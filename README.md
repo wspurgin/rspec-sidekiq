@@ -1,7 +1,7 @@
-# RSpec for Sidekiq [![Build Status][travis_ci_build_status]][travis_ci][![Dependency Status][gemnasium_dependency_status]][gemnasium]
+# RSpec for Sidekiq [![Code Climate][code_climate_badge]][code_climate] [![Travis CI][travis_ci_badge]][travis_ci] [![Gemnasium][gemnasium_badge]][gemnasium]
 *Simple testing of Sidekiq jobs via a collection of matchers and common tasks*
 
-[RubyGems][ruby_gems] | [GitHub][github] | [Travis CI][travis_ci] | [Gemnasium][gemnasium] | [RubyDoc][ruby_doc] | [Ruby Toolbox][ruby_toolbox] 
+[RubyGems][ruby_gems] | [Code Climate][code_climate] | [GitHub][github] | [Travis CI][travis_ci] | [Gemnasium][gemnasium] | [RubyDoc][ruby_doc] | [Ruby Toolbox][ruby_toolbox]
 
 ## Installation
 ```
@@ -58,11 +58,13 @@ Yes do it! If there's a feature missing that you'd love them get in on the actio
 
 Issues/Pull Requests/Comments bring them on...
 
+[code_climate]: https://codeclimate.com/github/philostler/rspec-sidekiq
+[code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.png
+[gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
+[gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.png
+[github]: http://github.com/philostler/rspec-sidekiq
+[ruby_doc]: http://rubydoc.info/github/philostler/rspec-sidekiq/master/frames
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
-[github]: http://github.com/philostler/rspec-sidekiq
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
-[travis_ci_build_status]: https://secure.travis-ci.org/philostler/rspec-sidekiq.png
-[gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
-[gemnasium_dependency_status]: https://gemnasium.com/philostler/rspec-sidekiq.png
-[ruby_doc]: http://rubydoc.info/github/philostler/rspec-sidekiq/master/frames
+[travis_ci_badge]: https://secure.travis-ci.org/philostler/rspec-sidekiq.png
