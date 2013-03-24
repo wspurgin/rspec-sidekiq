@@ -50,6 +50,14 @@ expect(AwesomeJob).to be_unique # new expect syntax
 expect(AwesomeJob).to have_enqueued_jobs(1) # new expect syntax
 ```
 
+## Testing
+```bundle exec rspec spec```
+
+## Contribute
+Yes do it! If there's a feature missing that you'd love them get in on the action!
+
+Issues/Pull Requests/Comments bring them on...
+
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [github]: http://github.com/philostler/rspec-sidekiq
