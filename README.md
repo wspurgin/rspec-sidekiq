@@ -35,6 +35,9 @@ expect(AwesomeJob).to be_processed_in :download # new expect syntax
 ```ruby
 it { should be_retryable true } } # one liner
 expect(AwesomeJob).to be_retryable true # new expect syntax
+# ...or alternatively specifiy the number of times it should be retried
+it { should be_retryable 5 } } # one liner
+expect(AwesomeJob).to be_retryable 5 # new expect syntax
 ```
 
 ### be_unique (Only available when using [sidekiq-middleware](https://github.com/krasnoukhov/sidekiq-middleware))
