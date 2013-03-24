@@ -1,11 +1,20 @@
 # RSpec for Sidekiq [![Build Status][travis_ci_build_status]][travis_ci][![Dependency Status][gemnasium_dependency_status]][gemnasium]
 *Simple testing of Sidekiq jobs via a collection of matchers and common tasks*
 
-[RubyGems][ruby_gems] | [Ruby Toolbox][ruby_toolbox] | [GitHub][github] | [Travis CI][travis_ci] | [Gemnasium][gemnasium] | [RubyDoc][ruby_doc]
+[RubyGems][ruby_gems] | [GitHub][github] | [Travis CI][travis_ci] | [Gemnasium][gemnasium] | [RubyDoc][ruby_doc] | [Ruby Toolbox][ruby_toolbox] 
 
 ## Installation
 ```
 gem "rspec-sidekiq"
+```
+There is no need to ```require "sidekiq/testing"``` when using rspec-sidekiq
+
+## Configuration
+```ruby
+RSpec::Sidekiq.configure do |config|
+  # Clears all job queues before each example
+  config.clear_all_enqueued_jobs = false # default => true
+end
 ```
 
 ## Matchers
@@ -14,7 +23,7 @@ gem "rspec-sidekiq"
 * [be_unique](#be_unique)
 * [have_enqueued_jobs](#have_enqueued_jobs)
 
-### #be_processed_in
+### be_processed_in
 *Describes the queue that the job should be processed in*
 ```ruby
 it { should be_processed_in :download } } # one liner
@@ -36,7 +45,7 @@ expect(AwesomeJob).to be_unique # new expect syntax
 ```
 
 ### have_enqueued_jobs
-*Evaluates the number of enqueued jobs for a specified worker*
+*Evaluates the number of enqueued jobs for a specified job*
 ```ruby
 expect(AwesomeJob).to have_enqueued_jobs(1) # new expect syntax
 ```
