@@ -9,11 +9,36 @@ gem "rspec-sidekiq"
 ```
 
 ## Matchers
+* [be_processed_in](#be_processed_in)
+* [be_retryable](#be_retryable)
+* [be_unique](#be_unique)
+* [have_enqueued_jobs](#have_enqueued_jobs)
+
+### #be_processed_in
+*Describes the queue that the job should be processed in*
 ```ruby
-be_processed_in
-be_retryable
-be_unique
-have_enqueued_jobs
+it { should be_processed_in :download } } # one liner
+expect(AwesomeJob).to be_processed_in :download # new expect syntax
+```
+
+### be_retryable
+*Describes if the job retries when there is a failure in it's execution*
+```ruby
+it { should be_retryable true } } # one liner
+expect(AwesomeJob).to be_retryable true # new expect syntax
+```
+
+### be_unique (Only available when using [sidekiq-middleware](https://github.com/krasnoukhov/sidekiq-middleware))
+*Describes if the job should be unique within it's queue*
+```ruby
+it { should be_unique } } # one liner
+expect(AwesomeJob).to be_unique # new expect syntax
+```
+
+### have_enqueued_jobs
+*Evaluates the number of enqueued jobs for a specified worker*
+```ruby
+expect(AwesomeJob).to have_enqueued_jobs(1) # new expect syntax
 ```
 
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
