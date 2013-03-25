@@ -21,6 +21,7 @@ end
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
+* [have_enqueued_job](#have_enqueued_job)
 * [have_enqueued_jobs](#have_enqueued_jobs)
 
 ### be_processed_in
@@ -45,6 +46,12 @@ expect(AwesomeJob).to be_retryable 5 # new expect syntax
 ```ruby
 it { should be_unique } } # one liner
 expect(AwesomeJob).to be_unique # new expect syntax
+```
+
+### have_enqueued_job
+*Evaluates that there is an enqueued job with the specified arguments*
+```ruby
+expect(AwesomeJob).to have_enqueued_job("Awesome", true) # new expect syntax
 ```
 
 ### have_enqueued_jobs
