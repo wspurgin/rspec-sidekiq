@@ -11,11 +11,15 @@ module RSpec
         end
 
         def description
-          "enqueues a #{@klass} job"
+          "have #{@expected} enqueued #{@klass} job#{jobs_description}"
         end
 
         def failure_message
-          "expected #{@klass} to have #{@expected} enqueued jobs but got #{@actual}"
+          "expected #{@klass} to have #{@expected} enqueued job#{jobs_description} but got #{@actual}"
+        end
+
+        def jobs_description
+          "s" unless @expected == 1
         end
 
         def matches? klass
@@ -25,7 +29,7 @@ module RSpec
         end
         
         def negative_failure_message
-          "expected #{@klass} to not have #{@expected} enqueued jobs"
+          "expected #{@klass} to not have #{@expected} enqueued job#{jobs_description}"
         end
       end
     end
