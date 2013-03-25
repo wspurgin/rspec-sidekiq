@@ -58,6 +58,10 @@ expect(AwesomeJob).to have_enqueued_job("Awesome", true) # new expect syntax
 *Evaluates the number of enqueued jobs for a specified job class*
 ```ruby
 expect(AwesomeJob).to have_enqueued_jobs(1) # new expect syntax
+# ...but you could just use
+expect(AwesomeJob).to have(1).jobs
+# ...or even
+expect(AwesomeJob).to have(1).enqueued.jobs
 ```
 
 ## Testing
