@@ -48,7 +48,7 @@ expect(AwesomeJob).to be_unique # new expect syntax
 ```
 
 ### have_enqueued_jobs
-*Evaluates the number of enqueued jobs for a specified job*
+*Evaluates the number of enqueued jobs for a specified job class*
 ```ruby
 expect(AwesomeJob).to have_enqueued_jobs(1) # new expect syntax
 ```
