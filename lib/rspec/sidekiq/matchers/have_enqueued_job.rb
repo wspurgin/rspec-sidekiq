@@ -22,7 +22,6 @@ module RSpec
         def matches? klass
           @klass = klass
           @actual = klass.jobs.map { |job| job["args"] }
-          puts @actual
           @actual.include? @expected
         end
         
