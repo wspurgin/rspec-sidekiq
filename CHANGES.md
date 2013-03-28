@@ -1,3 +1,7 @@
+0.2.2
+---
+* Matcher ```be_retryable false``` not producing correct output description
+
 0.2.1
 ---
 * Removed debug #puts
