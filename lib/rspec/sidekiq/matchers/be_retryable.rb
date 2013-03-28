@@ -11,11 +11,17 @@ module RSpec
         end
 
         def description
-          "retry #{number_of_description} times"
+          if @expected.is_a?(Fixnum)
+            "retry #{@expected} times"          # retry: 5
+          elsif @expected
+            "retry the default number of times" # retry: true
+          else
+            "not retry"                         # retry: false
+          end
         end
 
         def failure_message
-          "expected #{@klass} to retry #{number_of_description} times but got #{@actual}"
+          "expected #{@klass} to #{description} but got #{@actual}"
         end
 
         def matches? job
@@ -25,11 +31,7 @@ module RSpec
         end
         
         def negative_failure_message
-          "expected #{@klass} to not retry #{number_of_description} times"
-        end
-
-        def number_of_description
-          @expected.is_a?(Fixnum) ? @expected : "the default number of"
+          "expected #{@klass} to not #{description}"
         end
       end
     end
