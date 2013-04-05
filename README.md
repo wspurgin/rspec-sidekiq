@@ -10,6 +10,7 @@ gem "rspec-sidekiq"
 There is no need to ```require "sidekiq/testing"``` when using rspec-sidekiq
 
 ## Configuration
+If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
 ```ruby
 RSpec::Sidekiq.configure do |config|
   # Clears all job queues before each example
