@@ -13,7 +13,7 @@ Removed restriction on needing to use sidekiq-middleware with be_unique matcher 
 0.2.0
 ---
 * New #have_enqueued_job matcher [philostler]
-# Improved #have_enqueued_jobs description [philostler]
+* Improved #have_enqueued_jobs description [philostler]
 * Minor documentation updates [philostler]
 
 0.1.0
