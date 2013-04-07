@@ -42,9 +42,11 @@ it { should be_retryable 5 } } # one liner
 expect(AwesomeJob).to be_retryable 5 # new expect syntax
 ```
 
-### be_unique (Only available when using [sidekiq-middleware](https://github.com/krasnoukhov/sidekiq-middleware))
+### be_unique
 *Describes if the job should be unique within it's queue*
 ```ruby
+sidekiq_options unique: true # job option
+
 it { should be_unique } } # one liner
 expect(AwesomeJob).to be_unique # new expect syntax
 ```
