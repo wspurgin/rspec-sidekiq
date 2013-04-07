@@ -1,3 +1,4 @@
+require "rspec/core"
 require "rspec/sidekiq/matchers/be_processed_in"
 require "rspec/sidekiq/matchers/be_retryable"
 require "rspec/sidekiq/matchers/have_enqueued_job"
