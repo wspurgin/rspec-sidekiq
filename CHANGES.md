@@ -1,7 +1,7 @@
 0.3.0
 ---
 * Removed restriction on needing to use sidekiq-middleware with be_unique matcher [philostler#4]
-* Ensure RSpec.configure is defined on loading rspec/sidekiq/matchers [centaure]
+* Ensure RSpec.configure is defined on loading rspec/sidekiq/matchers [centaure#3]
 
 0.2.2
 ---
