@@ -67,6 +67,23 @@ expect(AwesomeJob).to have(1).jobs
 expect(AwesomeJob).to have(1).enqueued.jobs
 ```
 
+## Example
+```ruby
+require "spec_helper"
+
+describe AwesomeJob do
+  it { should be_processed_in :download }
+  it { should be_retryable false }
+  it { should be_unique }
+  
+  it "enqueues another awesome job" do
+    subject.perform
+  
+    expect(AnotherAwesomeJob).to have_enqueued_job("Awesome", true)
+  end
+end
+```
+
 ## Testing
 ```bundle exec rspec spec```
 
