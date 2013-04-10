@@ -25,7 +25,7 @@ module RSpec
         end
 
         def matches? job
-          @klass = job.class
+          @klass = job
           @actual = @klass.get_sidekiq_options["retry"]
           @actual == @expected
         end
