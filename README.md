@@ -4,10 +4,15 @@
 [RubyGems][ruby_gems] | [Code Climate][code_climate] | [GitHub][github] | [Travis CI][travis_ci] | [Gemnasium][gemnasium] | [RubyDoc][ruby_doc] | [Ruby Toolbox][ruby_toolbox]
 
 ## Installation
+```ruby
+# Gemfile
+group :test do
+  gem "rspec-sidekiq"
+end
 ```
-gem "rspec-sidekiq"
-```
-There is no need to ```require "sidekiq/testing"``` when using rspec-sidekiq
+```rspec-sidekiq``` requires ```sidekiq/testing``` by default so there is no need to include the line ```require "sidekiq/testing"``` inside your ```spec_helper.rb```.
+
+*This has the effect of not pushing enqueued jobs to Redis but to a ```job``` array to enable testing ([see Sidekiq's testing wiki](https://github.com/mperham/sidekiq/wiki/Testing)). Thus, only include ```gem "rspec-sidekiq"``` in environments where this behaviour is required, such as the ```test``` group*
 
 ## Configuration
 If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
