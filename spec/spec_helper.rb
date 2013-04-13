@@ -1,5 +1,8 @@
+require "coveralls"
 require "sidekiq"
 require "rspec-sidekiq"
+
+Coveralls.wear!
 
 RSpec.configure do |config|
   config.alias_example_to :expect_it
