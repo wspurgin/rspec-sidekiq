@@ -47,17 +47,17 @@ end
 ### be_processed_in
 *Describes the queue that the job should be processed in*
 ```ruby
-it { should be_processed_in :download } } # one liner
+it { should be_processed_in :download } # one liner
 expect(AwesomeJob).to be_processed_in :download # new expect syntax
 ```
 
 ### be_retryable
 *Describes if the job retries when there is a failure in it's execution*
 ```ruby
-it { should be_retryable true } } # one liner
+it { should be_retryable true } # one liner
 expect(AwesomeJob).to be_retryable true # new expect syntax
 # ...or alternatively specifiy the number of times it should be retried
-it { should be_retryable 5 } } # one liner
+it { should be_retryable 5 } # one liner
 expect(AwesomeJob).to be_retryable 5 # new expect syntax
 ```
 
@@ -66,7 +66,7 @@ expect(AwesomeJob).to be_retryable 5 # new expect syntax
 ```ruby
 sidekiq_options unique: true # job option
 
-it { should be_unique } } # one liner
+it { should be_unique } # one liner
 expect(AwesomeJob).to be_unique # new expect syntax
 ```
 
