@@ -1,3 +1,8 @@
+0.4.0
+---
+* Bug fix for matcher failure if sidekiq_options were defined as strings vs symbols [mhuffnagle#16 & philostler]
+* Matcher tests (partial coverage) added [mhuffnagle#16 & philostler]
+
 0.3.0
 ---
 * Removed restriction on needing to use sidekiq-middleware with be_unique matcher [philostler#4]
