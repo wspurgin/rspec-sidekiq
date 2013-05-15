@@ -21,7 +21,7 @@ module RSpec
         def matches? job
           @klass = job.class
           @actual = @klass.get_sidekiq_options["queue"]
-          @actual == @expected
+          @actual.to_s == @expected.to_s
         end
         
         def negative_failure_message
