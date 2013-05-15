@@ -47,6 +47,8 @@ end
 ### be_processed_in
 *Describes the queue that the job should be processed in*
 ```ruby
+sidekiq_options queue: :download # job option
+
 it { should be_processed_in :download } # one liner
 expect(AwesomeJob).to be_processed_in :download # new expect syntax
 ```
@@ -54,6 +56,8 @@ expect(AwesomeJob).to be_processed_in :download # new expect syntax
 ### be_retryable
 *Describes if the job retries when there is a failure in it's execution*
 ```ruby
+sidekiq_options retry: 5 # job option
+
 it { should be_retryable true } # one liner
 expect(AwesomeJob).to be_retryable true # new expect syntax
 # ...or alternatively specifiy the number of times it should be retried
