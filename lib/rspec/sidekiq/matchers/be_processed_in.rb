@@ -19,7 +19,7 @@ module RSpec
         end
 
         def matches? job
-          @klass = job.class
+          @klass = job.kind_of?(Class) ? job : job.class
           @actual = @klass.get_sidekiq_options["queue"]
           @actual.to_s == @expected.to_s
         end
