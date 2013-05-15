@@ -1,10 +1,14 @@
+require "simplecov"
 require "coveralls"
+
 require "sidekiq"
 require "rspec-sidekiq"
 
-Coveralls.wear! do
-  add_filter "/spec/"
-end
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  Coveralls::SimpleCov::Formatter,
+  SimpleCov::Formatter::HTMLFormatter
+]
+SimpleCov.start
 
 RSpec.configure do |config|
   config.alias_example_to :expect_it
