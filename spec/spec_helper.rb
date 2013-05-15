@@ -4,6 +4,8 @@ require "coveralls"
 require "sidekiq"
 require "rspec-sidekiq"
 
+require_relative "support/init"
+
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   Coveralls::SimpleCov::Formatter,
   SimpleCov::Formatter::HTMLFormatter
