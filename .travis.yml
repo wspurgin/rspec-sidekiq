@@ -7,3 +7,6 @@ rvm:
   - rbx-19mode
   - ruby-head
 script: "bundle exec rspec spec"
+matrix:
+  allow_failures:
+    - rvm: ruby-head
