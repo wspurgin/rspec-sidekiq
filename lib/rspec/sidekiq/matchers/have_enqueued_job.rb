@@ -24,7 +24,7 @@ module RSpec
           @actual = klass.jobs.map { |job| job["args"] }
           @actual.include? @expected
         end
-        
+
         def negative_failure_message
           "expected to not have an enqueued #{@klass} job with arguments #{@expected}"
         end

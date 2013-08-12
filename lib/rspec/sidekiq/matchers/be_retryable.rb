@@ -29,7 +29,7 @@ module RSpec
           @actual = @klass.get_sidekiq_options["retry"]
           @actual == @expected
         end
-        
+
         def negative_failure_message
           "expected #{@klass} to not #{description}"
         end

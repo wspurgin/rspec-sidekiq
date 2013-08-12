@@ -27,7 +27,7 @@ module RSpec
           @actual = klass.jobs.size
           @actual == @expected
         end
-        
+
         def negative_failure_message
           "expected #{@klass} to not have #{@expected} enqueued job#{jobs_description}"
         end

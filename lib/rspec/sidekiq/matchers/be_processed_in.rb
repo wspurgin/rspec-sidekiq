@@ -23,7 +23,7 @@ module RSpec
           @actual = @klass.get_sidekiq_options["queue"]
           @actual.to_s == @expected.to_s
         end
-        
+
         def negative_failure_message
           "expected #{@klass} to not be processed in the #{@expected} queue"
         end

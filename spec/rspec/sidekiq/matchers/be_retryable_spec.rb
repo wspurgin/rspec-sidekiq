@@ -37,5 +37,5 @@ describe "Be Retryable matcher" do
       subject { TestWorkerAlternative }
       expect_it { to be_retryable false }
     end
-  end  
+  end
 end

@@ -19,7 +19,7 @@ module RSpec
           @actual = @klass.get_sidekiq_options["unique"]
           @actual == true
         end
-        
+
         def negative_failure_message
           "expected #{@klass} to not be unique in the queue"
         end

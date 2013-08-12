@@ -25,5 +25,5 @@ describe "Be Processed In matcher" do
     context "when queue is specified as a symbol" do
       expect_it { to be_processed_in :data }
     end
-  end  
+  end
 end

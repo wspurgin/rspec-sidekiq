@@ -11,5 +11,5 @@ describe "Be Unique matcher" do
 
   describe "one liner syntax" do
     expect_it { to be_unique }
-  end  
+  end
 end
