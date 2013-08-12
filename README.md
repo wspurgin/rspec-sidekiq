@@ -27,7 +27,7 @@ end
 ```
 ```rspec-sidekiq``` requires ```sidekiq/testing``` by default so there is no need to include the line ```require "sidekiq/testing"``` inside your ```spec_helper.rb```.
 
-*This has the effect of not pushing enqueued jobs to Redis but to a ```job``` array to enable testing ([see Sidekiq's testing wiki](https://github.com/mperham/sidekiq/wiki/Testing)). Thus, only include ```gem "rspec-sidekiq"``` in environments where this behaviour is required, such as the ```test``` group*
+*This has the effect of not pushing enqueued jobs to Redis but to a ```job``` array to enable testing ([see Sidekiq's testing wiki](https://github.com/mperham/sidekiq/wiki/Testing)). Thus, only include ```gem "rspec-sidekiq"``` in environments where this behaviour is required, such as the ```test``` group*.
 
 ## Configuration
 If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
@@ -99,10 +99,10 @@ describe AwesomeJob do
   it { should be_processed_in :download }
   it { should be_retryable false }
   it { should be_unique }
-  
+
   it "enqueues another awesome job" do
     subject.perform
-  
+
     expect(AnotherAwesomeJob).to have_enqueued_job("Awesome", true)
   end
 end
