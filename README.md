@@ -112,7 +112,7 @@ end
 ```bundle exec rspec spec```
 
 ## Contribute
-Yes do it! If there's a feature missing that you'd love them get in on the action!
+Please do! If there's a feature missing that you'd love to see then get in on the action!
 
 Issues/Pull Requests/Comments bring them on...
 
