@@ -1,3 +1,7 @@
+0.5.0
+---
+* Adds stub support for Sidekiq::Batch [kmayer#17]
+
 0.4.0
 ---
 * Bug fix for matcher failure if sidekiq_options were defined as strings vs symbols [mhuffnagle#16 & philostler]
