@@ -26,8 +26,19 @@ if defined?(Sidekiq::Batch)
 
   RSpec.configure do |config|
     config.before(:each) do
-      Sidekiq::Batch.stub(:new) { RSpec::Sidekiq::NullBatch.new }
-      Sidekiq::Batch::Status.stub(:new) { RSpec::Sidekiq::NullStatus.new }
+      if mocked_with_mocha?
+        Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
+        Sidekiq::Batch::Status.stubs(:new) { RSpec::Sidekiq::NullStatus.new }
+      else
+        Sidekiq::Batch.stub(:new) { RSpec::Sidekiq::NullBatch.new }
+        Sidekiq::Batch::Status.stub(:new) { RSpec::Sidekiq::NullStatus.new }
+      end
     end
+  end
+
+  ## Helpers ----------------------------------------------
+
+  def mocked_with_mocha?
+    Sidekiq::Batch.respond_to? :stubs
   end
 end
