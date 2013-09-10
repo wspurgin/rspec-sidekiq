@@ -29,7 +29,7 @@ end
 
 *This has the effect of not pushing enqueued jobs to Redis but to a ```job``` array to enable testing ([see Sidekiq's testing wiki](https://github.com/mperham/sidekiq/wiki/Testing)). Thus, only include ```gem "rspec-sidekiq"``` in environments where this behaviour is required, such as the ```test``` group.*
 
-If you are using Sidekiq Batches ([Sidekiq Pro feature](https://github.com/mperham/sidekiq/wiki/Batches)), ```rspec-sidekiq``` replaces the implementation (using the NullObject pattern) enabling testing without a Redis instance.
+If you are using Sidekiq Batches ([Sidekiq Pro feature](https://github.com/mperham/sidekiq/wiki/Batches)), ```rspec-sidekiq``` replaces the implementation (using the NullObject pattern) enabling testing without a Redis instance. Mocha and RSpec stubbing is supported here.
 
 ## Configuration
 If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
