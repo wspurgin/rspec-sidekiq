@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rspec", "~> 2.0"
   s.add_dependency "sidekiq", ">= 2.4.0"
 
-  s.add_development_dependency "coveralls", "~> 0.6.0"
+  s.add_development_dependency "coveralls", "~> 0.7.0"
   s.add_development_dependency "fuubar", "~> 1.1"
   s.add_development_dependency "rspec", "~> 2.0"
   s.add_development_dependency "sidekiq", ">= 2.4.0"

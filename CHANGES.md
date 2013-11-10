@@ -1,6 +1,7 @@
 0.6.0
 ---
 * Add delay extension matchers [sosaucily#22]
+* Update coveralls development dependency to version 0.7.x [philostler]
 
 0.5.1
 ---
