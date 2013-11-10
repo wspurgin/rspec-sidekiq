@@ -1,3 +1,7 @@
+0.6.0
+---
+* Add delay extension matchers [sosaucily#22]
+
 0.5.1
 ---
 * Allows Sidekiq::Batch support to work with Mocha as well RSpec stubbing [noiseunion#20]
