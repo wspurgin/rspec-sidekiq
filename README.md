@@ -93,6 +93,14 @@ expect(AwesomeJob).to have(1).jobs
 expect(AwesomeJob).to have(1).enqueued.jobs
 ```
 
+### be_a_delayed_job
+*Describes if the job was called on a class using the delay extension for sidekiq*
+```ruby
+expect("user_welcome_email").to be_a_delayed_job
+# verifying the delay amount
+expect("user_welcome_email").to be_a_delayed_job(1.hour)
+```
+
 ## Example
 ```ruby
 require "spec_helper"
