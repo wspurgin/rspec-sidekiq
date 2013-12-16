@@ -22,7 +22,7 @@ module RSpec
         def matches? klass
           @klass = klass
           @actual = klass.jobs.map { |job| job["args"] }
-          @actual.include? @expected
+          @actual.any? { |args| Array(@expected) == args }
         end
 
         def negative_failure_message
