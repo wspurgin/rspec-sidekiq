@@ -5,9 +5,10 @@ rvm:
   - ruby-head
   - jruby-19mode
   - jruby-head
-  - rbx-19mode
+  - rbx-head
 script: "bundle exec rspec spec"
 matrix:
   allow_failures:
-    - rvm: jruby-head
     - rvm: ruby-head
+    - rvm: jruby-head
+    - rvm: rbx-head
