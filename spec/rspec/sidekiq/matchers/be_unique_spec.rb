@@ -1,15 +1,50 @@
 require "spec_helper"
 
-describe "Be Unique matcher" do
-  subject { TestWorker }
+describe RSpec::Sidekiq::Matchers::BeUnique do
+  let(:worker) { create_worker unique: true }
+  before(:each) { subject.matches? worker }
 
-  describe "expect syntax" do
-    it "correctly matches" do
-      expect(TestWorker).to be_unique
+  describe "expected usage" do
+    it "matches" do
+      expect(worker).to be_unique
     end
   end
 
-  describe "one liner syntax" do
-    expect_it { to be_unique }
+  describe "#be_unique" do
+    it "returns instance" do
+      expect(be_unique).to be_a RSpec::Sidekiq::Matchers::BeUnique
+    end
+  end
+
+  describe "#description" do
+    it "returns description" do
+      expect(subject.description).to eq "be unique in the queue"
+    end
+  end
+
+  describe "#failure_message" do
+    it "returns message" do
+      expect(subject.failure_message).to eq "expected #{worker} to be unique in the queue but it was not"
+    end
+  end
+
+  describe "#matches?" do
+    context "when condition matches" do
+      it "returns true" do
+        expect(subject.matches? worker).to be_true
+      end
+    end
+
+    context "when condition does not match" do
+      it "returns false" do
+        expect(subject.matches? create_worker unique: false).to be_false
+      end
+    end
+  end
+
+  describe "#negative_failure_message" do
+    it "returns message" do
+      expect(subject.negative_failure_message).to eq "expected #{worker} to not be unique in the queue but it was"
+    end
   end
 end
