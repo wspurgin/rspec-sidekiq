@@ -18,6 +18,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |config|
     config.syntax = :expect
   end
+
+  config.include RSpec::Sidekiq::Spec::Support::Factories
 end
 
 RSpec::Core::MemoizedHelpers.module_eval do
