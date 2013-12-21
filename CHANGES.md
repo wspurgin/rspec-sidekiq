@@ -1,9 +1,7 @@
-Master
----
-* Allow to use [general matchers](https://www.relishapp.com/rspec/rspec-mocks/v/2-14/docs/argument-matchers/general-matchers) in have_enqueued_job [johanneswuerbach#30]
-
 1.0.0
 ---
+* Add helper for testing retries exhausted block [Noreaster76#31]
+* Allow to use [general matchers](https://www.relishapp.com/rspec/rspec-mocks/v/2-14/docs/argument-matchers/general-matchers) in have_enqueued_job [johanneswuerbach#30]
 * Add delay extension matchers [sosaucily#22]
 * Update coveralls development dependency to version 0.7.x [philostler]
 
