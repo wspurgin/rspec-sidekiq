@@ -31,7 +31,7 @@ module RSpec
         end
 
         def negative_failure_message
-          "expected #{@klass} to not #{description}"
+          "expected #{@klass} to not #{description}".gsub "not not ", ""
         end
       end
     end
