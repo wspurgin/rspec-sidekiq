@@ -19,7 +19,7 @@ describe RSpec::Sidekiq::Matchers::BeRetryable do
     end
   end
 
-  describe "#be_unique" do
+  describe "#be_retryable" do
     it "returns instance" do
       expect(be_retryable true).to be_a RSpec::Sidekiq::Matchers::BeRetryable
     end
