@@ -1,6 +1,7 @@
 1.0.0
 ---
 * Remove have_enqueued_jobs matcher [philostler#37]
+* Travis - Ruby 2.1.0, fix Rubinius build [petergoldstein#35]
 * Print warning when used in development mode [mperham & philostler#33]
 * Add helper for testing retries exhausted block [Noreaster76#31]
 * Allow to use [general matchers](https://www.relishapp.com/rspec/rspec-mocks/v/2-14/docs/argument-matchers/general-matchers) in have_enqueued_job [johanneswuerbach#30]
