@@ -54,13 +54,13 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
     context "when condition matches" do
       context "when expected is a symbol" do
         it "returns true" do
-          expect(symbol_subject.matches? symbol_worker).to be_true
+          expect(symbol_subject.matches? symbol_worker).to be true
         end
       end
 
       context "when expected is a string" do
         it "returns true" do
-          expect(string_subject.matches? string_worker).to be_true
+          expect(string_subject.matches? string_worker).to be true
         end
       end
     end
@@ -68,13 +68,13 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
     context "when condition does not match" do
       context "when expected is a symbol" do
         it "returns false" do
-          expect(symbol_subject.matches? create_worker queue: :another_queue).to be_false
+          expect(symbol_subject.matches? create_worker queue: :another_queue).to be false
         end
       end
 
       context "when expected is a string" do
         it "returns false" do
-          expect(string_subject.matches? create_worker queue: "another_queue").to be_false
+          expect(string_subject.matches? create_worker queue: "another_queue").to be false
         end
       end
     end
