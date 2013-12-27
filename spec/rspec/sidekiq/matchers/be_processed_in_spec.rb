@@ -1,29 +1,96 @@
 require "spec_helper"
 
-describe "Be Processed In matcher" do
-  subject { TestWorker }
+describe RSpec::Sidekiq::Matchers::BeProcessedIn do
+  let(:symbol_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new :a_queue }
+  let(:symbol_worker) { create_worker queue: :a_queue }
+  let(:string_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new "a_queue" }
+  let(:string_worker) { create_worker queue: "a_queue" }
+  before(:each) do
+    symbol_subject.matches? symbol_worker
+    string_subject.matches? string_worker
+  end
 
-  describe "expect syntax" do
-    context "when queue is specified as a string" do
-      it "correctly matches" do
-        expect(TestWorker).to be_processed_in "data"
+  describe "expected usage" do
+    it "matches" do
+      expect(symbol_worker).to be_processed_in :a_queue
+    end
+  end
+
+  describe "#be_processed_in" do
+    it "returns instance" do
+      expect(be_processed_in :a_queue).to be_a RSpec::Sidekiq::Matchers::BeProcessedIn
+    end
+  end
+
+  describe "#description" do
+    context "when expected is a symbol" do
+      it "returns description" do
+        expect(symbol_subject.description).to eq "be processed in the \"a_queue\" queue"
       end
     end
 
-    context "when queue is specified as a symbol" do
-      it "correctly matches" do
-        expect(TestWorker).to be_processed_in :data
+    context "when expected is a string" do
+      it "returns description" do
+        expect(string_subject.description).to eq "be processed in the \"a_queue\" queue"
       end
     end
   end
 
-  describe "one liner syntax" do
-    context "when queue is specified as a string" do
-      expect_it { to be_processed_in "data" }
+  describe "#failure_message" do
+    context "when expected is a symbol" do
+      it "returns message" do
+        expect(symbol_subject.failure_message).to eq "expected #{symbol_worker} to be processed in the \"a_queue\" queue but got \"a_queue\""
+      end
     end
 
-    context "when queue is specified as a symbol" do
-      expect_it { to be_processed_in :data }
+    context "when expected is a string" do
+      it "returns message" do
+        expect(string_subject.failure_message).to eq "expected #{string_worker} to be processed in the \"a_queue\" queue but got \"a_queue\""
+      end
+    end
+  end
+
+  describe "#matches?" do
+    context "when condition matches" do
+      context "when expected is a symbol" do
+        it "returns true" do
+          expect(symbol_subject.matches? symbol_worker).to be_true
+        end
+      end
+
+      context "when expected is a string" do
+        it "returns true" do
+          expect(string_subject.matches? string_worker).to be_true
+        end
+      end
+    end
+
+    context "when condition does not match" do
+      context "when expected is a symbol" do
+        it "returns false" do
+          expect(symbol_subject.matches? create_worker queue: :another_queue).to be_false
+        end
+      end
+
+      context "when expected is a string" do
+        it "returns false" do
+          expect(string_subject.matches? create_worker queue: "another_queue").to be_false
+        end
+      end
+    end
+  end
+
+  describe "#negative_failure_message" do
+    context "when expected is a symbol" do
+      it "returns message" do
+        expect(symbol_subject.negative_failure_message).to eq "expected #{symbol_worker} to not be processed in the \"a_queue\" queue"
+      end
+    end
+
+    context "when expected is a string" do
+      it "returns message" do
+        expect(string_subject.negative_failure_message).to eq "expected #{string_worker} to not be processed in the \"a_queue\" queue"
+      end
     end
   end
 end

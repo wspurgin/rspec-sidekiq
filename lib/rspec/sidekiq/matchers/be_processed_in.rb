@@ -15,7 +15,7 @@ module RSpec
         end
 
         def failure_message
-          "expected #{@klass} to be processed in the #{@expected} queue but got #{@actual}"
+          "expected #{@klass} to be processed in the \"#{@expected}\" queue but got \"#{@actual}\""
         end
 
         def matches? job
@@ -25,7 +25,7 @@ module RSpec
         end
 
         def negative_failure_message
-          "expected #{@klass} to not be processed in the #{@expected} queue"
+          "expected #{@klass} to not be processed in the \"#{@expected}\" queue"
         end
       end
     end
