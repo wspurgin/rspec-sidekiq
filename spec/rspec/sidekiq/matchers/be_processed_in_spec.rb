@@ -60,7 +60,7 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
 
       context "when expected is a symbol and actual is string" do
         it "returns true" do
-          expect(symbol_subject.matches? string_worker).to be_true
+          expect(symbol_subject.matches? string_worker).to be true
         end
       end
 
@@ -72,7 +72,7 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
 
       context "when expected is a string and actual is symbol" do
         it "returns true" do
-          expect(string_subject.matches? symbol_worker).to be_true
+          expect(string_subject.matches? symbol_worker).to be true
         end
       end
     end
