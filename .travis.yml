@@ -2,13 +2,14 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
+  - 2.1.0
   - ruby-head
   - jruby-19mode
   - jruby-head
-  - rbx-head
+  - rbx
 script: "bundle exec rspec spec"
 matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
-    - rvm: rbx-head
+    - rvm: rbx
