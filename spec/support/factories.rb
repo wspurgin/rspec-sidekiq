@@ -3,7 +3,7 @@ module RSpec
     module Spec
       module Support
         module Factories
-          def create_worker options
+          def create_worker options = {}
             Class.new do
               include ::Sidekiq::Worker
 
