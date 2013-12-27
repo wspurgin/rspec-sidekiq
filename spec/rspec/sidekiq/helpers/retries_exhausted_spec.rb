@@ -12,7 +12,7 @@ describe 'Retries Exhausted block' do
   end
 
   it 'executes whatever is within the block' do
-    FooClass.within_sidekiq_retries_exhausted_block { FooClass.should_receive(:bar).with('hello') }
+    FooClass.within_sidekiq_retries_exhausted_block { expect(FooClass).to receive(:bar).with('hello') }
   end
 
 end

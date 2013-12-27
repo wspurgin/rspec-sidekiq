@@ -31,13 +31,13 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
   describe "#matches?" do
     context "when condition matches" do
       it "returns true" do
-        expect(subject.matches? worker).to be_true
+        expect(subject.matches? worker).to be true
       end
     end
 
     context "when condition does not match" do
       it "returns false" do
-        expect(subject.matches? create_worker unique: false).to be_false
+        expect(subject.matches? create_worker unique: false).to be false
       end
     end
   end

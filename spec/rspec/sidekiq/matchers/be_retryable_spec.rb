@@ -69,19 +69,19 @@ describe RSpec::Sidekiq::Matchers::BeRetryable do
     context "when condition matches" do
       context "when expected is a number" do
         it "returns true" do
-          expect(specific_subject.matches? specific_worker).to be_true
+          expect(specific_subject.matches? specific_worker).to be true
         end
       end
 
       context "when expected is true" do
         it "returns true" do
-          expect(default_subject.matches? default_worker).to be_true
+          expect(default_subject.matches? default_worker).to be true
         end
       end
 
       context "when expected is false" do
         it "returns true" do
-          expect(negative_subject.matches? negative_worker).to be_true
+          expect(negative_subject.matches? negative_worker).to be true
         end
       end
     end
@@ -89,19 +89,19 @@ describe RSpec::Sidekiq::Matchers::BeRetryable do
     context "when condition does not match" do
       context "when expected is a number" do
         it "returns false" do
-          expect(specific_subject.matches? default_worker).to be_false
+          expect(specific_subject.matches? default_worker).to be false
         end
       end
 
       context "when expected is true" do
         it "returns false" do
-          expect(default_subject.matches? negative_worker).to be_false
+          expect(default_subject.matches? negative_worker).to be false
         end
       end
 
       context "when expected is false" do
         it "returns false" do
-          expect(negative_subject.matches? specific_worker).to be_false
+          expect(negative_subject.matches? specific_worker).to be false
         end
       end
     end
