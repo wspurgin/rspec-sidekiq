@@ -58,9 +58,21 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
         end
       end
 
+      context "when expected is a symbol and actual is string" do
+        it "returns true" do
+          expect(symbol_subject.matches? string_worker).to be_true
+        end
+      end
+
       context "when expected is a string" do
         it "returns true" do
           expect(string_subject.matches? string_worker).to be_true
+        end
+      end
+
+      context "when expected is a string and actual is symbol" do
+        it "returns true" do
+          expect(string_subject.matches? symbol_worker).to be_true
         end
       end
     end
