@@ -20,6 +20,10 @@ if defined?(Sidekiq::Batch)
         def join
           ::Sidekiq::Worker.drain_all
         end
+
+        def total
+          ::Sidekiq::Worker.jobs.size
+        end
       end
     end
   end
