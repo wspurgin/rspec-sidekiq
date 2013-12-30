@@ -1,5 +1,6 @@
 1.0.0
 ---
+* Add implementation of status.total [matthargett & Kelly Felkins#39]
 * Fix Rubinius build [petergoldstein#38]
 * Remove have_enqueued_jobs matcher [philostler#37]
 * Travis - Ruby 2.1.0, fix Rubinius build [petergoldstein#35]
