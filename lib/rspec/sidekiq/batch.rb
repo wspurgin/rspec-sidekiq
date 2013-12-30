@@ -1,4 +1,4 @@
-if defined?(Sidekiq::Batch)
+if defined? Sidekiq::Batch
   module RSpec
     module Sidekiq
       class NullObject
@@ -41,7 +41,6 @@ if defined?(Sidekiq::Batch)
   end
 
   ## Helpers ----------------------------------------------
-
   def mocked_with_mocha?
     Sidekiq::Batch.respond_to? :stubs
   end
