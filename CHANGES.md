@@ -1,5 +1,6 @@
 1.0.0
 ---
+* Fix Rubinius build [petergoldstein#38]
 * Remove have_enqueued_jobs matcher [philostler#37]
 * Travis - Ruby 2.1.0, fix Rubinius build [petergoldstein#35]
 * Prepare for RSpec 3.x [petergoldstein#34]
