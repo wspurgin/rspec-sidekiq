@@ -4,7 +4,8 @@ module RSpec
       module Support
         module Factories
           def create_worker options = {}
-            Class.new do
+            clazz_name = "Worker#{ rand(36 ** 10).to_s 36 }"
+            clazz = Class.new do
               include ::Sidekiq::Worker
 
               sidekiq_options options
@@ -12,6 +13,7 @@ module RSpec
               def perform
               end
             end
+            Object.const_set clazz_name, clazz
           end
         end
       end
