@@ -11,7 +11,7 @@ module RSpec
         end
 
         def failure_message
-          "expected #{@klass} to be unique in the queue but it was not"
+          "expected #{@klass} to be unique in the queue"
         end
 
         def matches? job
@@ -21,7 +21,7 @@ module RSpec
         end
 
         def negative_failure_message
-          "expected #{@klass} to not be unique in the queue but it was"
+          "expected #{@klass} to not be unique in the queue"
         end
       end
     end

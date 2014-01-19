@@ -1,5 +1,5 @@
 require "rspec/core"
-require "rspec/sidekiq/matchers/be_a_delayed_job"
+require "rspec/sidekiq/matchers/be_delayed"
 require "rspec/sidekiq/matchers/be_processed_in"
 require "rspec/sidekiq/matchers/be_retryable"
 require "rspec/sidekiq/matchers/be_unique"
