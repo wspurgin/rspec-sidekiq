@@ -2,7 +2,7 @@ module RSpec
   module Sidekiq
     class << self
       def configure &block
-        yield configuration
+        yield configuration if block
 
         configuration
       end
