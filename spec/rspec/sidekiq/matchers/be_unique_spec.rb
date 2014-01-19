@@ -24,7 +24,7 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
 
   describe "#failure_message" do
     it "returns message" do
-      expect(subject.failure_message).to eq "expected #{worker} to be unique in the queue but it was not"
+      expect(subject.failure_message).to eq "expected #{worker} to be unique in the queue"
     end
   end
 
@@ -44,7 +44,7 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
 
   describe "#negative_failure_message" do
     it "returns message" do
-      expect(subject.negative_failure_message).to eq "expected #{worker} to not be unique in the queue but it was"
+      expect(subject.negative_failure_message).to eq "expected #{worker} to not be unique in the queue"
     end
   end
 end

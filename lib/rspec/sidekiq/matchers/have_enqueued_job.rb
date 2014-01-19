@@ -15,7 +15,7 @@ module RSpec
         end
 
         def failure_message
-          "expected to have an enqueued #{@klass} job with arguments #{@expected_arguments} but none found\n\n" +
+          "expected to have an enqueued #{@klass} job with arguments #{@expected_arguments}\n\n" +
           "found: #{@actual}"
         end
 

@@ -29,7 +29,7 @@ describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe "#failure_message" do
     it "returns message" do
-      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true] but none found\n\nfound: [[\"string\", 1, true]]"
+      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true]\n\nfound: [[\"string\", 1, true]]"
     end
   end
 
