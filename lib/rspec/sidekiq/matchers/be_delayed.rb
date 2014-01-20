@@ -19,11 +19,7 @@ module RSpec
         end
 
         def failure_message
-          message = "expected #{@expected_method.receiver}.#{@expected_method.name} to be delayed"
-          message += " for #{@expected_interval} seconds" if @expected_interval
-          message += " until #{@expected_time}" if @expected_time
-          message += " with arguments #{@expected_arguments}" unless @expected_arguments.empty?
-          message
+          "expected #{@expected_method.receiver}.#{@expected_method.name} to " + description
         end
 
         def for interval
@@ -53,11 +49,7 @@ module RSpec
         end
 
         def negative_failure_message
-          message = "expected #{@expected_method.receiver}.#{@expected_method.name} to not be delayed"
-          message += " for #{@expected_interval} seconds" if @expected_interval
-          message += " until #{@expected_time}" if @expected_time
-          message += " with arguments #{@expected_arguments}" unless @expected_arguments.empty?
-          message
+          "expected #{@expected_method.receiver}.#{@expected_method.name} to not " + description
         end
 
         def until time
