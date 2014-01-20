@@ -3,8 +3,6 @@ module RSpec
     class << self
       def configure &block
         yield configuration if block
-
-        configuration
       end
 
       def configuration
