@@ -37,15 +37,35 @@ If you wish to modify the default behaviour, add the following to your ```spec_h
 RSpec::Sidekiq.configure do |config|
   # Clears all job queues before each example
   config.clear_all_enqueued_jobs = false # default => true
+
+  # Whether to use terminal colours when outputting messages
+  config.enable_terminal_colours = false # default => true
+
+  # Warn when jobs are not enqueued to Redis but to a jobs array so that testing can occur
+  config.warn_when_jobs_not_processed_by_sidekiq = false # default => true
 end
 ```
 
 ## Matchers
+* [be_delayed](#be_delayed)
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
 * [have_enqueued_job](#have_enqueued_job)
 * [have_enqueued_jobs](#have_enqueued_jobs)
+
+### be_delayed
+*Describes if a method is to be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_delayed_extensions])*
+```ruby
+expect(Object.method :is_nil?).to be_delayed                             # Object.delay.is_nil?
+expect(Object.method :is_a?).to be_delayed(Object)                       # Object.delay.is_a? Object
+
+expect(Object.method :is_nil?).to be_delayed.for 1.hour                  # Object.delay_for(1.hour).is_nil?
+expect(Object.method :is_a?).to be_delayed(Object).for 1.hour            # Object.delay_for(1.hour).is_a? Object
+
+expect(Object.method :is_nil?).to be_delayed.until 1.hour.from_now       # Object.delay_until(1.hour.from_now).is_nil?
+expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now # Object.delay_until(1.hour.from_now).is_a? Object
+```
 
 ### be_processed_in
 *Describes the queue that the job should be processed in*
@@ -141,3 +161,5 @@ Issues/Pull Requests/Comments bring them on...
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
 [travis_ci_badge]: https://secure.travis-ci.org/philostler/rspec-sidekiq.png
+
+[sidekiq_delayed_extensions]: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions
