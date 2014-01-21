@@ -170,7 +170,7 @@ Issues/Pull Requests/Comments all welcome...
 [gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
 [gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.png
 [github]: http://github.com/philostler/rspec-sidekiq
-[ruby_doc]: http://rubydoc.info/github/philostler/rspec-sidekiq/master/frames
+[ruby_doc]: http://rubydoc.info/gems/rspec-sidekiq/frames
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
