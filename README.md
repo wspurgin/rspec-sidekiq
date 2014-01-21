@@ -18,6 +18,8 @@
 [RubyDoc][ruby_doc] |
 [Ruby Toolbox][ruby_toolbox]
 
+[Jump to Matchers »](#matchers) | [Jump to Helpers »](#helpers)
+
 ## Installation
 ```ruby
 # Gemfile
@@ -51,10 +53,6 @@ end
 * [be_unique](#be_unique)
 * [have_enqueued_job](#have_enqueued_job)
 * ~~[have_enqueued_jobs](#have_enqueued_jobs)~~
-
-## Helpers
-* [Batches](#batches)
-* retried
 
 ### be_delayed
 *Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
@@ -119,13 +117,13 @@ expect(AwesomeJob).to have_enqueued_job("Awesome", true)
 ### ~~have_enqueued_jobs~~
 *Removed. [See the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting] for alternative and more information*
 
-## Example
+## Example matcher usage
 ```ruby
 require "spec_helper"
 
 describe AwesomeJob do
-  it { should be_processed_in :download }
-  it { should be_retryable false }
+  it { should be_processed_in :my_queue }
+  it { should be_retryable 5 }
   it { should be_unique }
 
   it "enqueues another awesome job" do
@@ -134,6 +132,24 @@ describe AwesomeJob do
     expect(AnotherAwesomeJob).to have_enqueued_job("Awesome", true)
   end
 end
+```
+
+## Helpers
+* [Batches](#batches)
+* [within_sidekiq_retries_exhausted_block](#within_sidekiq_retries_exhausted_block)
+
+### Batches
+If you are using Sidekiq Batches ([Sidekiq Pro feature][sidekiq_wiki_batches]), rspec-sidekiq replaces the implementation (using the NullObject pattern) enabling testing without a Redis instance. Mocha and RSpec stubbing is supported here.
+
+### within_sidekiq_retries_exhausted_block
+```ruby
+sidekiq_retries_exhausted do |msg|
+  bar('hello')
+end
+# test with...
+FooClass.within_sidekiq_retries_exhausted_block {
+  expect(FooClass).to receive(:bar).with("hello")
+}
 ```
 
 ## Testing
@@ -161,4 +177,5 @@ Issues/Pull Requests/Comments all welcome...
 [travis_ci_badge]: https://secure.travis-ci.org/philostler/rspec-sidekiq.png
 
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
+[sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches
 [sidekiq_wiki_delayed_extensions]: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions
