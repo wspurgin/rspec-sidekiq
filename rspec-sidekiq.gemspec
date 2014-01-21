@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.files = Dir[".gitattributes"] +
             Dir[".gitignore"] +
             Dir[".rspec"] +
+            Dir[".simplecov"] +
             Dir[".travis"] +
             Dir["CHANGES.md"] +
             Dir["Gemfile"] +
