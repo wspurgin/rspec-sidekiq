@@ -1,6 +1,9 @@
 1.0.0
 ---
-* Add implementation of status.total [matthargett & Kelly Felkins#39]
+* Improve coverage and readability of README [philostler#26]
+* Greatly increase test coverage [philostler#27]
+* Refactor and greatly improve be_a_delayed_job matcher (now be_delayed) [philostler#24 & #25]
+* Add implementation of status.total [matthargett & Kelly Felkins#32 & #39]
 * Fix Rubinius build [petergoldstein#38]
 * Remove have_enqueued_jobs matcher [philostler#37]
 * Travis - Ruby 2.1.0, fix Rubinius build [petergoldstein#35]
