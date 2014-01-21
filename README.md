@@ -18,7 +18,7 @@
 [RubyDoc][ruby_doc] |
 [Ruby Toolbox][ruby_toolbox]
 
-[Jump to Matchers »](#matchers) | [Jump to Helpers »](#helpers)
+[Jump to Matchers &raquo;](#matchers) | [Jump to Helpers &raquo;](#helpers)
 
 ## Installation
 ```ruby
