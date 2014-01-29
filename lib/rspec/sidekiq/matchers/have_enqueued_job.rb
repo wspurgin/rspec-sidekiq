@@ -16,13 +16,18 @@ module RSpec
 
         def failure_message
           "expected to have an enqueued #{@klass} job with arguments #{@expected_arguments}\n\n" +
-          "found: #{@actual}"
+            "found: #{@actual}"
         end
 
         def matches? klass
           @klass = klass
-          @actual = klass.jobs.map { |job| job["args"] }
-          @actual.any? { |arguments| Array(@expected_arguments) == arguments }
+
+          if ::Sidekiq::Testing.disabled?
+            @actual = Array(::Sidekiq::Queue.all.detect{|q| q.name == @klass.get_sidekiq_options['queue']}).map{|q| q.item['args']}
+          else
+            @actual = @klass.jobs.map { |job| job["args"] }
+          end
+          @actual.any? {|arguments| Array(@expected_arguments) == arguments }
         end
 
         def negative_failure_message
