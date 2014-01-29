@@ -34,32 +34,73 @@ describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   end
 
   describe "#matches?" do
-    context "when condition matches" do
-      context "when expected are arguments" do
-        it "returns true" do
-          expect(argument_subject.matches? worker).to be true
+    context 'when Sidekiq::Testing is enabled' do
+      context "when condition matches" do
+        context "when expected are arguments" do
+          it "returns true" do
+            expect(argument_subject.matches? worker).to be true
+          end
+        end
+
+        context "when expected are matchers" do
+          it "returns true" do
+            expect(matcher_subject.matches? worker).to be true
+          end
         end
       end
 
-      context "when expected are matchers" do
-        it "returns true" do
-          expect(matcher_subject.matches? worker).to be true
+      context "when condition does not match" do
+        before(:each) { Sidekiq::Worker.clear_all }
+
+        context "when expected are arguments" do
+          it "returns false" do
+            expect(argument_subject.matches? worker).to be false
+          end
+        end
+
+        context "when expected are matchers" do
+          it "returns false" do
+            expect(matcher_subject.matches? worker).to be false
+          end
         end
       end
     end
 
-    context "when condition does not match" do
-      before(:each) { Sidekiq::Worker.clear_all }
+    context 'when Sidekiq::Testing is disabled' do
+      around(:each) do |example|
+        Sidekiq::Testing.disable!{ example.run }
+      end
+      after(:each) do
+        Sidekiq::Queue.all.each(&:clear)
+      end
 
-      context "when expected are arguments" do
-        it "returns false" do
-          expect(argument_subject.matches? worker).to be false
+      context "when condition matches" do
+        context "when expected are arguments" do
+          it "returns true" do
+            expect(argument_subject.matches? worker).to be true
+          end
+        end
+
+        context "when expected are matchers" do
+          it "returns true" do
+            expect(matcher_subject.matches? worker).to be true
+          end
         end
       end
 
-      context "when expected are matchers" do
-        it "returns false" do
-          expect(matcher_subject.matches? worker).to be false
+      context "when condition does not match" do
+        before(:each) { Sidekiq::Queue.all.each(&:clear) }
+
+        context "when expected are arguments" do
+          it "returns false" do
+            expect(argument_subject.matches? worker).to be false
+          end
+        end
+
+        context "when expected are matchers" do
+          it "returns false" do
+            expect(matcher_subject.matches? worker).to be false
+          end
         end
       end
     end
