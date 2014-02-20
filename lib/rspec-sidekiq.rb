@@ -1,3 +1,4 @@
+require "sidekiq"
 require "sidekiq/testing"
 
 require "rspec/sidekiq/batch"
