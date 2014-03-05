@@ -28,6 +28,7 @@ module RSpec
         def negative_failure_message
           "expected to not have an enqueued #{@klass} job with arguments #{@expected_arguments}"
         end
+        alias_method :failure_message_when_negated, :negative_failure_message
       end
     end
   end
