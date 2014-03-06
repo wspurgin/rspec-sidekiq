@@ -1,3 +1,7 @@
+1.1.0
+---
+* ?
+
 1.0.0
 ---
 * Improve coverage and readability of README [philostler#26]
