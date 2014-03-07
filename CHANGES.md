@@ -1,6 +1,6 @@
 1.1.0
 ---
-* ?
+* Added Support for RSpec 3 [TBAA#44]
 
 1.0.0
 ---
