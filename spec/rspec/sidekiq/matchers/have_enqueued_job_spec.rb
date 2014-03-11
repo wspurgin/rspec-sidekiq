@@ -1,114 +1,144 @@
 require "spec_helper"
 
 describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
-  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new ["string", 1, true] }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [an_instance_of(String), an_instance_of(Fixnum), true] }
+  let(:args){ ["string", 1, true] }
+  let(:matcher){ RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new args }
   let(:worker) { create_worker }
-  before(:each) do
-    worker.perform_async "string", 1, true
-    argument_subject.matches? worker
-  end
+  let(:a_minute_from_now){ Time.now + 60 }
+  subject{ matcher }
 
   describe "expected usage" do
     it "matches" do
-      expect(worker).to have_enqueued_job "string", 1, true
+      worker.perform_async(*args)
+      expect(worker).to(have_enqueued_job(*args))
+    end
+
+    context 'chained with :to_be_performed_at' do
+      it "matches" do
+        worker.perform_in a_minute_from_now, *args
+        expect(worker).to(have_enqueued_job(*args).to_be_performed_at(a_minute_from_now))
+      end
+    end
+
+    context 'chained with :to_be_performed_it' do
+      it "matches" do
+        worker.perform_in a_minute_from_now, *args
+        expect(worker).to(have_enqueued_job(*args).to_be_performed_in(a_minute_from_now))
+      end
     end
   end
 
-  describe "#have_enqueued_job" do
-    it "returns instance" do
-      expect(have_enqueued_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedJob
+  describe '#matchers' do
+    it 'is an array of 1 element' do
+      expect(subject.matchers.count).to eq 1
+    end
+
+    it 'is an array with an instance of ArgumentsMatcher' do
+      expect(subject.matchers[0]).to be_instance_of(RSpec::Sidekiq::Matchers::HaveEnqueuedJob::ArgumentsMatcher)
+    end
+
+    context 'chained with :to_be_performed_at' do
+      subject { matcher.to_be_performed_at(a_minute_from_now) }
+
+      it 'is an array of 2 elements' do
+        expect(subject.matchers.count).to eq 2
+      end
+
+      it 'is an array with an instance of ArgumentsMatcher and an instance of TimeMatcher' do
+        expect(subject.matchers[0]).to be_instance_of(RSpec::Sidekiq::Matchers::HaveEnqueuedJob::ArgumentsMatcher)
+        expect(subject.matchers[1]).to be_instance_of(RSpec::Sidekiq::Matchers::HaveEnqueuedJob::TimeMatcher)
+      end
     end
   end
 
-  describe "#description" do
-    it "returns description" do
-      expect(argument_subject.description).to eq "have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+  describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob::ArgumentsMatcher do
+    subject do
+      RSpec::Sidekiq::Matchers::HaveEnqueuedJob::ArgumentsMatcher.new(args)
     end
-  end
 
-  describe "#failure_message" do
-    it "returns message" do
-      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true]\n\nfound: [[\"string\", 1, true]]"
+    before(:each) do
+      worker.perform_async(*args)
     end
-  end
 
-  describe "#matches?" do
-    context 'when Sidekiq::Testing is enabled' do
-      context "when condition matches" do
-        context "when expected are arguments" do
+    describe '#matches?' do
+      context 'when Sidekiq::Testing is enabled' do
+        context "when condition matches" do
           it "returns true" do
-            expect(argument_subject.matches? worker).to be true
+            expect(subject.matches? worker).to be_true
           end
         end
 
-        context "when expected are matchers" do
+        context "when condition does not match" do
+          before(:each) { Sidekiq::Worker.clear_all }
+
+          it "returns false" do
+            expect(subject.matches? worker).to be_false
+          end
+        end
+      end
+
+      context 'when Sidekiq::Testing is disabled' do
+        around(:each) { |example| Sidekiq::Testing.disable!{ example.run } }
+        after(:each) { Sidekiq::Queue.all.each(&:clear) }
+
+        context "when condition matches" do
           it "returns true" do
-            expect(matcher_subject.matches? worker).to be true
+            expect(subject.matches? worker).to be_true
           end
         end
-      end
 
-      context "when condition does not match" do
-        before(:each) { Sidekiq::Worker.clear_all }
-
-        context "when expected are arguments" do
+        context "when condition does not match" do
           it "returns false" do
-            expect(argument_subject.matches? worker).to be false
-          end
-        end
-
-        context "when expected are matchers" do
-          it "returns false" do
-            expect(matcher_subject.matches? worker).to be false
-          end
-        end
-      end
-    end
-
-    context 'when Sidekiq::Testing is disabled' do
-      around(:each) do |example|
-        Sidekiq::Testing.disable!{ example.run }
-      end
-      after(:each) do
-        Sidekiq::Queue.all.each(&:clear)
-      end
-
-      context "when condition matches" do
-        context "when expected are arguments" do
-          it "returns true" do
-            expect(argument_subject.matches? worker).to be true
-          end
-        end
-
-        context "when expected are matchers" do
-          it "returns true" do
-            expect(matcher_subject.matches? worker).to be true
-          end
-        end
-      end
-
-      context "when condition does not match" do
-        before(:each) { Sidekiq::Queue.all.each(&:clear) }
-
-        context "when expected are arguments" do
-          it "returns false" do
-            expect(argument_subject.matches? worker).to be false
-          end
-        end
-
-        context "when expected are matchers" do
-          it "returns false" do
-            expect(matcher_subject.matches? worker).to be false
+            Sidekiq::Queue.all.each(&:clear)
+            expect(subject.matches? worker).to be_false
           end
         end
       end
     end
   end
 
-  describe "#negative_failure_message" do
-    it "returns message" do
-      expect(argument_subject.negative_failure_message).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+  describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob::TimeMatcher do
+    subject do
+      RSpec::Sidekiq::Matchers::HaveEnqueuedJob::TimeMatcher.new(a_minute_from_now)
+    end
+
+    before(:each) do
+      worker.perform_in a_minute_from_now, *args
+    end
+
+    describe '#matches?' do
+      context 'when Sidekiq::Testing is enabled' do
+        context "when condition matches" do
+          it "returns true" do
+            expect(subject.matches? worker).to be_true
+          end
+        end
+
+        context "when condition does not match" do
+          it "returns false" do
+            Sidekiq::Worker.clear_all
+            expect(subject.matches? worker).to be_false
+          end
+        end
+      end
+
+      context 'when Sidekiq::Testing is disabled' do
+        around(:each) { |example| Sidekiq::Testing.disable!{ example.run } }
+        after(:each) { Sidekiq::Queue.all.each(&:clear) }
+
+        context "when condition matches" do
+          it "returns true" do
+            expect(subject.matches? worker).to be_true
+          end
+        end
+
+        context "when condition does not match" do
+          it "returns false" do
+            Sidekiq::ScheduledSet.new.each(&:delete)
+            expect(subject.matches? worker).to be_false
+          end
+        end
+      end
     end
   end
 end
