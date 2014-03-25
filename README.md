@@ -7,7 +7,7 @@
 [![Gemnasium][gemnasium_badge]][gemnasium]
 [![coderwall][coderwall_badge]][coderwall]
 
-*Simple testing of Sidekiq jobs via a collection of matchers and helpers*
+***Simple testing of Sidekiq jobs via a collection of matchers and helpers***
 
 [RubyGems][ruby_gems] |
 [Code Climate][code_climate] |
