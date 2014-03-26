@@ -107,22 +107,22 @@ describe RSpec::Sidekiq::Matchers::BeRetryable do
     end
   end
 
-  describe "#negative_failure_message" do
+  describe "#failure_message_when_negated" do
     context "when expected is a number" do
       it "returns message" do
-        expect(specific_subject.negative_failure_message).to eq "expected #{specific_worker} to not retry 2 times"
+        expect(specific_subject.failure_message_when_negated).to eq "expected #{specific_worker} to not retry 2 times"
       end
     end
 
     context "when expected is true" do
       it "returns message" do
-        expect(default_subject.negative_failure_message).to eq "expected #{default_worker} to not retry the default number of times"
+        expect(default_subject.failure_message_when_negated).to eq "expected #{default_worker} to not retry the default number of times"
       end
     end
 
     context "when expected is false" do
       it "returns message" do
-        expect(negative_subject.negative_failure_message).to eq "expected #{negative_worker} to retry"
+        expect(negative_subject.failure_message_when_negated).to eq "expected #{negative_worker} to retry"
       end
     end
   end

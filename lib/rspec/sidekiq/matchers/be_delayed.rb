@@ -43,7 +43,7 @@ module RSpec
           return false
         end
 
-        def negative_failure_message
+        def failure_message_when_negated
           "expected #{@expected_method.receiver}.#{@expected_method.name} to not " + description
         end
 

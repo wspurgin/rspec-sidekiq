@@ -34,8 +34,8 @@ if defined? Sidekiq::Batch
         Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
         Sidekiq::Batch::Status.stubs(:new) { RSpec::Sidekiq::NullStatus.new }
       else
-        Sidekiq::Batch.stub(:new) { RSpec::Sidekiq::NullBatch.new }
-        Sidekiq::Batch::Status.stub(:new) { RSpec::Sidekiq::NullStatus.new }
+        allow(Sidekiq::Batch).to receive(:new)  { RSpec::Sidekiq::NullBatch.new }
+        allow(Sidekiq::Batch::Status).to receive(:new)  { RSpec::Sidekiq::NullStatus.new }
       end
     end
   end

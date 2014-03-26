@@ -24,7 +24,7 @@ module RSpec
           @actual.to_s == @expected_queue.to_s
         end
 
-        def negative_failure_message
+        def failure_message_when_negated
           "expected #{@klass} to not be processed in the \"#{@expected_queue}\" queue"
         end
       end

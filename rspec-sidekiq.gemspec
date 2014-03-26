@@ -12,12 +12,12 @@ Gem::Specification.new do |s|
   s.description = "Simple testing of Sidekiq jobs via a collection of matchers and helpers"
   s.license     = "MIT"
 
-  s.add_dependency "rspec", ">= 2.0.0"
+  s.add_dependency "rspec", ">= 3.0.0.beta2"
   s.add_dependency "sidekiq", ">= 2.4.0"
 
   s.add_development_dependency "coveralls", "~> 0.7.0"
   s.add_development_dependency "fuubar", ">= 1.1.0"
-  s.add_development_dependency "rspec", ">= 2.0.0"
+  s.add_development_dependency "rspec", ">= 3.0.0.beta2"
   s.add_development_dependency "sidekiq", ">= 2.4.0"
 
   s.files = Dir[".gitattributes"] +

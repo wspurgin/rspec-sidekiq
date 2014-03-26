@@ -92,16 +92,16 @@ describe RSpec::Sidekiq::Matchers::BeProcessedIn do
     end
   end
 
-  describe "#negative_failure_message" do
+  describe "#failure_message_when_negated" do
     context "when expected is a symbol" do
       it "returns message" do
-        expect(symbol_subject.negative_failure_message).to eq "expected #{symbol_worker} to not be processed in the \"a_queue\" queue"
+        expect(symbol_subject.failure_message_when_negated).to eq "expected #{symbol_worker} to not be processed in the \"a_queue\" queue"
       end
     end
 
     context "when expected is a string" do
       it "returns message" do
-        expect(string_subject.negative_failure_message).to eq "expected #{string_worker} to not be processed in the \"a_queue\" queue"
+        expect(string_subject.failure_message_when_negated).to eq "expected #{string_worker} to not be processed in the \"a_queue\" queue"
       end
     end
   end

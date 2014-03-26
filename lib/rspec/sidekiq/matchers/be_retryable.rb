@@ -30,7 +30,7 @@ module RSpec
           @actual == @expected_retry
         end
 
-        def negative_failure_message
+        def failure_message_when_negated
           "expected #{@klass} to not #{description}".gsub "not not ", ""
         end
       end

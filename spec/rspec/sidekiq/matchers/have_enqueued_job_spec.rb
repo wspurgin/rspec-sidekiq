@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new ["string", 1, true] }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [an_instance_of(String), an_instance_of(Fixnum), true] }
+  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true] }
   let(:worker) { create_worker }
   before(:each) do
     worker.perform_async "string", 1, true
@@ -65,9 +65,9 @@ describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     end
   end
 
-  describe "#negative_failure_message" do
+  describe "#failure_message_when_negated" do
     it "returns message" do
-      expect(argument_subject.negative_failure_message).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+      expect(argument_subject.failure_message_when_negated).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true]"
     end
   end
 end
