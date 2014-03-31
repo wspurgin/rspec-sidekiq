@@ -127,7 +127,7 @@ describe AwesomeJob do
   it { should be_unique }
 
   it "enqueues another awesome job" do
-    subject.perform
+    subject.perform_async("Awesome", true)
 
     expect(AnotherAwesomeJob).to have_enqueued_job("Awesome", true)
   end
