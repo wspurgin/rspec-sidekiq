@@ -13,14 +13,21 @@ describe "Batch" do
   describe "NullStatus" do
     describe "#total" do
       it "returns 0 when no jobs" do
-        null_status = RSpec::Sidekiq::NullStatus.new
+        null_status = RSpec::Sidekiq::NullStatus.new("123")
         expect(null_status.total).to eq(0)
       end
 
       it "returns 1 when 1 job" do
-        null_status = RSpec::Sidekiq::NullStatus.new
+        null_status = RSpec::Sidekiq::NullStatus.new("123")
         TestWorker.perform_async('5')
         expect(null_status.total).to eq(1)
+      end
+    end
+
+    describe "#bid" do
+      it "returns a bid" do
+        null_status = RSpec::Sidekiq::NullStatus.new("123")
+        expect(null_status.bid).to eq("123")
       end
     end
   end
