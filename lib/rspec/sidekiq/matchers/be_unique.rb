@@ -17,7 +17,7 @@ module RSpec
         def matches? job
           @klass = job.kind_of?(Class) ? job : job.class
           @actual = @klass.get_sidekiq_options["unique"]
-          @actual == true
+          [true, :all].include?(@actual)
         end
 
         def negative_failure_message
