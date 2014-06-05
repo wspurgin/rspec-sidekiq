@@ -39,7 +39,6 @@ module RSpec
           exactly.matches?(arguments)
         end
 
-        alias_method :failure_message_when_negated, :negative_failure_message
       end
     end
   end

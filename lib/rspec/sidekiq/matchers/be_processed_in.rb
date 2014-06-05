@@ -27,7 +27,6 @@ module RSpec
         def failure_message_when_negated
           "expected #{@klass} to not be processed in the \"#{@expected_queue}\" queue"
         end
-        alias_method :failure_message_when_negated, :negative_failure_message
       end
     end
   end
