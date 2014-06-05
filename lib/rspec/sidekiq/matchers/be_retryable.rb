@@ -33,6 +33,7 @@ module RSpec
         def failure_message_when_negated
           "expected #{@klass} to not #{description}".gsub "not not ", ""
         end
+        alias_method :failure_message_when_negated, :negative_failure_message
       end
     end
   end
