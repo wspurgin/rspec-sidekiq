@@ -8,9 +8,11 @@ rvm:
   - jruby-head
   - rbx
   - rbx-head
+  - rbx-2
 script: "bundle exec rspec spec"
 matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: rbx
     - rvm: rbx-head
