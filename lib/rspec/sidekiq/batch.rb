@@ -1,3 +1,5 @@
+require "rspec/core"
+
 if defined? Sidekiq::Batch
   module RSpec
     module Sidekiq
