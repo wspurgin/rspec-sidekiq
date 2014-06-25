@@ -1,4 +1,4 @@
-1.1.0
+1.0.1
 ---
 * Added Support for RSpec 3 [TBAA#44]
 * Fixe gem build error ERROR: (Gem::InvalidSpecificationException) [mourad-ifeelgoods#42]
