@@ -1,4 +1,5 @@
-require "rspec/core"
+# encoding: utf-8
+require 'rspec/core'
 
 if defined? Sidekiq::Batch
   module RSpec

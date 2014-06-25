@@ -1,10 +1,11 @@
+# encoding: utf-8
 module RSpec
   module Sidekiq
     module Spec
       module Support
         module Factories
-          def create_worker options = {}
-            clazz_name = "Worker#{ rand(36 ** 10).to_s 36 }"
+          def create_worker(options = {})
+            clazz_name = "Worker#{ rand(36**10).to_s 36 }"
             clazz = Class.new do
               include ::Sidekiq::Worker
 

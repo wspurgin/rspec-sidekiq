@@ -1,6 +1,7 @@
-require "spec_helper"
+# encoding: utf-8
+require 'spec_helper'
 
-describe "Batch" do
+describe 'Batch' do
   module Sidekiq
     module Batch
       class Status
@@ -8,16 +9,16 @@ describe "Batch" do
     end
   end
 
-  load File.expand_path(File.join(File.dirname(__FILE__), "../../../lib/rspec/sidekiq/batch.rb"))
+  load File.expand_path(File.join(File.dirname(__FILE__), '../../../lib/rspec/sidekiq/batch.rb'))
 
-  describe "NullStatus" do
-    describe "#total" do
-      it "returns 0 when no jobs" do
+  describe 'NullStatus' do
+    describe '#total' do
+      it 'returns 0 when no jobs' do
         null_status = Sidekiq::Batch.new.status
         expect(null_status.total).to eq(0)
       end
 
-      it "returns 1 when 1 job" do
+      it 'returns 1 when 1 job' do
         batch = Sidekiq::Batch.new
 
         batch.jobs do
@@ -30,8 +31,8 @@ describe "Batch" do
       end
     end
 
-    describe "#bid" do
-      it "returns a bid" do
+    describe '#bid' do
+      it 'returns a bid' do
         null_status = Sidekiq::Batch.new
         expect(null_status.bid).to_not be_nil
       end

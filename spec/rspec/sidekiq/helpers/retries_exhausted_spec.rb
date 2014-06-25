@@ -1,7 +1,7 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe 'Retries Exhausted block' do
-
   class FooClass < TestWorkerAlternative
     sidekiq_retries_exhausted do |msg|
       bar('hello')
@@ -20,7 +20,7 @@ describe 'Retries Exhausted block' do
   end
 
   it 'passes arguments to the block' do
-    args = {'args' => ['a', 'b']}
+    args = { 'args' => ['a', 'b']}
     FooClass.within_sidekiq_retries_exhausted_block(args) do
       expect(FooClass).to receive(:foo).with(FooClass.default_retries_exhausted_args.merge(args))
     end

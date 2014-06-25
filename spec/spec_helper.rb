@@ -1,10 +1,11 @@
-require "simplecov"
-require "coveralls"
+# encoding: utf-8
+require 'simplecov'
+require 'coveralls'
 
-require "sidekiq"
-require "rspec-sidekiq"
+require 'sidekiq'
+require 'rspec-sidekiq'
 
-require_relative "support/init"
+require_relative 'support/init'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   Coveralls::SimpleCov::Formatter,
