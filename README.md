@@ -171,7 +171,7 @@ Issues/Pull Requests/Comments all welcome...
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
-[travis_ci_badge]: https://secure.travis-ci.org/philostler/rspec-sidekiq.png
+[travis_ci_badge]: https://travis-ci.org/philostler/rspec-sidekiq.svg?branch=master
 
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches
