@@ -43,10 +43,9 @@ module RSpec
           return false
         end
 
-        def negative_failure_message
+        def failure_message_when_negated
           "expected #{@expected_method.receiver}.#{@expected_method.name} to not " + description
         end
-        alias_method :failure_message_when_negated, :negative_failure_message
 
         def until time
           @expected_time = time

@@ -54,9 +54,9 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
     end
   end
 
-  describe "#description" do
-    it "returns description" do
-      expect(subject.description).to eq "be unique in the queue"
+  describe "#failure_message_when_negated" do
+    it "returns message" do
+      expect(subject.failure_message_when_negated).to eq "expected #{worker} to not be unique in the queue"
     end
   end
 end

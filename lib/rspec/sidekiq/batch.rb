@@ -48,7 +48,8 @@ if defined? Sidekiq::Batch
       if mocked_with_mocha?
         Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
       else
-        Sidekiq::Batch.stub(:new) { RSpec::Sidekiq::NullBatch.new }
+        allow(Sidekiq::Batch).to receive(:new)  { RSpec::Sidekiq::NullBatch.new }
+        allow(Sidekiq::Batch::Status).to receive(:new)  { RSpec::Sidekiq::NullStatus.new }
       end
     end
   end

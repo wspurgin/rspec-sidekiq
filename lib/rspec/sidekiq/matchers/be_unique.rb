@@ -20,10 +20,9 @@ module RSpec
           [true, :all].include?(@actual)
         end
 
-        def negative_failure_message
+        def failure_message_when_negated
           "expected #{@klass} to not be unique in the queue"
         end
-        alias_method :failure_message_when_negated, :negative_failure_message
       end
     end
   end

@@ -198,40 +198,40 @@ describe RSpec::Sidekiq::Matchers::BeDelayed do
     end
   end
 
-  describe "#negative_failure_message" do
+  describe "#failure_message_when_negated" do
     context "when expected is a delay" do
       it "returns message" do
-        expect(delay_subject.negative_failure_message).to eq "expected Object.nil? to not be delayed"
+        expect(delay_subject.failure_message_when_negated).to eq "expected Object.nil? to not be delayed"
       end
     end
 
     context "when expected is a delay with arguments" do
       it "returns message" do
-        expect(delay_with_arguments_subject.negative_failure_message).to eq "expected Object.is_a? to not be delayed with arguments [Object]"
+        expect(delay_with_arguments_subject.failure_message_when_negated).to eq "expected Object.is_a? to not be delayed with arguments [Object]"
       end
     end
 
     context "when expected is a delay for" do
       it "returns message" do
-        expect(delay_for_subject.negative_failure_message).to eq "expected Object.nil? to not be delayed for 3600 seconds"
+        expect(delay_for_subject.failure_message_when_negated).to eq "expected Object.nil? to not be delayed for 3600 seconds"
       end
     end
 
     context "when expected is a delay for with arguments" do
       it "returns message" do
-        expect(delay_for_with_arguments_subject.negative_failure_message).to eq "expected Object.is_a? to not be delayed for 3600 seconds with arguments [Object]"
+        expect(delay_for_with_arguments_subject.failure_message_when_negated).to eq "expected Object.is_a? to not be delayed for 3600 seconds with arguments [Object]"
       end
     end
 
     context "when expected is a delay until" do
       it "returns message" do
-        expect(delay_until_subject.negative_failure_message).to eq "expected Object.nil? to not be delayed until #{Time.now + 3600}"
+        expect(delay_until_subject.failure_message_when_negated).to eq "expected Object.nil? to not be delayed until #{Time.now + 3600}"
       end
     end
 
     context "when expected is a delay until with arguments" do
       it "returns message" do
-        expect(delay_until_with_arguments_subject.negative_failure_message).to eq "expected Object.is_a? to not be delayed until #{Time.now + 3600} with arguments [Object]"
+        expect(delay_until_with_arguments_subject.failure_message_when_negated).to eq "expected Object.is_a? to not be delayed until #{Time.now + 3600} with arguments [Object]"
       end
     end
   end
