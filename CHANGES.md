@@ -1,7 +1,7 @@
 1.0.1
 ---
 * Added Support for RSpec 3 [TBAA#44]
-* Fixe gem build error ERROR: (Gem::InvalidSpecificationException) [mourad-ifeelgoods#42]
+* Fix gem build error ERROR: (Gem::InvalidSpecificationException) [mourad-ifeelgoods#42]
 * Make sure sidekiq is required [mourad-ifeelgoods#43]
 
 1.0.0
