@@ -6,7 +6,7 @@ rvm:
   - ruby-head
   - jruby
   - jruby-head
-  - rbx
+  - rbx-2
   - rbx-head
 script: "bundle exec rspec spec"
 matrix:
