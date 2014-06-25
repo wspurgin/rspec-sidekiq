@@ -5,6 +5,7 @@
 * Make sure sidekiq is required [mourad-ifeelgoods#43]
 * attempt at fixing 'undefined method `configure' for RSpec:Module' [homanchou#51]
 * Supports accessing the batch id [fabiokr#54]
+* Pass message hash to retries_exhausted block [layervault#52]
 
 1.0.0
 ---
