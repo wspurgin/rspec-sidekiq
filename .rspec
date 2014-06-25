@@ -1,3 +1,4 @@
 --colour
+--tty
 --format Fuubar
---format html --out spec_result/rspec.html
+--format html --out spec/result/index.html
