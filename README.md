@@ -5,7 +5,6 @@
 [![Travis CI][travis_ci_badge]][travis_ci]
 [![Coveralls][coveralls_badge]][coveralls]
 [![Gemnasium][gemnasium_badge]][gemnasium]
-[![coderwall][coderwall_badge]][coderwall]
 
 ***Simple testing of Sidekiq jobs via a collection of matchers and helpers***
 
@@ -162,8 +161,6 @@ Issues/Pull Requests/Comments all welcome...
 
 [code_climate]: https://codeclimate.com/github/philostler/rspec-sidekiq
 [code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.png
-[coderwall]: https://coderwall.com/philostler
-[coderwall_badge]: https://api.coderwall.com/philostler/endorsecount.png
 [coveralls]: https://coveralls.io/r/philostler/rspec-sidekiq
 [coveralls_badge]: https://coveralls.io/repos/philostler/rspec-sidekiq/badge.png?branch=master
 [gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.png
