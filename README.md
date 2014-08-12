@@ -51,7 +51,6 @@ end
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
 * [have_enqueued_job](#have_enqueued_job)
-* ~~[have_enqueued_jobs](#have_enqueued_jobs)~~
 
 ### be_delayed
 *Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
@@ -112,9 +111,6 @@ Awesomejob.perform_async "Awesome", true
 # test with...
 expect(AwesomeJob).to have_enqueued_job("Awesome", true)
 ```
-
-### ~~have_enqueued_jobs~~
-*Removed. [See the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting] for alternative and more information*
 
 ## Example matcher usage
 ```ruby
