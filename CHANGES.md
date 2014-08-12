@@ -1,3 +1,7 @@
+2.0.0
+---
+* Add support for 3.0.0 [yelled3#47]
+
 1.1.0
 ---
 * Added Support for RSpec 3 [TBAA#44]
