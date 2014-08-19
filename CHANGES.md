@@ -1,6 +1,7 @@
-2.0.0
+2.0.0.beta
 ---
 * Add support for 3.0.0 [yelled3#47]
+* Completely remove have_enqueued_jobs matcher [philostler#56]
 
 1.1.0
 ---

@@ -2,5 +2,5 @@
 SimpleCov.start do
   add_filter '/spec/'
 
-  coverage_dir 'spec/result/coverage'
+  coverage_dir 'tmp/spec_coverage'
 end
