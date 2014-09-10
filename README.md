@@ -23,7 +23,7 @@
 ```ruby
 # Gemfile
 group :test do
-  gem "rspec-sidekiq"
+  gem 'rspec-sidekiq'
 end
 ```
 rspec-sidekiq requires ```sidekiq/testing``` by default so there is no need to include the line ```require "sidekiq/testing"``` inside your ```spec_helper.rb```.
@@ -77,7 +77,7 @@ expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now
 sidekiq_options queue: :download
 # test with...
 expect(AwesomeJob).to be_processed_in :download # or
-it { should be_processed_in :download }
+it { is_expected.to be_processed_in :download }
 ```
 
 ### be_retryable
@@ -86,13 +86,13 @@ it { should be_processed_in :download }
 sidekiq_options retry: 5
 # test with...
 expect(AwesomeJob).to be_retryable true # or
-it { should be_retryable true }
+it { is_expected.to be_retryable true }
 # ...or alternatively specifiy the number of times it should be retried
 expect(AwesomeJob).to be_retryable 5 # or
-it { should be_retryable 5 }
+it { is_expected.to be_retryable 5 }
 # ...or when it should not retry
 expect(AwesomeJob).to be_retryable false # or
-it { should be_retryable false }
+it { is_expected.to be_retryable false }
 ```
 
 ### be_unique
@@ -101,37 +101,37 @@ it { should be_retryable false }
 sidekiq_options unique: true
 # test with...
 expect(AwesomeJob).to be_unique
-it { should be_unique }
+it { is_expected.to be_unique }
 ```
 
 ### have_enqueued_job
 *Describes that there should be an enqueued job with the specified arguments*
 ```ruby
-Awesomejob.perform_async "Awesome", true
+Awesomejob.perform_async 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_job("Awesome", true)
+expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
 
 ## Example matcher usage
 ```ruby
-require "spec_helper"
+require 'spec_helper'
 
 describe AwesomeJob do
-  it { should be_processed_in :my_queue }
-  it { should be_retryable 5 }
-  it { should be_unique }
+  it { is_expected.to be_processed_in :my_queue }
+  it { is_expected.to be_retryable 5 }
+  it { is_expected.to be_unique }
 
-  it "enqueues another awesome job" do
+  it 'enqueues another awesome job' do
     subject.perform
 
-    expect(AnotherAwesomeJob).to have_enqueued_job("Awesome", true)
+    expect(AnotherAwesomeJob).to have_enqueued_job('Awesome', true)
   end
 end
 ```
 
 ## Helpers
-* [Batches](#batches)
-* [within_sidekiq_retries_exhausted_block](#within_sidekiq_retries_exhausted_block)
+* [Batches (Sidekiq Pro)](#batches)
+* [`within_sidekiq_retries_exhausted_block`](#within_sidekiq_retries_exhausted_block)
 
 ### Batches
 If you are using Sidekiq Batches ([Sidekiq Pro feature][sidekiq_wiki_batches]), rspec-sidekiq replaces the implementation (using the NullObject pattern) enabling testing without a Redis instance. Mocha and RSpec stubbing is supported here.
@@ -143,7 +143,7 @@ sidekiq_retries_exhausted do |msg|
 end
 # test with...
 FooClass.within_sidekiq_retries_exhausted_block {
-  expect(FooClass).to receive(:bar).with("hello")
+  expect(FooClass).to receive(:bar).with('hello')
 }
 ```
 
@@ -156,12 +156,12 @@ Please do! If there's a feature missing that you'd love to see then get in on th
 Issues/Pull Requests/Comments all welcome...
 
 [code_climate]: https://codeclimate.com/github/philostler/rspec-sidekiq
-[code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.png
+[code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.svg
 [coveralls]: https://coveralls.io/r/philostler/rspec-sidekiq
-[coveralls_badge]: https://coveralls.io/repos/philostler/rspec-sidekiq/badge.png?branch=master
-[gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.png
+[coveralls_badge]: https://img.shields.io/coveralls/philostler/rspec-sidekiq.svg?branch=master
+[gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.svg
 [gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
-[gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.png
+[gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.svg
 [github]: http://github.com/philostler/rspec-sidekiq
 [ruby_doc]: http://rubydoc.info/gems/rspec-sidekiq/frames
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
