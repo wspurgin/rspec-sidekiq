@@ -158,7 +158,7 @@ Issues/Pull Requests/Comments all welcome...
 [code_climate]: https://codeclimate.com/github/philostler/rspec-sidekiq
 [code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.svg
 [coveralls]: https://coveralls.io/r/philostler/rspec-sidekiq
-[coveralls_badge]: https://img.shields.io/coveralls/philostler/rspec-sidekiq.svg?branch=master
+[coveralls_badge]: https://img.shields.io/coveralls/philostler/rspec-sidekiq.svg?branch=develop
 [gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.svg
 [gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
 [gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.svg
@@ -167,7 +167,7 @@ Issues/Pull Requests/Comments all welcome...
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
-[travis_ci_badge]: https://travis-ci.org/philostler/rspec-sidekiq.svg?branch=master
+[travis_ci_badge]: https://travis-ci.org/philostler/rspec-sidekiq.svg?branch=develop
 
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches
