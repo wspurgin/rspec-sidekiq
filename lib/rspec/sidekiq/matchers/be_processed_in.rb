@@ -1,12 +1,12 @@
 module RSpec
   module Sidekiq
     module Matchers
-      def be_processed_in expected_queue
+      def be_processed_in(expected_queue)
         BeProcessedIn.new expected_queue
       end
 
       class BeProcessedIn
-        def initialize expected_queue
+        def initialize(expected_queue)
           @expected_queue = expected_queue
         end
 
@@ -18,9 +18,9 @@ module RSpec
           "expected #{@klass} to be processed in the \"#{@expected_queue}\" queue but got \"#{@actual}\""
         end
 
-        def matches? job
-          @klass = job.kind_of?(Class) ? job : job.class
-          @actual = @klass.get_sidekiq_options["queue"]
+        def matches?(job)
+          @klass = job.is_a?(Class) ? job : job.class
+          @actual = @klass.get_sidekiq_options['queue']
           @actual.to_s == @expected_queue.to_s
         end
 
