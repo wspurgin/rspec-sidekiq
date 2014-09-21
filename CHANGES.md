@@ -1,3 +1,8 @@
+2.0.0
+---
+* Get specs to green [petergoldstein#58]
+* Update spec syntax in README. [futhr#60]
+
 2.0.0.beta
 ---
 * Add support for 3.0.0 [yelled3#47]
