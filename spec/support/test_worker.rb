@@ -1,4 +1,3 @@
-# encoding: utf-8
 class TestWorker
   include Sidekiq::Worker
 

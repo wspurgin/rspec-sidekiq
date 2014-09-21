@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'rspec/core'
 require 'rspec/sidekiq/matchers/be_delayed'
 require 'rspec/sidekiq/matchers/be_processed_in'

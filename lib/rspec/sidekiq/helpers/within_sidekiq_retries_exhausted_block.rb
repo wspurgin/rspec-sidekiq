@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sidekiq
   module Worker
     module ClassMethods
