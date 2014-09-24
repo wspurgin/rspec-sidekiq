@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Batch' do
+RSpec.describe 'Batch' do
   module Sidekiq
     module Batch
       class Status

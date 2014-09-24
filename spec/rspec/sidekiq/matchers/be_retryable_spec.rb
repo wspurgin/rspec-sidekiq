@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::BeRetryable do
+RSpec.describe RSpec::Sidekiq::Matchers::BeRetryable do
   let(:specific_subject) { RSpec::Sidekiq::Matchers::BeRetryable.new 2 }
   let(:specific_worker) { create_worker retry: 2 }
   let(:default_subject) { RSpec::Sidekiq::Matchers::BeRetryable.new true }

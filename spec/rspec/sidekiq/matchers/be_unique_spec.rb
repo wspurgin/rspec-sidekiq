@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::BeUnique do
+RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   shared_context 'a unique worker' do
     before(:each) { subject.matches? @worker }
 

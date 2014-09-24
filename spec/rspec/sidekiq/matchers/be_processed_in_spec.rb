@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::BeProcessedIn do
+RSpec.describe RSpec::Sidekiq::Matchers::BeProcessedIn do
   let(:symbol_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new :a_queue }
   let(:symbol_worker) { create_worker queue: :a_queue }
   let(:string_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new 'a_queue' }

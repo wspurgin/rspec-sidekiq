@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RSpec::Sidekiq do
+RSpec.describe RSpec::Sidekiq do
   describe '#configure' do
     it 'yields with configuration' do
       expect { |block| RSpec::Sidekiq.configure(&block) }.to yield_with_args RSpec::Sidekiq.configuration

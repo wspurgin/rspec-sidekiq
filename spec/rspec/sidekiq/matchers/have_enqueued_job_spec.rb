@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
+RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new ['string', 1, true] }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true] }
   let(:worker) { create_worker }

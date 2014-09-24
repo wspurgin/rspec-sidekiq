@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Retries Exhausted block' do
+RSpec.describe 'Retries Exhausted block' do
   class FooClass < TestWorkerAlternative
     sidekiq_retries_exhausted do |msg|
       bar('hello')
