@@ -1,7 +1,6 @@
-# encoding: utf-8
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::BeDelayed do
+RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
   let(:delay_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new }
   let(:delay_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new Object }
   let(:delay_for_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new.for 3600 }

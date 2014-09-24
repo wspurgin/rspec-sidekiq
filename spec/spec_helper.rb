@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'simplecov'
 require 'coveralls'
 
@@ -14,16 +13,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 SimpleCov.start
 
 RSpec.configure do |config|
-  config.alias_example_to :expect_it
-
-  config.expect_with :rspec do |config|
-    config.syntax = :expect
-  end
+  config.disable_monkey_patching!
 
   config.include RSpec::Sidekiq::Spec::Support::Factories
-end
-
-RSpec::Core::MemoizedHelpers.module_eval do
-  alias to should
-  alias to_not should_not
 end

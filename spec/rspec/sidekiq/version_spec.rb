@@ -1,6 +1,5 @@
-# encoding: utf-8
 require 'spec_helper'
 
-describe RSpec::Sidekiq::VERSION do
-  expect_it { to eq('2.0.0.beta') }
+RSpec.describe RSpec::Sidekiq::VERSION do
+  it { is_expected.to eq('2.0.0') }
 end

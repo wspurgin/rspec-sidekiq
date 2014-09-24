@@ -1,7 +1,6 @@
-# encoding: utf-8
 require 'spec_helper'
 
-describe RSpec::Sidekiq::Matchers::BeUnique do
+RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   shared_context 'a unique worker' do
     before(:each) { subject.matches? @worker }
 
@@ -31,9 +30,9 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
         end
       end
 
-      describe '#negative_failure_message' do
+      describe '#failure_message_when_negated' do
         it 'returns message' do
-          expect(subject.negative_failure_message).to eq "expected #{@worker} to not be unique in the queue"
+          expect(subject.failure_message_when_negated).to eq "expected #{@worker} to not be unique in the queue"
         end
       end
     end
@@ -57,7 +56,7 @@ describe RSpec::Sidekiq::Matchers::BeUnique do
 
   describe '#failure_message_when_negated' do
     it 'returns message' do
-      expect(subject.failure_message_when_negated).to eq "expected #{worker} to not be unique in the queue"
+      expect(subject.failure_message_when_negated).to eq "expected #{@worker} to not be unique in the queue"
     end
   end
 end

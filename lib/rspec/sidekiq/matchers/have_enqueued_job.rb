@@ -1,12 +1,11 @@
 module RSpec
   module Sidekiq
     module Matchers
-      def have_enqueued_job *expected_arguments
+      def have_enqueued_job(*expected_arguments)
         HaveEnqueuedJob.new expected_arguments
       end
 
       class HaveEnqueuedJob
-
         attr_reader :klass, :expected_arguments, :actual
 
         def initialize(expected_arguments)
@@ -18,13 +17,13 @@ module RSpec
         end
 
         def failure_message
-          "expected to have an enqueued #{klass} job with arguments #{expected_arguments}\n\n" +
+          "expected to have an enqueued #{klass} job with arguments #{expected_arguments}\n\n" \
           "found: #{actual}"
         end
 
         def matches?(klass)
           @klass = klass
-          @actual = klass.jobs.map { |job| job["args"] }
+          @actual = klass.jobs.map { |job| job['args'] }
           @actual.any? { |arguments| contain_exactly?(arguments) }
         end
 
@@ -38,7 +37,6 @@ module RSpec
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
           exactly.matches?(arguments)
         end
-
       end
     end
   end
