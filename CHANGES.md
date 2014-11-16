@@ -1,3 +1,7 @@
+2.1.0
+---
+* Adding a save_backtrace matcher [webdestroya#61]
+
 2.0.0
 ---
 * Get specs to green [petergoldstein#58]
