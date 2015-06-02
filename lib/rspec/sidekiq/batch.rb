@@ -44,7 +44,9 @@ if defined? Sidekiq::Batch
   end
 
   RSpec.configure do |config|
-    config.before(:each) do
+    config.before(:each) do |example|
+      next if example.metadata[:stub_batches] == false
+
       if mocked_with_mocha?
         Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
       else
