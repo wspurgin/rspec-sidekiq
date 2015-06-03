@@ -69,6 +69,10 @@ Object.delay_until(1.hour.from_now).is_nil? # delay until
 expect(Object.method :is_nil?).to be_delayed.until 1.hour.from_now
 Object.delay_until(1.hour.from_now).is_a? Object # delay until with argument
 expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now
+
+#Rails Mailer
+MyMailer.delay.some_mail
+expect(MyMailer.instance_method :some_mail).to be_delayed
 ```
 
 ### be_processed_in
