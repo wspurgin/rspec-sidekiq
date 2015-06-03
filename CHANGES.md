@@ -2,6 +2,7 @@
 ---
 * Adding a save_backtrace matcher [webdestroya#61]
 * Add flag to skip Batch stubs [paulfri#69]
+* allow passing an instance method to be_delayed matcher [lastobelus#63]
 
 2.0.0
 ---
