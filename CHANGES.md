@@ -1,6 +1,7 @@
 2.1.0
 ---
 * Adding a save_backtrace matcher [webdestroya#61]
+* Add flag to skip Batch stubs [paulfri#69]
 
 2.0.0
 ---
