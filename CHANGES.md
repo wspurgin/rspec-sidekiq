@@ -1,5 +1,6 @@
 2.1.0
 ---
+* Add support for NullBatch#on and NullStatus#failures to the null batch objects. [PacerPRO#64]
 * Adding a save_backtrace matcher [webdestroya#61]
 * Add flag to skip Batch stubs [paulfri#69]
 * allow passing an instance method to be_delayed matcher [lastobelus#63]
