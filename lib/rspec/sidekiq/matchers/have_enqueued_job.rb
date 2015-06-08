@@ -35,19 +35,25 @@ module RSpec
 
         def unwrapped_job_arguments(jobs)
           if jobs.is_a? Hash
-            jobs.map { |k,v| map_arguments(v).flatten }
+            jobs.values.flatten.map do |job|
+              map_arguments(job).flatten
+            end
           else
             map_arguments(jobs)
           end
         end
 
-        def map_arguments(jobs)
-          jobs.map { |job| job_arguments(job) }
+        def map_arguments(job)
+          args = job_arguments(job) || job
+          if args.any? { |e| e.is_a? Hash }
+            args.map { |a| map_arguments(a) }
+          else
+            args
+          end
         end
 
-        def job_arguments(job)
-          args = job['arguments'] || job['args']
-          args.any? { |el|  el.is_a?(Hash) } ? map_arguments(args) : args
+        def job_arguments(hash)
+          hash['arguments'] || hash['args'] unless hash.is_a? Array
         end
 
         def contain_exactly?(arguments)
