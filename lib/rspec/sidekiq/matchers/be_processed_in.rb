@@ -20,7 +20,11 @@ module RSpec
 
         def matches?(job)
           @klass = job.is_a?(Class) ? job : job.class
-          @actual = @klass.get_sidekiq_options['queue']
+          if @klass.methods.include?(:get_sidekiq_options)
+            @actual = @klass.get_sidekiq_options['queue']
+          else
+            @actual = job.try(:queue_name)
+          end
           @actual.to_s == @expected_queue.to_s
         end
 
