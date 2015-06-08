@@ -23,7 +23,7 @@ module RSpec
 
         def matches?(klass)
           @klass = klass
-          @actual = klass.jobs.map { |job| job['args'] }
+          @actual = unwrapped_job_arguments(klass.jobs)
           @actual.any? { |arguments| contain_exactly?(arguments) }
         end
 
@@ -32,6 +32,23 @@ module RSpec
         end
 
         private
+
+        def unwrapped_job_arguments(jobs)
+          if jobs.is_a? Hash
+            jobs.map { |k,v| map_arguments(v).flatten }
+          else
+            map_arguments(jobs)
+          end
+        end
+
+        def map_arguments(jobs)
+          jobs.map { |job| job_arguments(job) }
+        end
+
+        def job_arguments(job)
+          args = job['arguments'] || job['args']
+          args.any? { |el|  el.is_a?(Hash) } ? map_arguments(args) : args
+        end
 
         def contain_exactly?(arguments)
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)

@@ -19,3 +19,5 @@ RSpec.configure do |config|
 
   config.include RSpec::Sidekiq::Spec::Support::Factories
 end
+
+ActiveJob::Base.queue_adapter = :sidekiq

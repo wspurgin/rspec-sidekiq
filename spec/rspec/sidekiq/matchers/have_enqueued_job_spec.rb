@@ -4,14 +4,25 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new ['string', 1, true] }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true] }
   let(:worker) { create_worker }
+  let(:active_job) { create_active_job :mailers }
+
   before(:each) do
     worker.perform_async 'string', 1, true
+    active_job.perform_later 'someResource'
     argument_subject.matches? worker
   end
 
   describe 'expected usage' do
     it 'matches' do
       expect(worker).to have_enqueued_job 'string', 1, true
+    end
+
+    it 'matches on the global Worker queue' do
+      expect(Sidekiq::Worker).to have_enqueued_job 'string', 1, true
+    end
+
+    it 'matches on an enqueued ActiveJob' do
+      expect(Sidekiq::Worker).to have_enqueued_job 'someResource'
     end
   end
 
