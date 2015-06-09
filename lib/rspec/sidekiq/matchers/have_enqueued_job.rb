@@ -45,7 +45,7 @@ module RSpec
 
         def map_arguments(job)
           args = job_arguments(job) || job
-          if args.any? { |e| e.is_a? Hash }
+          if args.respond_to?(:any?) && args.any? { |e| e.is_a? Hash }
             args.map { |a| map_arguments(a) }
           else
             args

@@ -5,6 +5,7 @@ require 'sidekiq'
 require 'rspec-sidekiq'
 
 require 'active_job'
+require 'action_mailer'
 
 require_relative 'support/init'
 

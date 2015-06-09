@@ -11,6 +11,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     worker.perform_async 'string', 1, true
     active_job.perform_later 'someResource'
     active_job.perform_later(resource)
+    TestActionMailer.testmail.deliver_later
+    TestActionMailer.testmail(resource).deliver_later
     argument_subject.matches? worker
   end
 
@@ -29,6 +31,23 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
     it 'matches on an enqueued ActiveJob by global_id' do
       expect(Sidekiq::Worker).to have_enqueued_job("_aj_globalid" => resource.to_global_id.uri.to_s)
+    end
+
+    it 'matches on ActionMailer Job' do
+      expect(Sidekiq::Worker).to have_enqueued_job(
+        "TestActionMailer",
+        "testmail",
+        "deliver_now"
+      )
+    end
+
+    it 'matches on ActionMailer with a resource Job' do
+      expect(Sidekiq::Worker).to have_enqueued_job(
+        "TestActionMailer",
+        "testmail",
+        "deliver_now",
+        { "_aj_globalid" => resource.to_global_id.uri.to_s }
+      )
     end
   end
 
