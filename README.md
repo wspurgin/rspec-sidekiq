@@ -125,7 +125,7 @@ expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
 ```
 ### be_expired_in
-*Describes when a job should expire
+*Describes when a job should expire*
 ```ruby
 sidekiq_options expires_in: 1.hour
 # test with...
