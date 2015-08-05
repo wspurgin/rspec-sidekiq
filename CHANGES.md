@@ -1,5 +1,6 @@
 2.1.0
 ---
+* Fixed testing failures with be_delayed matcher due to rename of `enqueued_at` to `created_at` in latest Sidekiq [philostler]
 * Add support for NullBatch#on and NullStatus#failures to the null batch objects. [PacerPRO#64]
 * Adding a save_backtrace matcher [webdestroya#61]
 * Add flag to skip Batch stubs [paulfri#69]
