@@ -124,6 +124,14 @@ sidekiq_options unique: true
 expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
 ```
+### be_expired_in
+*Describes when a job should expire*
+```ruby
+sidekiq_options expires_in: 1.hour
+# test with...
+it { is_expected.to be_expired_in 1.hour }
+it { is_expected.to_not be_expired_in 2.hours }
+```
 
 ### have_enqueued_job
 *Describes that there should be an enqueued job with the specified arguments*
@@ -141,6 +149,7 @@ describe AwesomeJob do
   it { is_expected.to be_processed_in :my_queue }
   it { is_expected.to be_retryable 5 }
   it { is_expected.to be_unique }
+  it { is_expected.to be_expired_in 1.hour }
 
   it 'enqueues another awesome job' do
     subject.perform
