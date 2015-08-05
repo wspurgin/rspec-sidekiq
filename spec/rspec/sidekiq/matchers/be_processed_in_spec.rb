@@ -5,6 +5,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeProcessedIn do
   let(:symbol_worker) { create_worker queue: :a_queue }
   let(:string_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new 'a_queue' }
   let(:string_worker) { create_worker queue: 'a_queue' }
+  let(:active_job) { create_active_job :mailers }
+
   before(:each) do
     symbol_subject.matches? symbol_worker
     string_subject.matches? string_worker
@@ -13,6 +15,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeProcessedIn do
   describe 'expected usage' do
     it 'matches' do
       expect(symbol_worker).to be_processed_in :a_queue
+    end
+
+    it 'matches on an ActiveJob' do
+      expect(active_job).to be_processed_in :mailers
     end
   end
 

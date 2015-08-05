@@ -4,6 +4,9 @@ require 'coveralls'
 require 'sidekiq'
 require 'rspec-sidekiq'
 
+require 'active_job'
+require 'action_mailer'
+
 require_relative 'support/init'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
@@ -17,3 +20,5 @@ RSpec.configure do |config|
 
   config.include RSpec::Sidekiq::Spec::Support::Factories
 end
+
+ActiveJob::Base.queue_adapter = :sidekiq

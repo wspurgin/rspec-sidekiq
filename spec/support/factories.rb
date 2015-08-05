@@ -15,6 +15,17 @@ module RSpec
             end
             Object.const_set clazz_name, clazz
           end
+
+          def create_active_job(options = {})
+            clazz_name = "ActiveJob#{ rand(36**10).to_s 36 }"
+            clazz = Class.new(ActiveJob::Base) do
+              queue_as options
+
+              def perform
+              end
+            end
+            Object.const_set clazz_name, clazz
+          end
         end
       end
     end
