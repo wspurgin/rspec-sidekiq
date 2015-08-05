@@ -33,7 +33,8 @@ module RSpec
 
           find_job @expected_method, @expected_arguments do |job|
             if @expected_interval
-              return job['at'].to_i == job['enqueued_at'].to_i + @expected_interval
+              created_enqueued_at = job['enqueued_at'] || job['created_at']
+              return job['at'].to_i == created_enqueued_at.to_i + @expected_interval
             elsif @expected_time
               return job['at'].to_i == @expected_time.to_i
             else
