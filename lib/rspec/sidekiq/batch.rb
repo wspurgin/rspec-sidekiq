@@ -14,10 +14,15 @@ if defined? Sidekiq::Batch
 
         def initialize(bid = nil)
           @bid = bid || SecureRandom.hex(8)
+          @callbacks = []
         end
 
         def status
-          NullStatus.new(@bid)
+          NullStatus.new(@bid, @callbacks)
+        end
+
+        def on(*args)
+          @callbacks << args
         end
 
         def jobs(*)
@@ -28,12 +33,23 @@ if defined? Sidekiq::Batch
       class NullStatus < NullObject
         attr_reader :bid
 
-        def initialize(bid)
+        def initialize(bid, callbacks)
           @bid = bid
+          @callbacks = callbacks
+        end
+
+        def failures
+          0
         end
 
         def join
           ::Sidekiq::Worker.drain_all
+
+          @callbacks.each do |event, callback_class, options|
+            if event != :success || failures == 0
+              callback_class.new.send("on_#{event}", self, options)
+            end
+          end
         end
 
         def total
@@ -44,7 +60,9 @@ if defined? Sidekiq::Batch
   end
 
   RSpec.configure do |config|
-    config.before(:each) do
+    config.before(:each) do |example|
+      next if example.metadata[:stub_batches] == false
+
       if mocked_with_mocha?
         Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
       else

@@ -19,7 +19,7 @@ module RSpec
         end
 
         def failure_message
-          "expected #{@expected_method.receiver}.#{@expected_method.name} to " + description
+          "expected #{@expected_method_receiver}.#{@expected_method.name} to " + description
         end
 
         def for(interval)
@@ -29,10 +29,12 @@ module RSpec
 
         def matches?(expected_method)
           @expected_method = expected_method
+          @expected_method_receiver = @expected_method.is_a?(UnboundMethod) ? @expected_method.owner : @expected_method.receiver
 
           find_job @expected_method, @expected_arguments do |job|
             if @expected_interval
-              return job['at'].to_i == job['enqueued_at'].to_i + @expected_interval
+              created_enqueued_at = job['enqueued_at'] || job['created_at']
+              return job['at'].to_i == created_enqueued_at.to_i + @expected_interval
             elsif @expected_time
               return job['at'].to_i == @expected_time.to_i
             else
@@ -44,7 +46,7 @@ module RSpec
         end
 
         def failure_message_when_negated
-          "expected #{@expected_method.receiver}.#{@expected_method.name} to not " + description
+          "expected #{@expected_method_receiver}.#{@expected_method.name} to not " + description
         end
 
         def until(time)
@@ -57,7 +59,7 @@ module RSpec
         def find_job(method, arguments, &block)
           job = (::Sidekiq::Extensions::DelayedClass.jobs + ::Sidekiq::Extensions::DelayedModel.jobs + ::Sidekiq::Extensions::DelayedMailer.jobs).find do |job|
             yaml = YAML.load(job['args'].first)
-            @expected_method.receiver == yaml[0] && @expected_method.name == yaml[1] && (@expected_arguments <=> yaml[2]) == 0
+            @expected_method_receiver == yaml[0] && @expected_method.name == yaml[1] && (@expected_arguments <=> yaml[2]) == 0
           end
 
           yield job if block && job

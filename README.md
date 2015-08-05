@@ -69,6 +69,10 @@ Object.delay_until(1.hour.from_now).is_nil? # delay until
 expect(Object.method :is_nil?).to be_delayed.until 1.hour.from_now
 Object.delay_until(1.hour.from_now).is_a? Object # delay until with argument
 expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now
+
+#Rails Mailer
+MyMailer.delay.some_mail
+expect(MyMailer.instance_method :some_mail).to be_delayed
 ```
 
 ### be_processed_in
@@ -95,6 +99,23 @@ expect(AwesomeJob).to be_retryable false # or
 it { is_expected.to be_retryable false }
 ```
 
+### save_backtrace
+*Describes if a job should save the error backtrace when there is a failure in it's execution*
+```ruby
+sidekiq_options backtrace: 5
+# test with...
+expect(AwesomeJob).to save_backtrace # or
+it { is_expected.to save_backtrace }
+# ...or alternatively specifiy the number of lines that should be saved
+expect(AwesomeJob).to save_backtrace 5 # or
+it { is_expected.to save_backtrace 5 }
+# ...or when it should not save the backtrace
+expect(AwesomeJob).to_not save_backtrace # or
+expect(AwesomeJob).to save_backtrace false # or
+it { is_expected.to_not save_backtrace } # or
+it { is_expected.to save_backtrace false }
+```
+
 ### be_unique
 *Describes when a job should be unique within it's queue*
 ```ruby
@@ -102,6 +123,14 @@ sidekiq_options unique: true
 # test with...
 expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
+```
+### be_expired_in
+*Describes when a job should expire*
+```ruby
+sidekiq_options expires_in: 1.hour
+# test with...
+it { is_expected.to be_expired_in 1.hour }
+it { is_expected.to_not be_expired_in 2.hours }
 ```
 
 ### have_enqueued_job
@@ -120,6 +149,7 @@ describe AwesomeJob do
   it { is_expected.to be_processed_in :my_queue }
   it { is_expected.to be_retryable 5 }
   it { is_expected.to be_unique }
+  it { is_expected.to be_expired_in 1.hour }
 
   it 'enqueues another awesome job' do
     subject.perform
