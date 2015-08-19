@@ -60,13 +60,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe '#description' do
     it 'returns description' do
-      expect(argument_subject.description).to eq "have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+      expect(argument_subject.description).to eq "have an enqueued #{worker} job with arguments [\"string\", 1, true, {:key=>\"value\"}]"
     end
   end
 
   describe '#failure_message' do
     it 'returns message' do
-      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true]\n\nfound: [[\"string\", 1, true]]"
+      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true, {:key=>\"value\"}]\n\nfound: [[\"string\", 1, true, {\"key\"=>\"value\"}]]"
     end
   end
 
@@ -104,7 +104,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe '#failure_message_when_negated' do
     it 'returns message' do
-      expect(argument_subject.failure_message_when_negated).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+      expect(argument_subject.failure_message_when_negated).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true, {:key=>\"value\"}]"
     end
   end
 end
