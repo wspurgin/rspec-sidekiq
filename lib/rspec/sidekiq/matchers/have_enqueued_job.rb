@@ -9,7 +9,7 @@ module RSpec
         attr_reader :klass, :expected_arguments, :actual
 
         def initialize(expected_arguments)
-          @expected_arguments = expected_arguments
+          @expected_arguments = normalize_arguments(expected_arguments)
         end
 
         def description
@@ -53,12 +53,24 @@ module RSpec
         end
 
         def job_arguments(hash)
-          hash['arguments'] || hash['args'] unless hash.is_a? Array
+          hash['arguments'] || hash['args'] if hash.is_a? Hash
         end
 
         def contain_exactly?(arguments)
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
           exactly.matches?(arguments)
+        end
+
+        def normalize_arguments(args)
+          if args.is_a?(Array)
+            args.map{ |x| normalize_arguments(x) }
+          elsif args.is_a?(Hash)
+            args.each_with_object({}) do |(key, value), hash|
+              hash[key.to_s] = normalize_arguments(value)
+            end
+          else
+            args
+          end
         end
       end
     end
