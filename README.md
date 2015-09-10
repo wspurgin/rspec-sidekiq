@@ -145,14 +145,14 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```ruby
 require 'spec_helper'
 
-describe AwesomeJob do
+describe AnotherAwesomeJob do
   it { is_expected.to be_processed_in :my_queue }
   it { is_expected.to be_retryable 5 }
   it { is_expected.to be_unique }
   it { is_expected.to be_expired_in 1.hour }
 
   it 'enqueues another awesome job' do
-    subject.perform
+    subject.perform 'Awesome', true
 
     expect(AnotherAwesomeJob).to have_enqueued_job('Awesome', true)
   end
