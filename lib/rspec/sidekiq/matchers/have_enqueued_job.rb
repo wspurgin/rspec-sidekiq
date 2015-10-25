@@ -9,11 +9,72 @@ module RSpec
         alias have_enqueued_sidekiq_job have_enqueued_job
       end
 
+      class JobMatcher
+        attr_reader :jobs
+
+        def initialize(klass)
+          @jobs = unwrap_jobs(klass.jobs)
+        end
+
+        def present?(arguments, options)
+          find_job(arguments, options).present?
+        end
+
+        private
+
+        def matches?(job, arguments, options)
+          arguments_matches?(job, arguments) &&
+            options_matches?(job, options)
+        end
+
+        def arguments_matches?(job, arguments)
+          arguments_got = job_arguments(job)
+          contain_exactly?(arguments, arguments_got)
+        end
+
+        def options_matches?(job, options)
+          return true unless options.has_key?(:at)
+          options[:at].to_time.to_s == Time.at(job["at"]).to_s
+        end
+
+        def find_job(arguments, options)
+          jobs.find { |job| matches?(job, arguments, options) }
+        end
+
+        def job_arguments(job)
+          args = job['args']
+          return args[0]['arguments'] if args.is_a?(Array) && args[0].is_a?(Hash) && args[0].has_key?('arguments')
+          args
+        end
+
+        def unwrap_jobs(jobs)
+          return jobs if jobs.is_a?(Array)
+          jobs.values.flatten
+        end
+
+        def contain_exactly?(expected, got)
+          exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected)
+          exactly.matches?(got)
+        end
+      end
+
       class HaveEnqueuedJob
-        attr_reader :klass, :expected_arguments, :actual
+        attr_reader :klass, :expected_arguments, :actual_arguments, :options
 
         def initialize(expected_arguments)
           @expected_arguments = normalize_arguments(expected_arguments)
+          @options = {}
+        end
+
+        def matches?(klass)
+          @klass = klass
+          @actual_arguments = unwrapped_job_arguments(klass.jobs)
+          JobMatcher.new(klass).present?(expected_arguments, options)
+        end
+
+        def at(time)
+          @options[:at] = time
+          self
         end
 
         def description
@@ -22,13 +83,7 @@ module RSpec
 
         def failure_message
           "expected to have an enqueued #{klass} job with arguments #{expected_arguments}\n\n" \
-          "found: #{actual}"
-        end
-
-        def matches?(klass)
-          @klass = klass
-          @actual = unwrapped_job_arguments(klass.jobs)
-          @actual.any? { |arguments| contain_exactly?(arguments) }
+          "found: #{actual_arguments}"
         end
 
         def failure_message_when_negated
@@ -58,11 +113,6 @@ module RSpec
 
         def job_arguments(hash)
           hash['arguments'] || hash['args'] if hash.is_a? Hash
-        end
-
-        def contain_exactly?(arguments)
-          exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
-          exactly.matches?(arguments)
         end
 
         def normalize_arguments(args)

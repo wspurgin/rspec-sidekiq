@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
+  let(:tomorrow) { DateTime.now + 1 }
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
   let(:worker) { create_worker }
@@ -9,7 +10,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:resource) { TestResource.new }
 
   before(:each) do
-    worker.perform_async *worker_args
+    worker.perform_at tomorrow, *worker_args
     active_job.perform_later 'someResource'
     active_job.perform_later(resource)
     TestActionMailer.testmail.deliver_later
@@ -20,6 +21,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   describe 'expected usage' do
     it 'matches' do
       expect(worker).to have_enqueued_job *worker_args
+    end
+
+    it 'matches on an scheduled job' do
+      expect(worker).to have_enqueued_job(*worker_args).at(tomorrow)
     end
 
     it 'matches on the global Worker queue' do
@@ -83,6 +88,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
           expect(matcher_subject.matches? worker).to be true
         end
       end
+
+      context 'when job is scheduled' do
+        before(:each) do
+          allow(matcher_subject).to receive(:options).and_return(at: tomorrow)
+        end
+
+        it 'returns true' do
+          expect(matcher_subject.at(tomorrow).matches? worker).to be true
+        end
+      end
     end
 
     context 'when condition does not match' do
@@ -97,6 +112,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
       context 'when expected are matchers' do
         it 'returns false' do
           expect(matcher_subject.matches? worker).to be false
+        end
+      end
+
+      context 'when job is scheduled' do
+        before(:each) do
+          allow(matcher_subject).to receive(:options).and_return(at: tomorrow)
+        end
+
+        it 'returns true' do
+          expect(matcher_subject.at(tomorrow).matches? worker).to be false
         end
       end
     end
