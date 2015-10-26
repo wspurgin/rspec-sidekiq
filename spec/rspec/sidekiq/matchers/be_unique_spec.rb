@@ -2,6 +2,9 @@ require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   shared_context 'a unique worker' do
+    before do
+      stub_const("SidekiqUniqueJobs", true)
+    end
     before(:each) { subject.matches? @worker }
 
     describe 'expected usage' do
@@ -57,6 +60,34 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   describe '#failure_message_when_negated' do
     it 'returns message' do
       expect(subject.failure_message_when_negated).to eq "expected #{@worker} to not be unique in the queue"
+    end
+  end
+
+  describe '#unique_key' do
+    context "with Sidekiq Enterprise" do
+      before do
+        stub_const("Sidekiq::Enterprise", true)
+      end
+
+      it "returns the correct key" do
+        expect(subject.unique_key).to eq('unique_for')
+      end
+    end
+
+    context "with sidekiq-unique-jobs" do
+      before do
+        stub_const("SidekiqUniqueJobs", true)
+      end
+
+      it "returns the correct key" do
+        expect(subject.unique_key).to eq('unique')
+      end
+    end
+
+    context "without a uniquing solution" do
+      it "raises an exception" do
+        expect{subject.unique_key}.to raise_error
+      end
     end
   end
 end
