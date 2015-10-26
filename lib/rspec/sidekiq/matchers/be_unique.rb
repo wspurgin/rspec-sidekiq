@@ -6,48 +6,80 @@ module RSpec
       end
 
       class BeUnique
-        def description
-          'be unique in the queue'
+        def self.new
+          if defined?(::Sidekiq::Enterprise)
+            SidekiqEnterprise.new
+          elsif defined?(::SidekiqUniqueJobs)
+            SidekiqUniqueJobs.new
+          else
+            fail "No support found for Sidekiq unique jobs"
+          end
         end
 
-        def failure_message
-          "expected #{@klass} to be unique in the queue"
+        class Base
+          def description
+            'be unique in the queue'
+          end
+
+          def failure_message
+            if !interval_matches? && @expected_interval
+              "expected #{@klass} to be unique for #{@expected_interval} seconds, "\
+              "but its interval was #{actual_interval} seconds"
+            else
+              "expected #{@klass} to be unique in the queue"
+            end
+          end
+
+          def matches?(job)
+            @klass = job.is_a?(Class) ? job : job.class
+            @actual = @klass.get_sidekiq_options[unique_key]
+            !!(value_matches? && interval_matches?)
+          end
+
+          def for(interval)
+            @expected_interval = interval
+            self
+          end
+
+          def interval_specified?
+            @expected_interval
+          end
+
+          def interval_matches?
+            !interval_specified? || actual_interval == @expected_interval
+          end
+
+          def failure_message_when_negated
+            "expected #{@klass} to not be unique in the queue"
+          end
         end
 
-        def matches?(job)
-          @klass = job.is_a?(Class) ? job : job.class
-          @actual = @klass.get_sidekiq_options[unique_key]
-          valid_value?
-        end
+        class SidekiqUniqueJobs < Base
+          def actual_interval
+            @klass.get_sidekiq_options['unique_job_expiration']
+          end
 
-        def valid_value?
-          if sidekiq_enterprise?
-            @actual > 0
-          elsif sidekiq_unique_jobs?
+          def value_matches?
             [true, :all].include?(@actual)
           end
-        end
 
-        def unique_key
-          if sidekiq_enterprise?
-            'unique_for'
-          elsif sidekiq_unique_jobs?
+          def unique_key
             'unique'
-          else
-            fail "No gem included for uniquing"
           end
         end
 
-        def sidekiq_enterprise?
-          defined? ::Sidekiq::Enterprise
-        end
+        class SidekiqEnterprise < Base
+          def actual_interval
+            @actual
+          end
 
-        def sidekiq_unique_jobs?
-          defined? ::SidekiqUniqueJobs
-        end
+          def value_matches?
+            @actual && @actual > 0
+          end
 
-        def failure_message_when_negated
-          "expected #{@klass} to not be unique in the queue"
+          def unique_key
+            'unique_for'
+          end
         end
       end
     end
