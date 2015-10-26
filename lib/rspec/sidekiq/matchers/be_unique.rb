@@ -17,7 +17,15 @@ module RSpec
         def matches?(job)
           @klass = job.is_a?(Class) ? job : job.class
           @actual = @klass.get_sidekiq_options[unique_key]
-          [true, :all].include?(@actual)
+          valid_value?
+        end
+
+        def valid_value?
+          if sidekiq_enterprise?
+            @actual > 0
+          elsif sidekiq_unique_jobs?
+            [true, :all].include?(@actual)
+          end
         end
 
         def unique_key
