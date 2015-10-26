@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   shared_context 'a unique worker' do
     before do
-      stub_const("SidekiqUniqueJobs", true)
+      stub_const(module_constant, true)
     end
     before(:each) { subject.matches? @worker }
 
@@ -17,7 +17,6 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
           expect(subject.failure_message).to eq "expected #{@worker} to be unique in the queue"
         end
       end
-
     end
 
     describe '#matches?' do
@@ -41,23 +40,40 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
     end
   end
 
-  context 'a scheduled worker' do
-    before { @worker =  create_worker unique: :all }
+  context 'a sidekiq-enterprise scheduled worker' do
+    let(:interval) { 3.hours }
+    let(:module_constant) { "Sidekiq::Enterprise" }
+    before { @worker = create_worker unique_for: interval }
     include_context 'a unique worker'
   end
 
-  context 'a regular worker' do
-    before { @worker =  create_worker unique: true }
+  context 'a sidekiq-unique-jobs scheduled worker' do
+    let(:module_constant) { "SidekiqUniqueJobs" }
+    before { @worker = create_worker unique: :all }
+    include_context 'a unique worker'
+  end
+
+  context 'a sidekiq-unique-jobs regular worker' do
+    let(:module_constant) { "SidekiqUniqueJobs" }
+    before { @worker = create_worker unique: true }
     include_context 'a unique worker'
   end
 
   describe '#be_unique' do
+    before do
+      stub_const("SidekiqUniqueJobs", true)
+    end
+
     it 'returns instance' do
-      expect(be_unique).to be_a RSpec::Sidekiq::Matchers::BeUnique
+      expect(be_unique).to be_kind_of RSpec::Sidekiq::Matchers::BeUnique::Base
     end
   end
 
   describe '#failure_message_when_negated' do
+    before do
+      stub_const("SidekiqUniqueJobs", true)
+    end
+
     it 'returns message' do
       expect(subject.failure_message_when_negated).to eq "expected #{@worker} to not be unique in the queue"
     end
