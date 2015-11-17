@@ -1,11 +1,11 @@
 module RSpec
   module Sidekiq
     module Matchers
-      def have_enqueued_job(*expected_arguments)
-        HaveEnqueuedJob.new expected_arguments
+      def have_enqueued_sidekiq_job(*expected_arguments)
+        HaveEnqueuedSidekiqJob.new expected_arguments
       end
 
-      class HaveEnqueuedJob
+      class HaveEnqueuedSidekiqJob
         attr_reader :klass, :expected_arguments, :actual
 
         def initialize(expected_arguments)
