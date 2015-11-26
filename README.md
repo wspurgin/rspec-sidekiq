@@ -136,7 +136,7 @@ it { is_expected.to_not be_expired_in 2.hours }
 ### have_enqueued_job
 *Describes that there should be an enqueued job with the specified arguments*
 ```ruby
-Awesomejob.perform_async 'Awesome', true
+AwesomeJob.perform_async 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
