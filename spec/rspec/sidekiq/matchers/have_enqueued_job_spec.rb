@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
-  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
+RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
+  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob.new worker_args }
+  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
   let(:worker) { create_worker }
   let(:worker_args) { ['string', 1, true, {key: 'value', nested: [{hash: true}]}] }
   let(:active_job) { create_active_job :mailers }
@@ -19,23 +19,23 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe 'expected usage' do
     it 'matches' do
-      expect(worker).to have_enqueued_job *worker_args
+      expect(worker).to have_enqueued_sidekiq_job *worker_args
     end
 
     it 'matches on the global Worker queue' do
-      expect(Sidekiq::Worker).to have_enqueued_job *worker_args
+      expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
     end
 
     it 'matches on an enqueued ActiveJob' do
-      expect(Sidekiq::Worker).to have_enqueued_job 'someResource'
+      expect(Sidekiq::Worker).to have_enqueued_sidekiq_job 'someResource'
     end
 
     it 'matches on an enqueued ActiveJob by global_id' do
-      expect(Sidekiq::Worker).to have_enqueued_job("_aj_globalid" => resource.to_global_id.uri.to_s)
+      expect(Sidekiq::Worker).to have_enqueued_sidekiq_job("_aj_globalid" => resource.to_global_id.uri.to_s)
     end
 
     it 'matches on ActionMailer Job' do
-      expect(Sidekiq::Worker).to have_enqueued_job(
+      expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
         "TestActionMailer",
         "testmail",
         "deliver_now"
@@ -43,7 +43,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     end
 
     it 'matches on ActionMailer with a resource Job' do
-      expect(Sidekiq::Worker).to have_enqueued_job(
+      expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
         "TestActionMailer",
         "testmail",
         "deliver_now",
@@ -52,9 +52,9 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     end
   end
 
-  describe '#have_enqueued_job' do
+  describe '#have_enqueued_sidekiq_job' do
     it 'returns instance' do
-      expect(have_enqueued_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedJob
+      expect(have_enqueued_sidekiq_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob
     end
   end
 

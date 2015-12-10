@@ -50,7 +50,7 @@ end
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
-* [have_enqueued_job](#have_enqueued_job)
+* [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
 
 ### be_delayed
 *Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
@@ -133,12 +133,12 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### have_enqueued_job
+### have_enqueued_sidekiq_job
 *Describes that there should be an enqueued job with the specified arguments*
 ```ruby
 AwesomeJob.perform_async 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_job('Awesome', true)
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
 ```
 
 ## Example matcher usage
@@ -154,7 +154,7 @@ describe AwesomeJob do
   it 'enqueues another awesome job' do
     subject.perform
 
-    expect(AnotherAwesomeJob).to have_enqueued_job('Awesome', true)
+    expect(AnotherAwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
   end
 end
 ```
