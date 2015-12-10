@@ -91,7 +91,7 @@ sidekiq_options retry: 5
 # test with...
 expect(AwesomeJob).to be_retryable true # or
 it { is_expected.to be_retryable true }
-# ...or alternatively specifiy the number of times it should be retried
+# ...or alternatively specify the number of times it should be retried
 expect(AwesomeJob).to be_retryable 5 # or
 it { is_expected.to be_retryable 5 }
 # ...or when it should not retry
