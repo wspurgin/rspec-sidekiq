@@ -91,7 +91,7 @@ sidekiq_options retry: 5
 # test with...
 expect(AwesomeJob).to be_retryable true # or
 it { is_expected.to be_retryable true }
-# ...or alternatively specifiy the number of times it should be retried
+# ...or alternatively specify the number of times it should be retried
 expect(AwesomeJob).to be_retryable 5 # or
 it { is_expected.to be_retryable 5 }
 # ...or when it should not retry
@@ -136,7 +136,7 @@ it { is_expected.to_not be_expired_in 2.hours }
 ### have_enqueued_job
 *Describes that there should be an enqueued job with the specified arguments*
 ```ruby
-Awesomejob.perform_async 'Awesome', true
+AwesomeJob.perform_async 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```

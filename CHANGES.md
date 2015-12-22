@@ -1,3 +1,10 @@
+2.2.0
+---
+* Fix typo in README file [bradhaydon#87]
+* Fix type in readme [graudeejs#80]
+* Matchers::HaveEnqueuedJob breaks on jobs with Hash arguments [erikogan#77]
+* have_enqueued_job fails if args includes a Hash bug [gPrado#74]
+
 2.1.0
 ---
 * ActiveJob support [tarzan#71]

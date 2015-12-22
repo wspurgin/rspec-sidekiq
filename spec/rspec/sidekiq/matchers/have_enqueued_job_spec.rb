@@ -1,14 +1,15 @@
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
-  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new ['string', 1, true] }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true] }
+  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
+  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
   let(:worker) { create_worker }
+  let(:worker_args) { ['string', 1, true, {key: 'value', nested: [{hash: true}]}] }
   let(:active_job) { create_active_job :mailers }
   let(:resource) { TestResource.new }
 
   before(:each) do
-    worker.perform_async 'string', 1, true
+    worker.perform_async *worker_args
     active_job.perform_later 'someResource'
     active_job.perform_later(resource)
     TestActionMailer.testmail.deliver_later
@@ -18,11 +19,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe 'expected usage' do
     it 'matches' do
-      expect(worker).to have_enqueued_job 'string', 1, true
+      expect(worker).to have_enqueued_job *worker_args
     end
 
     it 'matches on the global Worker queue' do
-      expect(Sidekiq::Worker).to have_enqueued_job 'string', 1, true
+      expect(Sidekiq::Worker).to have_enqueued_job *worker_args
     end
 
     it 'matches on an enqueued ActiveJob' do
@@ -59,13 +60,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe '#description' do
     it 'returns description' do
-      expect(argument_subject.description).to eq "have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+      expect(argument_subject.description).to eq "have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"nested\"=>[{\"hash\"=>true}]}]"
     end
   end
 
   describe '#failure_message' do
     it 'returns message' do
-      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true]\n\nfound: [[\"string\", 1, true]]"
+      expect(argument_subject.failure_message).to eq "expected to have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"nested\"=>[{\"hash\"=>true}]}]\n\nfound: [[\"string\", 1, true, {\"key\"=>\"value\", \"nested\"=>[{\"hash\"=>true}]}]]"
     end
   end
 
@@ -103,7 +104,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe '#failure_message_when_negated' do
     it 'returns message' do
-      expect(argument_subject.failure_message_when_negated).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true]"
+      expect(argument_subject.failure_message_when_negated).to eq "expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"nested\"=>[{\"hash\"=>true}]}]"
     end
   end
 end
