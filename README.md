@@ -199,7 +199,6 @@ Issues/Pull Requests/Comments all welcome...
 [travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
 [travis_ci_badge]: https://travis-ci.org/philostler/rspec-sidekiq.svg?branch=develop
 
-
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches
 [sidekiq_wiki_delayed_extensions]: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions
