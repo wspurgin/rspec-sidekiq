@@ -4,6 +4,10 @@ module RSpec
       def have_enqueued_job(*expected_arguments)
         HaveEnqueuedJob.new expected_arguments
       end
+      if Gem::Dependency.new('rspec-rails', '>= 3.4.0').matching_specs.max_by(&:version)
+        warn "[DEPRECATION] `have_enqueued_job` is deprecated.  Please use `have_enqueued_sidekiq_job` instead."
+        alias have_enqueued_sidekiq_job have_enqueued_job
+      end
 
       class HaveEnqueuedJob
         attr_reader :klass, :expected_arguments, :actual
@@ -58,7 +62,7 @@ module RSpec
 
         def contain_exactly?(arguments)
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
-          exactly.matches?(arguments)
+          exactly.matches?(arguments.flatten)
         end
 
         def normalize_arguments(args)
