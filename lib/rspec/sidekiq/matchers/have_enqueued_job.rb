@@ -62,7 +62,7 @@ module RSpec
 
         def contain_exactly?(arguments)
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
-          exactly.matches?(arguments.flatten)
+          exactly.matches?(arguments.flatten(1))
         end
 
         def normalize_arguments(args)
