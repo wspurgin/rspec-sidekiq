@@ -40,11 +40,11 @@ module RSpec
         def unwrapped_job_arguments(jobs)
           if jobs.is_a? Hash
             jobs.values.flatten.map do |job|
-              map_arguments(job).flatten
+              map_arguments(job)
             end
           else
             map_arguments(jobs)
-          end
+          end.map { |job| job.flatten }
         end
 
         def map_arguments(job)
@@ -62,7 +62,7 @@ module RSpec
 
         def contain_exactly?(arguments)
           exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected_arguments)
-          exactly.matches?(arguments.flatten(1))
+          exactly.matches?(arguments)
         end
 
         def normalize_arguments(args)
@@ -72,6 +72,8 @@ module RSpec
             args.each_with_object({}) do |(key, value), hash|
               hash[key.to_s] = normalize_arguments(value)
             end
+          elsif args.is_a?(Symbol)
+            args.to_s
           else
             args
           end
