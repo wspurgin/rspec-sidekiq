@@ -1,3 +1,5 @@
+* Add simple deprectation if rspec-rails is detected and create alias for method call
+
 3.0.0
 ---
 *
