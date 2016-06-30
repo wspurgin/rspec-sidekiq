@@ -9,6 +9,31 @@ module RSpec
         alias have_enqueued_sidekiq_job have_enqueued_job
       end
 
+      class JobOptionParser
+        attr_reader :job
+
+        def initialize(job)
+          @job = job
+        end
+
+        def matches?(option, value)
+          raise ArgumentError, "Option `#{option}` is not defined." unless %w(in at).include?(option.to_s)
+          send("#{option}_evaluator", value)
+        end
+
+        private
+
+        def at_evaluator(value)
+          return false if job['at'].blank?
+          value.to_time.to_s == Time.at(job['at']).to_s
+        end
+
+        def in_evaluator(value)
+          return false if job['at'].blank?
+          (Time.now + value).to_s == Time.at(job['at']).to_s
+        end
+      end
+
       class JobMatcher
         attr_reader :jobs
 
@@ -33,8 +58,10 @@ module RSpec
         end
 
         def options_matches?(job, options)
-          return true unless options.has_key?(:at)
-          options[:at].to_time.to_s == Time.at(job["at"]).to_s
+          options.map do |option, value|
+            parser = JobOptionParser.new(job)
+            parser.matches?(option, value)
+          end
         end
 
         def find_job(arguments, options)
@@ -72,8 +99,13 @@ module RSpec
           JobMatcher.new(klass).present?(expected_arguments, options)
         end
 
-        def at(time)
-          @options[:at] = time
+        def at(timestamp)
+          @options['at'] = timestamp
+          self
+        end
+
+        def in(interval)
+          @options['in'] = interval
           self
         end
 

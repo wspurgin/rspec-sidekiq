@@ -142,12 +142,17 @@ AwesomeJob.perform_async 'Awesome', true
 expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
 
-#### Testing scheduled jobs with `perform_at`
-*Use a chainable matcher `#at`*
+#### Testing scheduled jobs
+*Use chainable matchers `#at` and `#in`*
 ```ruby
-Awesomejob.perform_at 5.minutes, 'Awesome', true
+Awesomejob.perform_at 5.minutes.from_now, 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_job('Awesome', true).at(5.minutes)
+expect(AwesomeJob).to have_enqueued_job('Awesome', true).at(5.minutes.from_now)
+```
+```ruby
+Awesomejob.perform_in 5.minutes, 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_job('Awesome', true).in(5.minutes)
 ```
 
 ## Example matcher usage
