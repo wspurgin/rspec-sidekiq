@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rspec-core', '~> 3.0', '>= 3.0.0'
   s.add_dependency 'sidekiq', '>= 2.4.0'
 
+  s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.0'
   s.add_development_dependency 'fuubar', '~> 2.0', '>= 2.0.0'
   s.add_development_dependency 'activejob', '~> 4.2', '>= 4.0.0'
