@@ -1,8 +1,11 @@
-* Add simple deprectation if rspec-rails is detected and create alias for method call
-
 3.0.0
 ---
-*
+* Rely on all of RSpec in development [packrat386#101]
+* Pass exception to within_sidekiq_retries_exhausted_block [packrat386#100]
+* Add support for testing scheduled jobs [wpolicarpo#81]
+* only depend on rspec-core [urkle#96]
+* Add support for Sidekiq Enterprise [Geesu#82]
+* Fix clash with rspec-rails [pavel-jurasek-bcgdv-com#95]
 
 2.2.0
 ---
