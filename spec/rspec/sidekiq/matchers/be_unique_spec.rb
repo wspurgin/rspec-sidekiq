@@ -38,6 +38,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
         end
       end
     end
+
+    describe '#description' do
+      it 'returns description' do
+        expect(subject.description).to eq 'be unique in the queue'
+      end
+    end
   end
 
   context 'a sidekiq-enterprise scheduled worker' do

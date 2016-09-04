@@ -139,6 +139,7 @@ sidekiq_options unique: true
 expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
 ```
+
 ### be_expired_in
 *Describes when a job should expire*
 ```ruby
@@ -154,6 +155,19 @@ it { is_expected.to_not be_expired_in 2.hours }
 AwesomeJob.perform_async 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_job('Awesome', true)
+```
+
+#### Testing scheduled jobs
+*Use chainable matchers `#at` and `#in`*
+```ruby
+Awesomejob.perform_at 5.minutes.from_now, 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_job('Awesome', true).at(5.minutes.from_now)
+```
+```ruby
+Awesomejob.perform_in 5.minutes, 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_job('Awesome', true).in(5.minutes)
 ```
 
 ## Example matcher usage

@@ -59,6 +59,7 @@ if defined? Sidekiq::Batch
     end
   end
 
+  # :nocov:
   RSpec.configure do |config|
     config.before(:each) do |example|
       next if example.metadata[:stub_batches] == false
@@ -76,4 +77,5 @@ if defined? Sidekiq::Batch
   def mocked_with_mocha?
     Sidekiq::Batch.respond_to? :stubs
   end
+  # :nocov:
 end

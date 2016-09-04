@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
+  let(:tomorrow) { DateTime.now + 1 }
+  let(:interval) { 3.minutes }
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
   let(:worker) { create_worker }
@@ -50,6 +52,30 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
         { "_aj_globalid" => resource.to_global_id.uri.to_s }
       )
     end
+
+    context "perform_in" do
+      let(:worker_args_in) { worker_args + ['in'] }
+
+      before(:each) do
+        worker.perform_in 3.minutes, *worker_args_in
+      end
+
+      it 'matches on an scheduled job with #perform_in' do
+        expect(worker).to have_enqueued_job(*worker_args_in).in(interval)
+      end
+    end
+
+    context "perform_at" do
+      let(:worker_args_at) { worker_args + ['at'] }
+
+      before(:each) do
+        worker.perform_at tomorrow, *worker_args_at
+      end
+
+      it 'matches on an scheduled job with #perform_at' do
+        expect(worker).to have_enqueued_job(*worker_args_at).at(tomorrow)
+      end
+    end
   end
 
   describe '#have_enqueued_job' do
@@ -83,6 +109,28 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
           expect(matcher_subject.matches? worker).to be true
         end
       end
+
+      context 'when job is scheduled' do
+        context 'with #perform_at' do
+          before(:each) do
+            worker.perform_at(tomorrow)
+          end
+
+          it 'returns true' do
+            expect(matcher_subject.at(tomorrow).matches? worker).to be true
+          end
+        end
+
+        context 'with #perform_in' do
+          before(:each) do
+            worker.perform_in(interval)
+          end
+
+          it 'returns true' do
+            expect(matcher_subject.in(interval).matches? worker).to be true
+          end
+        end
+      end
     end
 
     context 'when condition does not match' do
@@ -97,6 +145,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
       context 'when expected are matchers' do
         it 'returns false' do
           expect(matcher_subject.matches? worker).to be false
+        end
+      end
+
+      context 'when job is scheduled' do
+        before(:each) do
+          allow(matcher_subject).to receive(:options).and_return(at: tomorrow)
+        end
+
+        it 'returns true' do
+          expect(matcher_subject.at(tomorrow).matches? worker).to be false
         end
       end
     end
