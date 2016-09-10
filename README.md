@@ -1,4 +1,4 @@
-**Welcome @wpolicarpo as a new maintainer for `rspec-sidekiq`!**
+**Welcome @wpolicarpo and @packrat386 as new maintainers for `rspec-sidekiq`!**
 
 # RSpec for Sidekiq
 
@@ -198,6 +198,7 @@ FooClass.within_sidekiq_retries_exhausted_block {
 
 ## Maintainers
 * @wpolicarpo
+* @packrat386
 * @philostler
 
 ## Contribute
