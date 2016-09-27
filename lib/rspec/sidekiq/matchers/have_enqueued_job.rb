@@ -4,6 +4,7 @@ module RSpec
       def have_enqueued_job(*expected_arguments)
         HaveEnqueuedJob.new expected_arguments
       end
+
       if Gem::Dependency.new('rspec-rails', '>= 3.4.0').matching_specs.max_by(&:version)
         warn "[DEPRECATION] `have_enqueued_job` is deprecated.  Please use `have_enqueued_sidekiq_job` instead."
         alias have_enqueued_sidekiq_job have_enqueued_job
@@ -61,7 +62,7 @@ module RSpec
           options.map do |option, value|
             parser = JobOptionParser.new(job)
             parser.matches?(option, value)
-          end
+          end.all?
         end
 
         def find_job(arguments, options)
