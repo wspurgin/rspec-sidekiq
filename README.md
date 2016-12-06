@@ -138,6 +138,10 @@ it { is_expected.to_not be_expired_in 2.hours }
 
 ### have_enqueued_job
 *Describes that there should be an enqueued job with the specified arguments*
+
+**Note:** When using rspec-rails >= 3.4, use `have_enqueued_sidekiq_job` instead to
+prevent a name clash with rspec-rails' ActiveJob matcher.
+
 ```ruby
 AwesomeJob.perform_async 'Awesome', true
 # test with...
