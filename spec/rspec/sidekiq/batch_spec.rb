@@ -67,5 +67,11 @@ RSpec.describe 'Batch' do
         subject.join
       end
     end
+
+    describe '#initialize' do
+      it 'uses default argument values when none are provided' do
+        expect { Sidekiq::Batch::Status.new }.to_not raise_error
+      end
+    end
   end
 end
