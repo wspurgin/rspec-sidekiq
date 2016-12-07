@@ -33,9 +33,9 @@ if defined? Sidekiq::Batch
       class NullStatus < NullObject
         attr_reader :bid
 
-        def initialize(bid = nil, callbacks = nil)
-          @bid = bid || SecureRandom.hex(8)
-          @callbacks = callbacks || []
+        def initialize(bid = SecureRandom.hex(8), callbacks = [])
+          @bid = bid
+          @callbacks = callbacks
         end
 
         def failures
