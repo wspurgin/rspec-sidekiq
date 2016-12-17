@@ -59,10 +59,10 @@ module RSpec
         end
 
         def options_matches?(job, options)
-          options.map do |option, value|
+          options.all? do |option, value|
             parser = JobOptionParser.new(job)
             parser.matches?(option, value)
-          end.all?
+          end
         end
 
         def find_job(arguments, options)
@@ -87,26 +87,27 @@ module RSpec
       end
 
       class HaveEnqueuedJob
-        attr_reader :klass, :expected_arguments, :actual_arguments, :options
+        attr_reader :klass, :expected_arguments, :actual_arguments, :expected_options, :actual_options
 
         def initialize(expected_arguments)
           @expected_arguments = normalize_arguments(expected_arguments)
-          @options = {}
+          @expected_options = {}
         end
 
         def matches?(klass)
           @klass = klass
           @actual_arguments = unwrapped_job_arguments(klass.jobs)
-          JobMatcher.new(klass).present?(expected_arguments, options)
+          @actual_options = unwrapped_job_options(klass.jobs)
+          JobMatcher.new(klass).present?(expected_arguments, expected_options)
         end
 
         def at(timestamp)
-          @options['at'] = timestamp
+          @expected_options['at'] = timestamp
           self
         end
 
         def in(interval)
-          @options['in'] = interval
+          @expected_options['in'] = interval
           self
         end
 
@@ -115,15 +116,30 @@ module RSpec
         end
 
         def failure_message
-          "expected to have an enqueued #{klass} job with arguments #{expected_arguments}\n\n" \
-          "found: #{actual_arguments}"
+          message = ["expected to have an enqueued #{klass} job"]
+          message << "  arguments: #{expected_arguments}" if expected_arguments
+          message << "  options: #{expected_options}" if expected_options.any?
+          message << "found"
+          message << "  arguments: #{actual_arguments}" if expected_arguments
+          message << "  options: #{actual_options}" if expected_options.any?
+          message.join("\n")
         end
 
         def failure_message_when_negated
-          "expected to not have an enqueued #{klass} job with arguments #{expected_arguments}"
+          message = ["expected not to have an enqueued #{klass} job"]
+          message << "  arguments: #{expected_arguments}" if expected_arguments.any?
+          message << "  options: #{expected_options}" if expected_options.any?
+          message.join("\n")
         end
 
         private
+
+        def unwrapped_job_options(jobs)
+          jobs = jobs.values if jobs.is_a?(Hash)
+          jobs.flatten.map do |job|
+            job.slice('at')
+          end
+        end
 
         def unwrapped_job_arguments(jobs)
           if jobs.is_a? Hash

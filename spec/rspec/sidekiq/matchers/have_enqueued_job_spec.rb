@@ -6,7 +6,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
   let(:worker) { create_worker }
-  let(:worker_args) { ['string', 1, true, {key: 'value', bar: :foo, nested: [{hash: true}]}] }
+  let(:worker_args) { ['string', 1, true, { key: 'value', bar: :foo, nested: [{hash: true}] }] }
   let(:active_job) { create_active_job :mailers }
   let(:resource) { TestResource.new }
 
@@ -99,14 +99,22 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   describe '#failure_message' do
     it 'returns message' do
       argument_subject.matches? worker
-      expect(argument_subject.failure_message).to eq %{expected to have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]\n\nfound: [[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]]}
+      expect(argument_subject.failure_message).to eq <<-eos.gsub(/^ {6}/, '').strip
+      expected to have an enqueued #{worker} job
+        arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
+      found
+        arguments: [[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]]
+      eos
     end
   end
 
   describe '#failure_message_when_negated' do
     it 'returns message' do
       argument_subject.matches? worker
-      expect(argument_subject.failure_message_when_negated).to eq %{expected to not have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]}
+      expect(argument_subject.failure_message_when_negated).to eq <<-eos.gsub(/^ {6}/, '').strip
+      expected not to have an enqueued #{worker} job
+        arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
+      eos
     end
   end
 
