@@ -1,8 +1,8 @@
 language: ruby
 rvm:
-  - 2.0
   - 2.1
   - 2.2
+  - 2.3
   - jruby
   - rbx-2
   
@@ -15,3 +15,6 @@ matrix:
   allow_failures:
     - rvm: jruby
     - rvm: rbx-2
+  include:
+    - rvm: 2.0
+      gemfile: gemfiles/ruby20.gemfile
