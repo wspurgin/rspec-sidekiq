@@ -11,7 +11,8 @@ module RSpec
         end
 
         def description
-          if @expected_backtrace.is_a?(Fixnum)
+          num_class = 1.class # Ruby 2.4 returns Integer, older returns Fixnum
+          if @expected_backtrace.is_a?(num_class)
             "save #{@expected_backtrace} lines of error backtrace" # backtrace: 5
           elsif @expected_backtrace
             'save error backtrace' # backtrace: true
