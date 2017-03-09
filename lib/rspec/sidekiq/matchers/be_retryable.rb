@@ -11,7 +11,8 @@ module RSpec
         end
 
         def description
-          if @expected_retry.is_a?(Fixnum)
+          num_class = 1.class # Ruby 2.4 returns Integer, older returns Fixnum
+          if @expected_retry.is_a?(num_class)
             "retry #{@expected_retry} times"    # retry: 5
           elsif @expected_retry
             'retry the default number of times' # retry: true
