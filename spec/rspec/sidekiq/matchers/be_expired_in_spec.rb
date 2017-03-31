@@ -6,7 +6,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeExpiredIn do
 
   describe '#be_expired_in' do
     it 'returns instance' do
-      expect(be_expired_in 1).to be_a RSpec::Sidekiq::Matchers::BeExpiredIn
+      expect(be_expired_in 1).to be_kind_of( described_class )
     end
   end
 
