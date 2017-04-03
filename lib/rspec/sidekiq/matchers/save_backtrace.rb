@@ -11,7 +11,7 @@ module RSpec
         end
 
         def description
-          if @expected_backtrace.is_a?(Fixnum)
+          if @expected_backtrace.is_a?(Numeric)
             "save #{@expected_backtrace} lines of error backtrace" # backtrace: 5
           elsif @expected_backtrace
             'save error backtrace' # backtrace: true
