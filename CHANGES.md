@@ -1,5 +1,7 @@
 3.0.0
 ---
+* Use default arguments for NullStatus initialization [briansharon#111]
+* Fix at and in chainable methods [wpolicarpo#109]
 * Rely on all of RSpec in development [packrat386#101]
 * Pass exception to within_sidekiq_retries_exhausted_block [packrat386#100]
 * Add support for testing scheduled jobs [wpolicarpo#81]
