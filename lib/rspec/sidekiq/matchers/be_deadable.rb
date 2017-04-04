@@ -1,8 +1,12 @@
 module RSpec
   module Sidekiq
     module Matchers
-      def be_deadable(expected_dead)
-        BeDeadable.new expected_dead
+      def be_deadable
+        BeDeadable.new(false)
+      end
+
+       def not_be_deadable
+        BeDeadable.new(true)
       end
 
       class BeDeadable
@@ -10,16 +14,16 @@ module RSpec
           @expected_dead = expected_dead
         end
 
-        def message_for(expected_dead)
-          expected_dead ? 'dead' : 'not dead'
+        def current_state
+          @expected_dead ? 'dead' : 'not dead'
         end
 
         def description
-          "be #{message_for(@expected_dead)} in queue"
+          "be #{current_state} in queue"
         end
 
         def failure_message
-          "expected #{@klass} to be \"#{message_for(@expected_dead)}\" but got \"#{message_for(@actual)}\""
+          "expected #{@klass} to be \"#{current_state}\" but got \"#{@actual}\""
         end
 
         def matches?(job)
@@ -29,7 +33,7 @@ module RSpec
         end
 
         def failure_message_when_negated
-          "expected #{@klass} to be \"#{message_for(!@expected_dead)}\" but it does"
+          "expected #{@klass} to be \"#{current_state}\" but it does"
         end
       end
     end
