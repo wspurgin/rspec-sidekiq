@@ -43,7 +43,7 @@ module RSpec
         end
 
         def present?(arguments, options)
-          find_job(arguments, options).present?
+          !!find_job(arguments, options)
         end
 
         private
@@ -137,7 +137,7 @@ module RSpec
         def unwrapped_job_options(jobs)
           jobs = jobs.values if jobs.is_a?(Hash)
           jobs.flatten.map do |job|
-            job.slice('at')
+            { 'at' => job['at'] }
           end
         end
 
