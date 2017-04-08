@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::BeDeadable do
-  let(:subject) { RSpec::Sidekiq::Matchers::BeDeadable.new true }
-  let(:dead_worker) { create_worker dead: true }
-  let(:survivor_worker) { create_worker dead: false }
+  let(:subject) { RSpec::Sidekiq::Matchers::BeDeadable.new }
+  let(:dead_worker) { create_worker(dead: true) }
+  let(:survivor_worker) { create_worker }
 
   describe '#be_deadable' do
     it 'returns instance' do
@@ -13,12 +13,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDeadable do
 
   describe 'expected usage' do
     it 'matches' do
-      expect(survivor_worker).to be_deadable
+      expect(dead_worker).to be_deadable
     end
-
     context 'with negated' do
       it 'matches' do
-        expect(dead_worker).to not_be_deadable #because he is already dead
+        expect(survivor_worker).not_to be_deadable
       end
     end
   end
@@ -38,7 +37,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDeadable do
     end
     context 'when expected is not equal to actual' do
       it 'returns false' do
-        expect(described_class.new(2).matches? dead_worker). to be false
+        expect(subject.matches? survivor_worker). to be false
       end
     end
   end
