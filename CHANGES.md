@@ -1,3 +1,7 @@
+3.0.1
+---
+* Remove implicit runtime dependency on ActiveSupport [aprescott#109]
+
 3.0.0
 ---
 * Use default arguments for NullStatus initialization [briansharon#111]
