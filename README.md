@@ -52,7 +52,7 @@ end
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
-* [have_enqueued_job](#have_enqueued_job)
+* [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
 
 ### be_delayed
 *Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
@@ -136,11 +136,15 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### have_enqueued_job
+### have_enqueued__sidekiq_job
 *Describes that there should be an enqueued job with the specified arguments*
 ```ruby
 AwesomeJob.perform_async 'Awesome', true
 # test with...
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
+
+# Code written with older versions of the gem may use the deprecated
+# have_enqueued_job matcher.
 expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
 
@@ -149,12 +153,12 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```ruby
 Awesomejob.perform_at 5.minutes.from_now, 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_job('Awesome', true).at(5.minutes.from_now)
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(5.minutes.from_now)
 ```
 ```ruby
 Awesomejob.perform_in 5.minutes, 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_job('Awesome', true).in(5.minutes)
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
 ```
 
 ## Example matcher usage
@@ -170,7 +174,7 @@ describe AwesomeJob do
   it 'enqueues another awesome job' do
     subject.perform
 
-    expect(AnotherAwesomeJob).to have_enqueued_job('Awesome', true)
+    expect(AnotherAwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
   end
 end
 ```
