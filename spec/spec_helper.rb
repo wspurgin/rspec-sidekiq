@@ -10,10 +10,9 @@ require 'active_record'
 
 require_relative 'support/init'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  Coveralls::SimpleCov::Formatter,
-  SimpleCov::Formatter::HTMLFormatter
-]
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+  [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
+)
 SimpleCov.start
 
 RSpec.configure do |config|
