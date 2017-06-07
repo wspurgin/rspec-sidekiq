@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'fuubar', '~> 2.0', '>= 2.0.0'
   s.add_development_dependency 'activejob', '~> 4.2', '>= 4.0.0'
   s.add_development_dependency 'actionmailer', '~> 4.2', '>= 4.0.0'
+  s.add_development_dependency 'activerecord', '~> 4.2', '>= 4.0.0'
 
 
   s.files = Dir['.gitattributes'] +
