@@ -18,5 +18,5 @@ matrix:
   include:
     - rvm: 2.0
       gemfile: gemfiles/ruby20.gemfile
-    - rmv: 2.4
+    - rvm: 2.4
       gemfile: gemfiles/sidekiq4.gemfile
