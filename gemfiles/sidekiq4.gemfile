@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'nokogiri', '< 1.7'
 gem 'sidekiq', '< 5'
 
 gemspec :path => '../'

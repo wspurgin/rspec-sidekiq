@@ -5,7 +5,7 @@ rvm:
   - 2.4.1
   - jruby
   - rbx-2
-  
+
 script: "bundle exec rspec spec"
 
 before_install:
@@ -18,3 +18,5 @@ matrix:
   include:
     - rvm: 2.0
       gemfile: gemfiles/ruby20.gemfile
+    - rvm: 2.4
+      gemfile: gemfiles/sidekiq4.gemfile
