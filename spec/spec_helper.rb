@@ -20,6 +20,10 @@ RSpec.configure do |config|
   config.include RSpec::Sidekiq::Spec::Support::Factories
 end
 
+RSpec::Sidekiq.configure do |config|
+  config.warn_when_jobs_not_processed_by_sidekiq = false
+end
+
 ActiveJob::Base.queue_adapter = :sidekiq
 
 if Gem::Dependency.new('sidekiq', '>= 5.0.0').matching_specs.any?
