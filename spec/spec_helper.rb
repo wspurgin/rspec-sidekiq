@@ -25,6 +25,7 @@ RSpec::Sidekiq.configure do |config|
 end
 
 ActiveJob::Base.queue_adapter = :sidekiq
+ActiveJob::Base.logger.level = Logger::ERROR
 
 if Gem::Dependency.new('sidekiq', '>= 5.0.0').matching_specs.any?
   require 'active_record'
