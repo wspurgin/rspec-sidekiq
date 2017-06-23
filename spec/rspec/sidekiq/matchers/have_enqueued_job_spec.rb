@@ -97,6 +97,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     it 'provides deprecation warning' do
       expect { have_enqueued_job }.to output(/[DEPRECATION]/).to_stderr
     end
+
+    it 'matches the same way have_enqueued_sidekiq_job does' do
+      expect(worker).to have_enqueued_job *worker_args
+    end
   end
 
   describe '#description' do
