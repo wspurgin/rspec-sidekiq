@@ -1,3 +1,13 @@
+3.0.3
+---
+* Re-splat arguments for the have_enqueued_job alias (aprescott #136)
+
+3.0.2
+---
+* README updates (nilsding #110, packrat386 #122)
+* Ruby 2.4 support (packrat386 #119)
+* Fixes for Sidekiq 5 deprecations (packrat #130 with help from trev)
+
 3.0.1
 ---
 * Remove implicit runtime dependency on ActiveSupport [aprescott#109]
