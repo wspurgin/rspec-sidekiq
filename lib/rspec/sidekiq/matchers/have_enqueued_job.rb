@@ -7,7 +7,7 @@ module RSpec
 
       def have_enqueued_job(*expected_arguments)
         warn "[DEPRECATION] `have_enqueued_job` is deprecated.  Please use `have_enqueued_sidekiq_job` instead."
-        have_enqueued_sidekiq_job(expected_arguments)
+        have_enqueued_sidekiq_job(*expected_arguments)
       end
 
       class JobOptionParser
