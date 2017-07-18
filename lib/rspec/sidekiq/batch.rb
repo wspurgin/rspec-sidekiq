@@ -10,6 +10,7 @@ if defined? Sidekiq::Batch
       end
 
       class NullBatch < NullObject
+        attr_accessor :description
         attr_reader :bid
 
         def initialize(bid = nil)
