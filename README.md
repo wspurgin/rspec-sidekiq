@@ -136,7 +136,7 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### have_enqueued__sidekiq_job
+### have_enqueued_sidekiq_job
 *Describes that there should be an enqueued job with the specified arguments*
 
 **Note:** When using rspec-rails >= 3.4, use `have_enqueued_sidekiq_job` instead to
