@@ -155,9 +155,10 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 #### Testing scheduled jobs
 *Use chainable matchers `#at` and `#in`*
 ```ruby
-Awesomejob.perform_at 5.minutes.from_now, 'Awesome', true
+time = 5.minutes.from_now
+Awesomejob.perform_at time, 'Awesome', true
 # test with...
-expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(5.minutes.from_now)
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 ```
 ```ruby
 Awesomejob.perform_in 5.minutes, 'Awesome', true
