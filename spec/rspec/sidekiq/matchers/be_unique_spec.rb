@@ -53,6 +53,38 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
     include_context 'a unique worker'
   end
 
+  context '.until' do
+    before { stub_const("Sidekiq::Enterprise", true) }
+
+    let(:expiration) { :success }
+    let(:interval) { 3.hours }
+    let(:worker) do
+      options = { unique_for: interval, unique_until: expiration }
+      Class.new do
+        include ::Sidekiq::Worker
+        sidekiq_options options
+        def perform; end
+      end
+    end
+
+    subject do
+      stub_const("Sidekiq::Enterprise", true)
+      stub_const('MuhWorker', worker)
+      MuhWorker
+    end
+
+    it { should be_unique.for(interval).until(:success) }
+
+    context 'failure' do
+      subject { expect(super()).to be_unique.for(interval).until(:started) }
+
+      it do
+        expect { subject }.to raise_error RSpec::Expectations::ExpectationNotMetError,
+          'expected MuhWorker to be unique until started, but its unique_until was success'
+      end
+    end
+  end
+
   context 'a sidekiq-unique-jobs scheduled worker' do
     let(:module_constant) { "SidekiqUniqueJobs" }
     before { @worker = create_worker unique: :all }
