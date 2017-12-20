@@ -71,6 +71,10 @@ module RSpec
             @klass.get_sidekiq_options['unique_job_expiration']
           end
 
+          def actual_expiration
+            fail 'until is not supported for SidekiqUniqueJobs'
+          end
+
           def value_matches?
             [true, :all].include?(@actual)
           end
