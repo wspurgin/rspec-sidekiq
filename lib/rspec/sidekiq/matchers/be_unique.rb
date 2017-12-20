@@ -27,6 +27,9 @@ module RSpec
             if !interval_matches? && @expected_interval
               "expected #{@klass} to be unique for #{@expected_interval} seconds, "\
               "but its interval was #{actual_interval} seconds"
+            elsif !expiration_matches?
+              "expected #{@klass} to be unique until #{@expected_expiration}, "\
+              "but its unique_until was #{actual_expiration}"
             else
               "expected #{@klass} to be unique in the queue"
             end
@@ -35,11 +38,16 @@ module RSpec
           def matches?(job)
             @klass = job.is_a?(Class) ? job : job.class
             @actual = @klass.get_sidekiq_options[unique_key]
-            !!(value_matches? && interval_matches?)
+            !!(value_matches? && interval_matches? && expiration_matches?)
           end
 
           def for(interval)
             @expected_interval = interval
+            self
+          end
+
+          def until(expiration)
+            @expected_expiration = expiration
             self
           end
 
@@ -49,6 +57,10 @@ module RSpec
 
           def interval_matches?
             !interval_specified? || actual_interval == @expected_interval
+          end
+
+          def expiration_matches?
+            @expected_expiration.nil? || actual_expiration ==  @expected_expiration
           end
 
           def failure_message_when_negated
@@ -73,6 +85,10 @@ module RSpec
         class SidekiqEnterprise < Base
           def actual_interval
             @actual
+          end
+
+          def actual_expiration
+            @klass.get_sidekiq_options['unique_until']
           end
 
           def value_matches?
