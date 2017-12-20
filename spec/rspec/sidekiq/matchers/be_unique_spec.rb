@@ -56,12 +56,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
   end
 
   context '.until' do
-    before { stub_const("Sidekiq::Enterprise", true) }
-
+    let(:module_constant) { "Sidekiq::Enterprise" }
     let(:expiration) { :success }
     let(:interval) { 3.hours }
+    let(:sidekiq_options) { { unique_for: interval, unique_until: expiration } }
     let(:worker) do
-      options = { unique_for: interval, unique_until: expiration }
+      options = sidekiq_options
       Class.new do
         include ::Sidekiq::Worker
         sidekiq_options options
@@ -69,8 +69,9 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
       end
     end
 
+    before { stub_const(module_constant, true) }
+
     subject do
-      stub_const("Sidekiq::Enterprise", true)
       stub_const('MuhWorker', worker)
       MuhWorker
     end
@@ -78,7 +79,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
     it { should be_unique.for(interval).until(:success) }
 
     context 'errors' do
-      subject { expect(super()).to be_unique.for(interval).until(:started) }
+      subject { expect(super()).to be_unique.until(:started) }
 
       context 'when there is a mismatch' do
         it do
@@ -94,6 +95,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
           expect { subject }.to raise_error RSpec::Expectations::ExpectationNotMetError,
             'expected MuhWorker to be unique until started, but its unique_until was not specified'
         end
+      end
+
+      context 'when unique_until is not supported' do
+        let(:module_constant) { "SidekiqUniqueJobs" }
+        let(:sidekiq_options) { { unique: interval } }
+
+        it { expect { subject }.to raise_error 'until is not supported for SidekiqUniqueJobs' }
       end
     end
   end
