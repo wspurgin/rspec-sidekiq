@@ -27,7 +27,7 @@ module RSpec
               "but its interval was #{actual_interval} seconds"
             elsif !expiration_matches?
               "expected #{@klass} to be unique until #{@expected_expiration}, "\
-              "but its unique_until was #{actual_expiration}"
+              "but its unique_until was #{actual_expiration || 'not specified'}"
             else
               "expected #{@klass} to be unique in the queue"
             end

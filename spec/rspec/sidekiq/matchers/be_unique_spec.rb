@@ -75,12 +75,23 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
 
     it { should be_unique.for(interval).until(:success) }
 
-    context 'failure' do
+    context 'errors' do
       subject { expect(super()).to be_unique.for(interval).until(:started) }
 
-      it do
-        expect { subject }.to raise_error RSpec::Expectations::ExpectationNotMetError,
-          'expected MuhWorker to be unique until started, but its unique_until was success'
+      context 'when there is a mismatch' do
+        it do
+          expect { subject }.to raise_error RSpec::Expectations::ExpectationNotMetError,
+            'expected MuhWorker to be unique until started, but its unique_until was success'
+        end
+      end
+
+      context 'when not specified' do
+        let(:expiration) { nil }
+
+        it do
+          expect { subject }.to raise_error RSpec::Expectations::ExpectationNotMetError,
+            'expected MuhWorker to be unique until started, but its unique_until was not specified'
+        end
       end
     end
   end
