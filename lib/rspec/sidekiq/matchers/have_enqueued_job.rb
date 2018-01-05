@@ -102,7 +102,7 @@ module RSpec
         end
 
         def at(timestamp)
-          @expected_options['at'] = timestamp
+          @expected_options['at'] = timestamp.to_f
           self
         end
 
