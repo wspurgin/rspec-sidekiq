@@ -58,12 +58,18 @@ RSpec.describe 'Batch' do
         def on_event(status, options); end
       end
 
+      class OtherCallback
+        def foo(status, options); end
+      end
+
       before(:each) do
         batch.on(:event, MyCallback, my_arg: 42)
+        batch.on(:event, 'OtherCallback#foo', my_arg: 23)
       end
 
       it 'executes callbacks' do
         expect_any_instance_of(MyCallback).to receive(:on_event).with(subject, { my_arg: 42 })
+        expect_any_instance_of(OtherCallback).to receive(:foo).with(subject, { my_arg: 23 })
         subject.join
       end
     end
