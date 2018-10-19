@@ -4,7 +4,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:tomorrow) { DateTime.now + 1 }
   let(:interval) { 3.minutes }
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Fixnum), true, be_a(Hash)] }
+  let(:number_class) do
+    if Gem::Version.new(RUBY_VERSION) > ::Gem::Version.new('2.4.0')
+      ::Integer
+    else
+      ::Fixnum
+    end
+  end
+  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(number_class), true, be_a(Hash)] }
   let(:worker) { create_worker }
   let(:worker_args) { ['string', 1, true, { key: 'value', bar: :foo, nested: [{hash: true}] }] }
   let(:active_job) { create_active_job :mailers }
