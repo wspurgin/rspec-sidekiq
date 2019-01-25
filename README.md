@@ -87,7 +87,7 @@ it { is_expected.to be_processed_in :download }
 ```
 
 ### be_retryable
-*Describes if a job should retry when there is a failure in it's execution*
+*Describes if a job should retry when there is a failure in its execution*
 ```ruby
 sidekiq_options retry: 5
 # test with...
@@ -102,7 +102,7 @@ it { is_expected.to be_retryable false }
 ```
 
 ### save_backtrace
-*Describes if a job should save the error backtrace when there is a failure in it's execution*
+*Describes if a job should save the error backtrace when there is a failure in its execution*
 ```ruby
 sidekiq_options backtrace: 5
 # test with...
@@ -119,7 +119,7 @@ it { is_expected.to save_backtrace false }
 ```
 
 ### be_unique
-*Describes when a job should be unique within it's queue*
+*Describes when a job should be unique within its queue*
 ```ruby
 sidekiq_options unique: true
 # test with...
