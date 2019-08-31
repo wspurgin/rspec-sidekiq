@@ -35,6 +35,8 @@ rspec-sidekiq requires ```sidekiq/testing``` by default so there is no need to i
 ## Configuration
 If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
 ```ruby
+require 'rspec-sidekiq'
+
 RSpec::Sidekiq.configure do |config|
   # Clears all job queues before each example
   config.clear_all_enqueued_jobs = true # default => true
