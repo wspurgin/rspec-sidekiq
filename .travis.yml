@@ -2,15 +2,15 @@ language: ruby
 rvm:
   - 2.2
   - 2.3
-  - 2.4.1
-  - 2.5.1
+  - 2.4.9
+  - 2.5.7
+  - 2.6.5
   - jruby
   - rbx-2
 
 gemfile:
-  - gemfiles/ruby20.gemfile
-  - gemfiles/sidekiq4.gemfile
-  - gemfiles/upgrade.gemfile
+  - gemfiles/sidekiq52_rails52.gemfile
+  - gemfiles/sidekiq60_rails52.gemfile
 
 script: "bundle exec rspec spec"
 
