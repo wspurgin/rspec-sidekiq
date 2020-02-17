@@ -4,7 +4,7 @@ class TestResource
   attr_reader :global_id
 
   def initialize
-    @global_id = GlobalID.create(self, { app: 'rspec-sidekiq' })
+    @global_id = GlobalID.create(self, app: 'rspec-sidekiq')
   end
 
   def self.find(id)

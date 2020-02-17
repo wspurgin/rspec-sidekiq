@@ -11,11 +11,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:resource) { TestResource.new }
 
   before(:each) do
+    GlobalID.app = 'rspec-sidekiq'
     worker.perform_async *worker_args
     active_job.perform_later 'someResource'
     active_job.perform_later(resource)
     TestActionMailer.testmail.deliver_later
     TestActionMailer.testmail(resource).deliver_later
+    GlobalID.app = "RSpec-Sidekiq"
   end
 
   describe 'expected usage' do
@@ -73,11 +75,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
       end
 
       it 'matches on ActionMailer with a resource Job' do
-        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job([
           'TestActionMailer',
           'testmail',
           'deliver_now',
-          { '_aj_globalid' => resource.to_global_id.uri.to_s }
+          { '_aj_globalid' => resource.to_global_id.uri.to_s }]
         )
       end
     end
