@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'sidekiq', '~> 5.2.2'
+gem 'nokogiri', '~> 1.8.5'
+gem 'rspec-core', '~> 3.8'
+gem 'activejob', '~> 4.2'
+gem 'actionmailer', '~> 4.2'
+gem 'activerecord', '~> 4.2'
+gem "activemodel", "~> 4.2"
+gem "railties", "~> 4.2"
+
+gemspec :path => '../'

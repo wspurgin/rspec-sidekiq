@@ -9,6 +9,7 @@ rvm:
   - rbx-2
 
 gemfile:
+  - gemfiles/sidekiq52_rails42.gemfile
   - gemfiles/sidekiq52_rails52.gemfile
   - gemfiles/sidekiq60_rails52.gemfile
 

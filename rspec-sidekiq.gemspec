@@ -15,13 +15,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq', '>= 2.4.0'
 
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.0'
-  s.add_development_dependency 'fuubar', '~> 2.0', '>= 2.0.0'
-  s.add_development_dependency 'activejob', '~> 4.2', '>= 4.0.0'
-  s.add_development_dependency 'actionmailer', '~> 4.2', '>= 4.0.0'
-  s.add_development_dependency 'activerecord', '~> 4.2', '>= 4.0.0'
-  s.add_development_dependency 'activemodel', '~> 4.2', '>= 4.0.0'
-  s.add_development_dependency 'activesupport', '~> 4.2', '>= 4.0.0'
+  s.add_development_dependency 'coveralls'
+  s.add_development_dependency 'fuubar'
+  s.add_development_dependency 'activejob'
+  s.add_development_dependency 'actionmailer'
+  s.add_development_dependency 'activerecord'
+  s.add_development_dependency 'activemodel'
+  s.add_development_dependency 'activesupport'
 
 
   s.files = Dir['.gitattributes'] +
