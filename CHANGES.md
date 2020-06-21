@@ -1,3 +1,12 @@
+3.1.0
+---
+* Add support for latest ruby and Rails 5 (coding-bunny #156)
+* Support `Class#method` notation in batch callback (caalberts #155)
+* Fix bug with time comparison in delayed jobs (geeosh #153 with help from col)
+* remove usage of `Integer#blank?` (lanej #152)
+* Add `NullBatch#description` (dsantosmerino #139)
+* README updates (BenMusch #142, akihikodaki #141, wpolicarpo #160)
+
 3.0.3
 ---
 * Re-splat arguments for the have_enqueued_job alias (aprescott #136)
