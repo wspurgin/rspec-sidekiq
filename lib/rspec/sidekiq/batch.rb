@@ -46,9 +46,17 @@ if defined? Sidekiq::Batch
         def join
           ::Sidekiq::Worker.drain_all
 
-          @callbacks.each do |event, callback_class, options|
+          @callbacks.each do |event, callback, options|
             if event != :success || failures == 0
-              callback_class.new.send("on_#{event}", self, options)
+              case callback
+              when Class    
+                callback.new.send("on_#{event}", self, options)
+              when String
+                klass, meth = callback.split('#')
+                klass.constantize.new.send(meth, self, options)
+              else
+                raise ArgumentError, 'Unsupported callback notation'
+              end
             end
           end
         end
