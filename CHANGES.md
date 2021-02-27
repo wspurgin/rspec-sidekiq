@@ -1,3 +1,5 @@
+* Add new enqueue_sidekiq_job block matcher(pirj #172)
+
 3.1.0
 ---
 * Add support for latest ruby and Rails 5 (coding-bunny #156)

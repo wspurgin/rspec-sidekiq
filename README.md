@@ -52,6 +52,7 @@ end
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
+* [enqueue_sidekiq_job](#enqueue_sidekiq_job)
 * [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
 
 ### be_delayed
@@ -134,6 +135,41 @@ sidekiq_options expires_in: 1.hour
 # test with...
 it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
+```
+
+### enqueue_sidekiq_job
+*Checks if a certain job was enqueued in a block*
+
+#### Testing scheduled jobs
+*Use chainable matchers `#at` and `#in`*
+```ruby
+time = 5.minutes.from_now
+expect { AwesomeWorker.perform_at(time) }
+  .to enqueue_sidekiq_job(AwesomeWorker).at(time)
+```
+```ruby
+interval = 5.minutes
+expect { AwesomeWorker.perform_in(interval) }
+  .to enqueue_sidekiq_job(AwesomeWorker).in(5.minutes)
+```
+
+#### Specifying arguments
+
+```ruby
+expect { AwesomeWorker.perform_async(42, 'David')
+  .to enqueue_sidekiq_job(AwesomeWorker).with(42, 'David')
+```
+
+## Example matcher usage
+```ruby
+require 'spec_helper'
+
+describe User do
+  it 'enqueues welcome email job' do
+    expect { User.create! }
+      .to enqueue_sidekiq_job(WelcomeUserWorker)
+  end
+end
 ```
 
 ### have_enqueued_sidekiq_job
