@@ -74,8 +74,8 @@ module RSpec
         end
 
         def filter(jobs)
-          jobs = jobs.select { |job| timestamps_match_rounded_to_seconds?(expected_at, job['at']) } if expected_at
-          jobs = jobs.select { |job| intervals_match_rounded_to_seconds?(expected_in, job['at']) } if expected_in
+          jobs = jobs.select { |job| timestamps_match_rounded_to_seconds?(job['at']) } if expected_at
+          jobs = jobs.select { |job| intervals_match_rounded_to_seconds?(job['at']) } if expected_in
           jobs = jobs.select { |job| values_match?(expected_arguments, job['args']) } if expected_arguments
           jobs
         end
@@ -84,7 +84,7 @@ module RSpec
         # some platforms, and lossy Sidekiq serialization that uses `.to_f` on timestamps,
         # values won't match unless rounded.
         # Rounding to whole seconds is sub-optimal but simple.
-        def timestamps_match_rounded_to_seconds?(expected, actual)
+        def timestamps_match_rounded_to_seconds?(actual)
           return false if actual.nil?
 
           actual_time = Time.at(actual)
@@ -92,7 +92,7 @@ module RSpec
             expected_at.to_i == actual_time.to_i
         end
 
-        def intervals_match_rounded_to_seconds?(expected, actual)
+        def intervals_match_rounded_to_seconds?(actual)
           return false if actual.nil?
 
           actual_time = Time.at(actual)
