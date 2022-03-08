@@ -6,6 +6,8 @@ require 'rspec-sidekiq'
 
 require 'active_job'
 require 'action_mailer'
+require 'active_support/testing/time_helpers'
+require 'tzinfo'
 
 require_relative 'support/init'
 
@@ -18,6 +20,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.include RSpec::Sidekiq::Spec::Support::Factories
+  config.include ActiveSupport::Testing::TimeHelpers
 end
 
 ActiveJob::Base.queue_adapter = :sidekiq

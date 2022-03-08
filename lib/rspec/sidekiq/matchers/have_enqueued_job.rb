@@ -31,7 +31,7 @@ module RSpec
 
         def in_evaluator(value)
           return false if job['at'].to_s.empty?
-          (Time.now + value).to_i == Time.at(job['at']).to_i
+          (Time.now.to_f + value.to_f).to_i == Time.at(job['at']).to_i
         end
       end
 

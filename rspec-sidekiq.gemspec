@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'activerecord'
   s.add_development_dependency 'activemodel'
   s.add_development_dependency 'activesupport'
+  s.add_development_dependency 'tzinfo'
 
 
   s.files = Dir['.gitattributes'] +

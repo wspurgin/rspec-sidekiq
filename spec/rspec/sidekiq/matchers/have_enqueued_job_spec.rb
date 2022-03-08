@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:tomorrow) { DateTime.now + 1 }
-  let(:interval) { 3.minutes }
+  let(:interval) { 1.day }
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
   let(:worker) { create_worker }
@@ -19,6 +19,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     TestActionMailer.testmail(resource).deliver_later
   end
 
+  before do
+    travel_to Time.new(2021, 3, 14, 1, 59, 59, TZInfo::Timezone.get('America/New_York'))
+  end
+
+  after do
+    travel_back
+  end
+
   describe 'expected usage' do
     context 'Sidekiq' do
       it 'matches' do
@@ -33,7 +41,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
         let(:worker_args_in) { worker_args + ['in'] }
 
         before(:each) do
-          worker.perform_in 3.minutes, *worker_args_in
+          worker.perform_in interval, *worker_args_in
         end
 
         it 'matches on an scheduled job with #perform_in' do
