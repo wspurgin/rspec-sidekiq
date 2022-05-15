@@ -156,12 +156,12 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 *Use chainable matchers `#at` and `#in`*
 ```ruby
 time = 5.minutes.from_now
-Awesomejob.perform_at time, 'Awesome', true
+AwesomeJob.perform_at time, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 ```
 ```ruby
-Awesomejob.perform_in 5.minutes, 'Awesome', true
+AwesomeJob.perform_in 5.minutes, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
 ```
