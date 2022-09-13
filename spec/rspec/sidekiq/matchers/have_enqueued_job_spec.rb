@@ -118,7 +118,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
       expected to have an enqueued #{worker} job
         arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
       found
-        arguments: [[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]]
+        arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
       eos
     end
   end

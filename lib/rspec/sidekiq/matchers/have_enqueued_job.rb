@@ -148,7 +148,7 @@ module RSpec
             end
           else
             map_arguments(jobs)
-          end.map { |job| job.flatten }
+          end.first
         end
 
         def map_arguments(job)
