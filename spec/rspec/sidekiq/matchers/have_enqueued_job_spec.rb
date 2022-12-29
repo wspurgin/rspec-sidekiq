@@ -6,16 +6,17 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
   let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
   let(:worker) { create_worker }
-  let(:worker_args) { ['string', 1, true, { key: 'value', bar: :foo, nested: [{hash: true}] }] }
+  let(:worker_args) { ['string', 1, true, { "key" => 'value', "bar" => "foo", "nested" => [{"hash" => true}] }] }
   let(:active_job) { create_active_job :mailers }
   let(:resource) { TestResource.new }
 
   before(:each) do
     GlobalID.app = 'rspec-sidekiq'
+    allow(GlobalID::Locator).to receive(:locate).and_return(resource)
     worker.perform_async *worker_args
-    active_job.perform_later 'someResource'
+    active_job.perform_later "someResource", *worker_args
     active_job.perform_later(resource)
-    TestActionMailer.testmail.deliver_later
+    TestActionMailer.testmail(*worker_args).deliver_later
     TestActionMailer.testmail(resource).deliver_later
   end
 
@@ -56,11 +57,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
     context 'ActiveJob' do
       it 'matches on an enqueued ActiveJob' do
-        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job 'someResource'
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job 'someResource', *worker_args
       end
 
-      it 'matches on an enqueued ActiveJob by global_id' do
-        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job('_aj_globalid' => resource.to_global_id.uri.to_s)
+      it 'matches on an enqueued ActiveJob by global_id-capable object' do
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(resource)
       end
     end
 
@@ -69,7 +70,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
           'TestActionMailer',
           'testmail',
-          'deliver_now'
+          'deliver_now',
+          *worker_args
         )
       end
 
@@ -78,7 +80,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
           'TestActionMailer',
           'testmail',
           'deliver_now',
-          { '_aj_globalid' => resource.to_global_id.uri.to_s }
+          resource
         )
       end
     end
@@ -88,19 +90,9 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
     it 'returns instance' do
       expect(have_enqueued_sidekiq_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedJob
     end
-  end
-
-  describe '#have_enqueued_job' do
-    it 'returns instance' do
-      expect(have_enqueued_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedJob
-    end
-
-    it 'provides deprecation warning' do
-      expect { have_enqueued_job }.to output(/[DEPRECATION]/).to_stderr
-    end
 
     it 'matches the same way have_enqueued_sidekiq_job does' do
-      expect(worker).to have_enqueued_job *worker_args
+      expect(worker).to have_enqueued_sidekiq_job *worker_args
     end
   end
 
@@ -116,9 +108,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
       argument_subject.matches? worker
       expect(argument_subject.failure_message).to eq <<-eos.gsub(/^ {6}/, '').strip
       expected to have an enqueued #{worker} job
-        arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
-      found
-        arguments: [[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]]
+        with arguments:
+          -[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
+      but have enqueued only jobs
+        with arguments:
+          -[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
       eos
     end
   end

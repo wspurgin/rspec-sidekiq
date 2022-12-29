@@ -141,7 +141,9 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
 
 #### Testing scheduled jobs
+
 *Use chainable matchers `#at` and `#in`*
+
 ```ruby
 time = 5.minutes.from_now
 Awesomejob.perform_at time, 'Awesome', true
@@ -152,6 +154,21 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 Awesomejob.perform_in 5.minutes, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
+```
+
+#### Testing ActiveMailer jobs
+
+```ruby
+user = User.first
+AwesomeActionMailer.invite(user, true).deliver_later
+
+expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+  "AwesomeActionMailer",
+  "invite",
+  "deliver_now",
+  user,
+  true
+)
 ```
 
 ## Example matcher usage
@@ -195,8 +212,6 @@ FooClass.within_sidekiq_retries_exhausted_block {
 
 ## Maintainers
 * @adsteel
-* @packrat386
-* @philostler (original author)
 
 ## Contribute
 Please do! If there's a feature missing that you'd love to see then get in on the action!

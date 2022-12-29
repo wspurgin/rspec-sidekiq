@@ -35,15 +35,71 @@ module RSpec
         end
       end
 
-      class JobMatcher
-        attr_reader :jobs
+      class JobArguments
+        def initialize(job)
+          self.job = job
+        end
+        attr_accessor :job
+
+        def matches?(expected_args)
+          RSpec::Matchers::BuiltIn::ContainExactly.new(expected_args).matches?(unwrapped_arguments)
+        end
+
+        def unwrapped_arguments
+          args = job['args']
+
+          return deserialized_active_job_args if active_job?
+
+          args
+        end
+
+        private
+
+        def active_job?
+          job["class"] == "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
+        end
+
+        def deserialized_active_job_args
+          _deserialized_active_job_args = ActiveJob::Arguments.deserialize(active_job_original_args)
+
+          # ActiveJob 7 (aj7) changed deserialization structure, adding passed arguments
+          # in an aj-specific hash under the :args key
+          aj7_args_hash = _deserialized_active_job_args.detect { |arg| arg.respond_to?(:key) && arg.key?(:args) }
+
+          return _deserialized_active_job_args if aj7_args_hash.nil?
+
+          _deserialized_active_job_args.delete(aj7_args_hash)
+          _deserialized_active_job_args.concat(aj7_args_hash[:args])
+        end
+
+        def active_job_original_args
+          _active_job_args = job["args"].detect { |arg| arg.is_a?(Hash) && arg.key?("arguments") }
+          _active_job_args ||= {}
+          _active_job_args["arguments"] || []
+        end
+      end
+
+      class EnqueuedJobs
+        attr_reader :jobs, :actual_arguments, :actual_options
 
         def initialize(klass)
           @jobs = unwrap_jobs(klass.jobs)
         end
 
-        def present?(arguments, options)
-          !!find_job(arguments, options)
+        def includes?(arguments, options)
+          !!jobs.find { |job| matches?(job, arguments, options) }
+        end
+
+        def actual_arguments
+          @actual_arguments ||= jobs.map { |job| JobArguments.new(job).unwrapped_arguments }
+        end
+
+        def actual_options
+          @actual_options ||= if jobs.is_a?(Hash)
+            jobs.values
+          else
+            jobs.flatten.map { |j| { 'at' => j['at'] } }
+          end
         end
 
         private
@@ -54,8 +110,9 @@ module RSpec
         end
 
         def arguments_matches?(job, arguments)
-          arguments_got = job_arguments(job)
-          contain_exactly?(arguments, arguments_got)
+          job_arguments = JobArguments.new(job)
+
+          job_arguments.matches?(arguments)
         end
 
         def options_matches?(job, options)
@@ -65,24 +122,9 @@ module RSpec
           end
         end
 
-        def find_job(arguments, options)
-          jobs.find { |job| matches?(job, arguments, options) }
-        end
-
-        def job_arguments(job)
-          args = job['args']
-          return args[0]['arguments'] if args.is_a?(Array) && args[0].is_a?(Hash) && args[0].has_key?('arguments')
-          args
-        end
-
         def unwrap_jobs(jobs)
           return jobs if jobs.is_a?(Array)
           jobs.values.flatten
-        end
-
-        def contain_exactly?(expected, got)
-          exactly = RSpec::Matchers::BuiltIn::ContainExactly.new(expected)
-          exactly.matches?(got)
         end
       end
 
@@ -90,15 +132,20 @@ module RSpec
         attr_reader :klass, :expected_arguments, :actual_arguments, :expected_options, :actual_options
 
         def initialize(expected_arguments)
-          @expected_arguments = normalize_arguments(expected_arguments)
+          @expected_arguments = expected_arguments
           @expected_options = {}
         end
 
+
         def matches?(klass)
           @klass = klass
-          @actual_arguments = unwrapped_job_arguments(klass.jobs)
-          @actual_options = unwrapped_job_options(klass.jobs)
-          JobMatcher.new(klass).present?(expected_arguments, expected_options)
+
+          enqueued_jobs = EnqueuedJobs.new(klass)
+
+          @actual_arguments = enqueued_jobs.actual_arguments
+          @actual_options = enqueued_jobs.actual_options
+
+          enqueued_jobs.includes?(jsonified_expected_arguments, expected_options)
         end
 
         def at(timestamp)
@@ -117,11 +164,13 @@ module RSpec
 
         def failure_message
           message = ["expected to have an enqueued #{klass} job"]
-          message << "  arguments: #{expected_arguments}" if expected_arguments
-          message << "  options: #{expected_options}" if expected_options.any?
-          message << "found"
-          message << "  arguments: #{actual_arguments}" if expected_arguments
-          message << "  options: #{actual_options}" if expected_options.any?
+          message << "  with arguments:" if expected_arguments
+          message << "    -#{expected_arguments.inspect}" if expected_arguments
+          message << "  with options:" if expected_options.any?
+          message << "    -#{expected_options}" if expected_options.any?
+          message << "but have enqueued only jobs"
+          message.concat(["  with arguments:"], actual_arguments.sort_by { |a| a[0].to_s }.map { |a| "    -#{a}" }) if expected_arguments
+          message.concat(["  with options:"], actual_options.sort_by { |a| a.to_a[0].to_s }.map { |o| "    -#{o}" }) if expected_options.any?
           message.join("\n")
         end
 
@@ -132,49 +181,18 @@ module RSpec
           message.join("\n")
         end
 
-        private
-
-        def unwrapped_job_options(jobs)
-          jobs = jobs.values if jobs.is_a?(Hash)
-          jobs.flatten.map do |job|
-            { 'at' => job['at'] }
-          end
-        end
-
-        def unwrapped_job_arguments(jobs)
-          if jobs.is_a? Hash
-            jobs.values.flatten.map do |job|
-              map_arguments(job)
+        def jsonified_expected_arguments
+          # We would just cast-to-parse-json, but we need to support
+          # RSpec matcher args like #kind_of
+          @jsonified_expected_arguments ||= begin
+            expected_arguments.map do |arg|
+              case arg.class
+              when Symbol then arg.to_s
+              when Hash then JSON.parse(arg.to_json)
+              else
+                arg
+              end
             end
-          else
-            map_arguments(jobs)
-          end.map { |job| job.flatten }
-        end
-
-        def map_arguments(job)
-          args = job_arguments(job) || job
-          if args.respond_to?(:any?) && args.any? { |e| e.is_a? Hash }
-            args.map { |a| map_arguments(a) }
-          else
-            args
-          end
-        end
-
-        def job_arguments(hash)
-          hash['arguments'] || hash['args'] if hash.is_a? Hash
-        end
-
-        def normalize_arguments(args)
-          if args.is_a?(Array)
-            args.map{ |x| normalize_arguments(x) }
-          elsif args.is_a?(Hash)
-            args.each_with_object({}) do |(key, value), hash|
-              hash[key.to_s] = normalize_arguments(value)
-            end
-          elsif args.is_a?(Symbol)
-            args.to_s
-          else
-            args
           end
         end
       end

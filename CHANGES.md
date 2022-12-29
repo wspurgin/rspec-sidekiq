@@ -1,3 +1,13 @@
+Unreleased - 4.0.0
+---
+* [BREAKING] Dropped support for matching jobs on ActiveJob's private API args, (e.g. `_aj_globalid` and `_aj_ruby2_keywords`). `_aj_globalid` can be replaced with the object itself, e.g. `have_enqueued_sidekiq_job(user)`.
+* [BREAKING] Dropped support for Ruby 2.6
+* [Possible breaking] Dropped support for Sidekiq 5
+* [Possible breaking] Dropped support for Rails 5
+* Clarified `have_enqueued_sidekiq_job` error message to make it clear that the "actual arguments" list is a list of argument-lists across all jobs.
+* Switched to GitHub Actions for CI
+* README updates to clarify new author and build links
+
 3.1.0
 ---
 * Add support for latest ruby and Rails 5 (coding-bunny #156)
