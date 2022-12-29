@@ -1,7 +1,7 @@
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
 
-name: rspec-sidekiq gem
+name: main build
 run-name: ${{ github.actor }} 🚀
 on: [push]
 
