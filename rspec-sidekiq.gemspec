@@ -12,8 +12,11 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.add_dependency 'rspec-core', '~> 3.0', '>= 3.0.0'
-  s.add_dependency 'sidekiq', '>= 2.4.0'
+  s.add_dependency 'sidekiq', '>= 2.4.0', '< 7'
 
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'pry-doc'
+  s.add_development_dependency 'pry-nav'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'coveralls'
   s.add_development_dependency 'fuubar'
@@ -27,8 +30,6 @@ Gem::Specification.new do |s|
   s.files = Dir['.gitattributes'] +
             Dir['.gitignore'] +
             Dir['.rspec'] +
-            Dir['.simplecov'] +
-            Dir['.travis'] +
             Dir['CHANGES.md'] +
             Dir['Gemfile'] +
             Dir['LICENSE'] +

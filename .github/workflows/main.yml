@@ -1,0 +1,41 @@
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: main build
+run-name: ${{ github.actor }} 🚀 ${{github.ref_name}}
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version:
+          - '2.7'
+          - '3.0'
+          - '3.1'
+          - '3.2'
+        gemfile:
+          - 'Gemfile'
+          - 'gemfiles/sidekiq5_rails6.gemfile'
+          - 'gemfiles/sidekiq6_4_rails6.gemfile'
+          - 'gemfiles/sidekiq6_4_rails7.gemfile'
+          - 'gemfiles/sidekiq6_5_rails6.gemfile'
+          - 'gemfiles/sidekiq6_5_rails7.gemfile'
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up using Ruby ${{ matrix.ruby-version }} with Gemfile '${{ matrix.gemfile }}'
+      # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+      # change this to (see https://github.com/ruby/setup-ruby#versioning):
+      # uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Run tests
+        run: bundle exec rspec spec

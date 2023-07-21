@@ -1,2 +1,5 @@
 Gemfile.lock
 tmp
+/gemfiles/*.lock
+.tool-versions
+.rspec

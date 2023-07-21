@@ -1,5 +1,4 @@
-require 'simplecov'
-require 'coveralls'
+require 'pry'
 
 require 'sidekiq'
 require 'rspec-sidekiq'
@@ -9,11 +8,6 @@ require 'action_mailer'
 
 require_relative 'support/init'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
-  [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
-)
-SimpleCov.start
-
 RSpec.configure do |config|
   config.disable_monkey_patching!
 
@@ -21,6 +15,7 @@ RSpec.configure do |config|
 end
 
 ActiveJob::Base.queue_adapter = :sidekiq
+ActiveJob::Base.logger.level = :warn
 
 if Gem::Dependency.new('sidekiq', '>= 5.0.0').matching_specs.any?
   require 'active_record'

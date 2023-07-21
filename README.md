@@ -1,23 +1,11 @@
-**Welcome @packrat386 as new maintainer for `rspec-sidekiq`!**
+**Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
 
 # RSpec for Sidekiq
 
 [![RubyGems][gem_version_badge]][ruby_gems]
-[![Code Climate][code_climate_badge]][code_climate]
-[![Travis CI][travis_ci_badge]][travis_ci]
-[![Coveralls][coveralls_badge]][coveralls]
-[![Gemnasium][gemnasium_badge]][gemnasium]
+[![Github Actions CI][github_actions_badge]][github_actions]
 
-***Simple testing of Sidekiq jobs via a collection of matchers and helpers***
-
-[RubyGems][ruby_gems] |
-[Code Climate][code_climate] |
-[GitHub][github] |
-[Travis CI][travis_ci] |
-[Coveralls][coveralls] |
-[Gemnasium][gemnasium] |
-[RubyDoc][ruby_doc] |
-[Ruby Toolbox][ruby_toolbox]
+Simple testing of Sidekiq jobs via a collection of matchers and helpers.
 
 [Jump to Matchers &raquo;](#matchers) | [Jump to Helpers &raquo;](#helpers)
 
@@ -108,7 +96,7 @@ sidekiq_options backtrace: 5
 # test with...
 expect(AwesomeJob).to save_backtrace # or
 it { is_expected.to save_backtrace }
-# ...or alternatively specifiy the number of lines that should be saved
+# ...or alternatively specify the number of lines that should be saved
 expect(AwesomeJob).to save_backtrace 5 # or
 it { is_expected.to save_backtrace 5 }
 # ...or when it should not save the backtrace
@@ -153,7 +141,9 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 ```
 
 #### Testing scheduled jobs
+
 *Use chainable matchers `#at` and `#in`*
+
 ```ruby
 time = 5.minutes.from_now
 Awesomejob.perform_at time, 'Awesome', true
@@ -164,6 +154,21 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 Awesomejob.perform_in 5.minutes, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
+```
+
+#### Testing ActiveMailer jobs
+
+```ruby
+user = User.first
+AwesomeActionMailer.invite(user, true).deliver_later
+
+expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+  "AwesomeActionMailer",
+  "invite",
+  "deliver_now",
+  user,
+  true
+)
 ```
 
 ## Example matcher usage
@@ -203,9 +208,15 @@ FooClass.within_sidekiq_retries_exhausted_block {
 ```
 
 ## Testing
-```bundle exec rspec spec```
+```
+bundle exec rspec spec
+```
 
 ## Maintainers
+* @wspurgin
+
+### Alumni
+
 * @packrat386
 * @philostler
 
@@ -214,19 +225,13 @@ Please do! If there's a feature missing that you'd love to see then get in on th
 
 Issues/Pull Requests/Comments all welcome...
 
-[code_climate]: https://codeclimate.com/github/philostler/rspec-sidekiq
-[code_climate_badge]: https://codeclimate.com/github/philostler/rspec-sidekiq.svg
-[coveralls]: https://coveralls.io/r/philostler/rspec-sidekiq
-[coveralls_badge]: https://img.shields.io/coveralls/philostler/rspec-sidekiq.svg?branch=develop
 [gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.svg
-[gemnasium]: https://gemnasium.com/philostler/rspec-sidekiq
-[gemnasium_badge]: https://gemnasium.com/philostler/rspec-sidekiq.svg
 [github]: http://github.com/philostler/rspec-sidekiq
 [ruby_doc]: http://rubydoc.info/gems/rspec-sidekiq/frames
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
-[travis_ci]: http://travis-ci.org/philostler/rspec-sidekiq
-[travis_ci_badge]: https://travis-ci.org/philostler/rspec-sidekiq.svg?branch=develop
+[github_actions]: https://github.com/adsteel/rspec-sidekiq/actions
+[github_actions_badge]: https://github.com/adsteel/rspec-sidekiq/actions/workflows/main.yml/badge.svg
 
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches

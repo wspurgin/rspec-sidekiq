@@ -1,4 +1,0 @@
---colour
---tty
---format Fuubar
---format html --out tmp/spec_result/index.html
