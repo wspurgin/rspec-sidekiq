@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.add_dependency 'rspec-core', '~> 3.0', '>= 3.0.0'
-  s.add_dependency 'sidekiq', '>= 2.4.0', '< 7'
+  s.add_dependency 'sidekiq', '>= 2.4.0', '< 8'
 
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-doc'
