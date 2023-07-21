@@ -1,4 +1,4 @@
-**Welcome @adsteel as new maintainer for `rspec-sidekiq`!**
+**Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
 
 # RSpec for Sidekiq
 
@@ -208,10 +208,17 @@ FooClass.within_sidekiq_retries_exhausted_block {
 ```
 
 ## Testing
-```bundle exec rspec spec```
+```
+bundle exec rspec spec
+```
 
 ## Maintainers
-* @adsteel
+* @wspurgin
+
+### Alumni
+
+* @packrat386
+* @philostler
 
 ## Contribute
 Please do! If there's a feature missing that you'd love to see then get in on the action!
