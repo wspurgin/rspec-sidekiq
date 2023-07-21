@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
-  skip("Be Delayed is only valid for Sidekiq <7") do
+  if RSpec.configuration.sidekiq_gte_7
+    skip("Be Delayed is only valid for Sidekiq <7")
+  else
     let(:delay_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new }
     let(:delay_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new Object }
     let(:delay_for_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new.for 3600 }
@@ -235,6 +237,6 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
           expect(delay_until_with_arguments_subject.failure_message_when_negated).to eq "expected Object.is_a? to not be delayed until #{Time.now + 3600} with arguments [Object]"
         end
       end
-      end
-  end if RSpec.configuration.sidekiq_gte_7
+    end
+  end
 end
