@@ -8,9 +8,11 @@ module RSpec
         :warn_when_jobs_not_processed_by_sidekiq
 
       def initialize
-        @clear_all_enqueued_jobs = true
+        # Display settings defaults
         @enable_terminal_colours = true
 
+        # Functional settings defaults
+        @clear_all_enqueued_jobs = true
         @warn_when_jobs_not_processed_by_sidekiq = true
       end
 
