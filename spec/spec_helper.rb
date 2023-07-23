@@ -12,13 +12,22 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.include RSpec::Sidekiq::Spec::Support::Factories
-end
 
-ActiveJob::Base.queue_adapter = :sidekiq
-ActiveJob::Base.logger.level = :warn
+  # Add a setting to store our Sidekiq Version and share that around the specs
+  config.add_setting :sidekiq_gte_7
+  config.add_setting :sidekiq_gte_5
+  config.sidekiq_gte_5 = Gem::Dependency.new("sidekiq", ">= 5.0.0").matching_specs.any?
+  config.sidekiq_gte_7 = Gem::Dependency.new("sidekiq", ">= 7.0.0").matching_specs.any?
 
-if Gem::Dependency.new('sidekiq', '>= 5.0.0').matching_specs.any?
-  require 'active_record'
-  ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
-  Sidekiq::Extensions.enable_delay!
+  config.before(:suite) do
+    ActiveJob::Base.queue_adapter = :sidekiq
+    ActiveJob::Base.logger.level = :warn
+
+
+    if config.sidekiq_gte_5 && !config.sidekiq_gte_7
+      require "active_record"
+      ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
+      Sidekiq::Extensions.enable_delay!
+    end
+  end
 end

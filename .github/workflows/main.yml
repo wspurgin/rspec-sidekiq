@@ -25,6 +25,7 @@ jobs:
           - 'gemfiles/sidekiq6_4_rails7.gemfile'
           - 'gemfiles/sidekiq6_5_rails6.gemfile'
           - 'gemfiles/sidekiq6_5_rails7.gemfile'
+          - 'gemfiles/sidekiq7_rails7.gemfile'
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:

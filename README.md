@@ -36,33 +36,58 @@ end
 ```
 
 ## Matchers
-* [be_delayed](#be_delayed)
+* [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
-* [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
+* [be_delayed (_deprecated_)](#be_delayed)
 
-### be_delayed
-*Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
+### have_enqueued_sidekiq_job
+*Describes that there should be an enqueued job with the specified arguments*
+
+**Note:** When using rspec-rails >= 3.4, use `have_enqueued_sidekiq_job` instead to
+prevent a name clash with rspec-rails' ActiveJob matcher.
+
 ```ruby
-Object.delay.is_nil? # delay
-expect(Object.method :is_nil?).to be_delayed
-Object.delay.is_a? Object # delay with argument
-expect(Object.method :is_a?).to be_delayed(Object)
+AwesomeJob.perform_async 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
 
-Object.delay_for(1.hour).is_nil? # delay for
-expect(Object.method :is_nil?).to be_delayed.for 1.hour
-Object.delay_for(1.hour).is_a? Object # delay for with argument
-expect(Object.method :is_a?).to be_delayed(Object).for 1.hour
+# Code written with older versions of the gem may use the deprecated
+# have_enqueued_job matcher.
+expect(AwesomeJob).to have_enqueued_job('Awesome', true)
+```
 
-Object.delay_until(1.hour.from_now).is_nil? # delay until
-expect(Object.method :is_nil?).to be_delayed.until 1.hour.from_now
-Object.delay_until(1.hour.from_now).is_a? Object # delay until with argument
-expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now
+#### Testing scheduled jobs
 
-#Rails Mailer
-MyMailer.delay.some_mail
-expect(MyMailer.instance_method :some_mail).to be_delayed
+*Use chainable matchers `#at` and `#in`*
+
+```ruby
+time = 5.minutes.from_now
+Awesomejob.perform_at time, 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
+```
+```ruby
+Awesomejob.perform_in 5.minutes, 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
+```
+
+
+#### Testing ActiveMailer jobs
+
+```ruby
+user = User.first
+AwesomeActionMailer.invite(user, true).deliver_later
+
+expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+  "AwesomeActionMailer",
+  "invite",
+  "deliver_now",
+  user,
+  true
+)
 ```
 
 ### be_processed_in
@@ -124,51 +149,32 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### have_enqueued_sidekiq_job
-*Describes that there should be an enqueued job with the specified arguments*
+### be_delayed
 
-**Note:** When using rspec-rails >= 3.4, use `have_enqueued_sidekiq_job` instead to
-prevent a name clash with rspec-rails' ActiveJob matcher.
+**This matcher is deprecated**. Use of it with Sidekiq 7+ will raise an error.
+Sidekiq 7 [dropped Delayed
+Extensions](https://github.com/sidekiq/sidekiq/issues/5076).
 
+*Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
 ```ruby
-AwesomeJob.perform_async 'Awesome', true
-# test with...
-expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
+Object.delay.is_nil? # delay
+expect(Object.method :is_nil?).to be_delayed
+Object.delay.is_a? Object # delay with argument
+expect(Object.method :is_a?).to be_delayed(Object)
 
-# Code written with older versions of the gem may use the deprecated
-# have_enqueued_job matcher.
-expect(AwesomeJob).to have_enqueued_job('Awesome', true)
-```
+Object.delay_for(1.hour).is_nil? # delay for
+expect(Object.method :is_nil?).to be_delayed.for 1.hour
+Object.delay_for(1.hour).is_a? Object # delay for with argument
+expect(Object.method :is_a?).to be_delayed(Object).for 1.hour
 
-#### Testing scheduled jobs
+Object.delay_until(1.hour.from_now).is_nil? # delay until
+expect(Object.method :is_nil?).to be_delayed.until 1.hour.from_now
+Object.delay_until(1.hour.from_now).is_a? Object # delay until with argument
+expect(Object.method :is_a?).to be_delayed(Object).until 1.hour.from_now
 
-*Use chainable matchers `#at` and `#in`*
-
-```ruby
-time = 5.minutes.from_now
-Awesomejob.perform_at time, 'Awesome', true
-# test with...
-expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
-```
-```ruby
-Awesomejob.perform_in 5.minutes, 'Awesome', true
-# test with...
-expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
-```
-
-#### Testing ActiveMailer jobs
-
-```ruby
-user = User.first
-AwesomeActionMailer.invite(user, true).deliver_later
-
-expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
-  "AwesomeActionMailer",
-  "invite",
-  "deliver_now",
-  user,
-  true
-)
+#Rails Mailer
+MyMailer.delay.some_mail
+expect(MyMailer.instance_method :some_mail).to be_delayed
 ```
 
 ## Example matcher usage
