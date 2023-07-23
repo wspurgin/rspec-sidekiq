@@ -1,8 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
   if RSpec.configuration.sidekiq_gte_7
-    skip("Be Delayed is only valid for Sidekiq <7")
+    it "should raise an error" do
+      expect { described_class.new }.to raise_error(/Use of the be_delayed matcher with Sidekiq 7\+ is not possible/)
+    end
   else
     let(:delay_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new }
     let(:delay_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new Object }
