@@ -15,7 +15,7 @@ module RSpec
       end
 
       def sidekiq_gte_7?
-        Gem::Version.new(::Sidekiq::VERSION) >= "7"
+        Gem::Version.new(::Sidekiq::VERSION) >= Gem::Version.new("7.0.0")
       end
     end
   end
