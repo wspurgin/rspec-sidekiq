@@ -9,6 +9,24 @@ if defined? Sidekiq::Batch
         end
       end
 
+      ##
+      # Sidekiq::Batch is a Sidekiq::Pro feature. However the general consensus is
+      # that, by defeault, you can't test without redis. RSpec::Sidekiq includes
+      # a "null object" pattern implementation to mock Batches. This will mock
+      # Sidekiq::Batch and prevent it from using Redis.
+      #
+      # This is _opt-in_ only feature.
+      #
+      #     RSpec.describe "Using mocked batches", stub_batches: true do
+      #       it "uses mocked batches" do
+      #         batch = Sidekiq::Batch.new
+      #         batch.jobs do
+      #           SomeJob.perform_async 123
+      #         end
+      #
+      #         expect(SomeJob).to have_enqueued_sidekiq_job
+      #       end
+      #     end
       class NullBatch < NullObject
         attr_accessor :description
         attr_reader :bid
@@ -49,7 +67,7 @@ if defined? Sidekiq::Batch
           @callbacks.each do |event, callback, options|
             if event != :success || failures == 0
               case callback
-              when Class    
+              when Class
                 callback.new.send("on_#{event}", self, options)
               when String
                 klass, meth = callback.split('#')
@@ -71,7 +89,7 @@ if defined? Sidekiq::Batch
   # :nocov:
   RSpec.configure do |config|
     config.before(:each) do |example|
-      next if example.metadata[:stub_batches] == false
+      next unless example.metadata[:stub_batches] == true
 
       if mocked_with_mocha?
         Sidekiq::Batch.stubs(:new) { RSpec::Sidekiq::NullBatch.new }
