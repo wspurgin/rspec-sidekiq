@@ -64,12 +64,12 @@ expect(AwesomeJob).to have_enqueued_job('Awesome', true)
 
 ```ruby
 time = 5.minutes.from_now
-Awesomejob.perform_at time, 'Awesome', true
+AwesomeJob.perform_at time, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 ```
 ```ruby
-Awesomejob.perform_in 5.minutes, 'Awesome', true
+AwesomeJob.perform_in 5.minutes, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
 ```
@@ -196,11 +196,38 @@ end
 ```
 
 ## Helpers
-* [Batches (Sidekiq Pro)](#batches)
+* [Batches (Sidekiq Pro) _experimental_](#batches)
 * [`within_sidekiq_retries_exhausted_block`](#within_sidekiq_retries_exhausted_block)
 
 ### Batches
-If you are using Sidekiq Batches ([Sidekiq Pro feature][sidekiq_wiki_batches]), rspec-sidekiq replaces the implementation (using the NullObject pattern) enabling testing without a Redis instance. Mocha and RSpec stubbing is supported here.
+
+If you are using Sidekiq Batches ([Sidekiq Pro feature][sidekiq_wiki_batches]),
+You can *opt-in* with `stub_batches` to make `rspec-sidekiq` mock the
+implementation (using a NullObject pattern). This enables testing without a
+Redis instance. Mocha and RSpec stubbing is supported here.
+
+:warning: **Caution**: Opting-in to this feature, while allowing you to test without
+having Redis, _does not_ provide the exact API that `Sidekiq::Batch` does. As
+such it can cause surprises.
+
+
+```ruby
+RSpec.describe "Using mocked batches", stub_batches: true do
+  it "uses mocked batches" do
+    batch = Sidekiq::Batch.new
+    batch.jobs do
+      SomeJob.perform_async 123
+    end
+
+    expect(SomeJob).to have_enqueued_sidekiq_job
+
+    # Caution, the NullObject pattern means that the mocked Batch implementation
+    # responds to anything... even if it's not on the true `Sidekiq::Batch` API
+    # For example, the following fails
+    expect { batch.foobar! }.to raise_error(NoMethodError)
+  end
+end
+```
 
 ### within_sidekiq_retries_exhausted_block
 ```ruby
