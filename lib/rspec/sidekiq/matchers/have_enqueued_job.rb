@@ -74,27 +74,37 @@ module RSpec
         end
       end
 
+      class EnqueuedJob
+        extend Forwardable
+        attr_reader :job
+        delegate :[] => :@job
+
+        def initialize(job)
+          @job = job
+        end
+
+        def jid
+          job["jid"]
+        end
+
+        def args
+          @actual_arguments ||= JobArguments.new(job).unwrapped_arguments
+        end
+
+        def context
+          @actual_options ||= job.except("args")
+        end
+      end
+
       class EnqueuedJobs
         attr_reader :jobs
 
         def initialize(klass)
-          @jobs = unwrap_jobs(klass.jobs)
+          @jobs = unwrap_jobs(klass.jobs).map { |job| EnqueuedJob.new(job) }
         end
 
         def includes?(arguments, options)
           !!jobs.find { |job| matches?(job, arguments, options) }
-        end
-
-        def actual_arguments
-          @actual_arguments ||= jobs.map { |job| JobArguments.new(job).unwrapped_arguments }
-        end
-
-        def actual_options
-          @actual_options ||= if jobs.is_a?(Hash)
-            jobs.values
-          else
-            jobs.flatten.map { |j| {"at" => j["at"]} }
-          end
         end
 
         private
@@ -124,21 +134,18 @@ module RSpec
       end
 
       class HaveEnqueuedJob
-        attr_reader :klass, :expected_arguments, :actual_arguments, :expected_options, :actual_options
+        attr_reader :klass, :expected_arguments, :expected_options, :actual_jobs
 
         def initialize(expected_arguments)
           @expected_arguments = expected_arguments
           @expected_options = {}
         end
 
-
         def matches?(klass)
           @klass = klass
 
           enqueued_jobs = EnqueuedJobs.new(klass)
-
-          @actual_arguments = enqueued_jobs.actual_arguments
-          @actual_options = enqueued_jobs.actual_options
+          @actual_jobs = enqueued_jobs.jobs
 
           enqueued_jobs.includes?(jsonified_expected_arguments, expected_options)
         end
@@ -164,8 +171,20 @@ module RSpec
           message << "  with options:" if expected_options.any?
           message << "    -#{expected_options}" if expected_options.any?
           message << "but have enqueued only jobs"
-          message.concat(["  with arguments:"], actual_arguments.sort_by { |a| a[0].to_s }.map { |a| "    -#{a}" }) if expected_arguments
-          message.concat(["  with options:"], actual_options.sort_by { |a| a.to_a[0].to_s }.map { |o| "    -#{o}" }) if expected_options.any?
+          if expected_arguments
+            job_messages = actual_jobs.map do |job|
+              base = "  -JID:#{job.jid} with arguments:"
+              base << "\n    -#{job.args}"
+              if expected_options.any?
+                base << "\n   with options: #{job.context.inspect}"
+              end
+
+              base
+            end
+
+            message << job_messages.join("\n")
+          end
+
           message.join("\n")
         end
 

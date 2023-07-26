@@ -114,16 +114,36 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
   describe '#failure_message' do
     it 'returns message' do
-      worker.perform_async *worker_args
+      jid = worker.perform_async *worker_args
       argument_subject.matches? worker
-      expect(argument_subject.failure_message).to eq <<-eos.gsub(/^ {6}/, '').strip
+      expect(argument_subject.failure_message).to eq <<~eos.strip
       expected to have an enqueued #{worker} job
         with arguments:
-          -[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
+          -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
       but have enqueued only jobs
-        with arguments:
-          -[\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
+        -JID:#{jid} with arguments:
+          -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
       eos
+    end
+
+    context "when expected arguments is an array and multiple jobs enqueued" do
+      let(:wrapped_args) { [worker_args] }
+      let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new wrapped_args }
+
+      it "returns a message showing the wrapped array in expectations but each job on its own line" do
+        jids = 2.times.map { worker.perform_async *worker_args }
+        argument_subject.matches? worker
+        expect(argument_subject.failure_message).to eq <<~eos.strip
+        expected to have an enqueued #{worker} job
+          with arguments:
+            -[["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]]
+        but have enqueued only jobs
+          -JID:#{jids[0]} with arguments:
+            -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+          -JID:#{jids[1]} with arguments:
+            -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+        eos
+      end
     end
   end
 
