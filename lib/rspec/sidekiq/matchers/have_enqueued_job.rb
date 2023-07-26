@@ -164,8 +164,16 @@ module RSpec
           message << "  with options:" if expected_options.any?
           message << "    -#{expected_options}" if expected_options.any?
           message << "but have enqueued only jobs"
-          message.concat(["  with arguments:"], actual_arguments.sort_by { |a| a[0].to_s }.map { |a| "    -#{a}" }) if expected_arguments
-          message.concat(["  with options:"], actual_options.sort_by { |a| a.to_a[0].to_s }.map { |o| "    -#{o}" }) if expected_options.any?
+          if expected_arguments
+            message << "  with arguments:"
+            message << actual_arguments.sort_by { |a| a[0].to_s }.map { |a| "    -#{a}" }.join("\n")
+          end
+
+          if expected_options.any?
+            message << "  with options:"
+            message << actual_options.sort_by { |a| a.to_a[0].to_s }.map { |o| "    -#{o}" }.join("\n")
+          end
+
           message.join("\n")
         end
 
