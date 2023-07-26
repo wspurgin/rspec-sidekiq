@@ -75,7 +75,7 @@ module RSpec
       end
 
       class EnqueuedJobs
-        attr_reader :jobs, :actual_arguments, :actual_options
+        attr_reader :jobs
 
         def initialize(klass)
           @jobs = unwrap_jobs(klass.jobs)
@@ -93,7 +93,7 @@ module RSpec
           @actual_options ||= if jobs.is_a?(Hash)
             jobs.values
           else
-            jobs.flatten.map { |j| { 'at' => j['at'] } }
+            jobs.flatten.map { |j| {"at" => j["at"]} }
           end
         end
 
