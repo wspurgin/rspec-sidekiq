@@ -18,7 +18,7 @@ module RSpec
         end
 
         def matches?(option, value)
-          raise ArgumentError, "Option `#{option}` is not defined." unless %w(in at).include?(option.to_s)
+          raise ArgumentError, "Option `#{option}` is not defined." unless %w[at].include?(option.to_s)
           send("#{option}_evaluator", value)
         end
 
@@ -26,12 +26,7 @@ module RSpec
 
         def at_evaluator(value)
           return false if job['at'].to_s.empty?
-          value.to_time.to_i == Time.at(job['at']).to_i
-        end
-
-        def in_evaluator(value)
-          return false if job['at'].to_s.empty?
-          (Time.now + value).to_i == Time.at(job['at']).to_i
+          value == Time.at(job['at']).to_i
         end
       end
 
@@ -80,7 +75,7 @@ module RSpec
       end
 
       class EnqueuedJobs
-        attr_reader :jobs, :actual_arguments, :actual_options
+        attr_reader :jobs
 
         def initialize(klass)
           @jobs = unwrap_jobs(klass.jobs)
@@ -98,7 +93,7 @@ module RSpec
           @actual_options ||= if jobs.is_a?(Hash)
             jobs.values
           else
-            jobs.flatten.map { |j| { 'at' => j['at'] } }
+            jobs.flatten.map { |j| {"at" => j["at"]} }
           end
         end
 
@@ -149,12 +144,12 @@ module RSpec
         end
 
         def at(timestamp)
-          @expected_options['at'] = timestamp
+          @expected_options['at'] = timestamp.to_time.to_i
           self
         end
 
         def in(interval)
-          @expected_options['in'] = interval
+          @expected_options['at'] = (Time.now.to_f + interval.to_f).to_i
           self
         end
 
