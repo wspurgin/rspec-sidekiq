@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = "Simple testing of Sidekiq jobs via a collection of matchers and helpers"
   s.license     = "MIT"
 
-  s.add_dependency "rspec-core", "~> 3.0", ">= 3.0.0"
+  s.add_dependency "rspec-core", "~> 3.0"
   s.add_dependency "sidekiq", ">= 5", "< 8"
 
   s.add_development_dependency "pry"
@@ -25,14 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "activemodel"
   s.add_development_dependency "activesupport"
 
-  s.files = Dir[".gitattributes"] +
-    Dir[".gitignore"] +
-    Dir[".rspec"] +
-    Dir["CHANGES.md"] +
-    Dir["Gemfile"] +
-    Dir["LICENSE"] +
-    Dir["README.md"] +
-    Dir["rspec-sidekiq.gemspec"] +
-    Dir["**/*.rb"]
+  s.files = `git ls-files -- lib/*`.split("\n")
+  s.files += %w[CHANGES.md LICENSE README.md]
   s.require_paths = ["lib"]
 end
