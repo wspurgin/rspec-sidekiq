@@ -88,11 +88,11 @@ module RSpec
         end
 
         def args
-          @actual_arguments ||= JobArguments.new(job).unwrapped_arguments
+          @args ||= JobArguments.new(job).unwrapped_arguments
         end
 
         def context
-          @actual_options ||= job.except("args")
+          @context||= job.except("args")
         end
       end
 
@@ -168,7 +168,7 @@ module RSpec
           message = ["expected to have an enqueued #{klass} job"]
           message << "  with arguments:" if expected_arguments
           message << "    -#{expected_arguments.inspect}" if expected_arguments
-          message << "  with options:" if expected_options.any?
+          message << "  with context:" if expected_options.any?
           message << "    -#{expected_options}" if expected_options.any?
           message << "but have enqueued only jobs"
           if expected_arguments
@@ -176,7 +176,7 @@ module RSpec
               base = "  -JID:#{job.jid} with arguments:"
               base << "\n    -#{job.args}"
               if expected_options.any?
-                base << "\n   with options: #{job.context.inspect}"
+                base << "\n   with context: #{job.context.inspect}"
               end
 
               base
