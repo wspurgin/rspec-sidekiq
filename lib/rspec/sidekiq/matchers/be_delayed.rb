@@ -68,7 +68,10 @@ module RSpec
             rescue ArgumentError
               YAML.load(arg) # Pysch < 4 syntax
             end
-            @expected_method_receiver == yaml[0] && @expected_method.name == yaml[1] && (@expected_arguments <=> yaml[2]) == 0
+
+            @expected_method_receiver == yaml[0] &&
+              method.name == yaml[1] &&
+              (arguments.empty? || (arguments <=> yaml[2]) == 0)
           end
 
           yield job if block && job
