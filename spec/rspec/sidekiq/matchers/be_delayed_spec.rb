@@ -123,7 +123,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
 
             Object.delay.is_a? Object
 
-            expect(delay_subject.matchers? Object.method :is_a?).to be true
+            expect(delay_subject.matches? Object.method :is_a?).to be true
           end
         end
 
