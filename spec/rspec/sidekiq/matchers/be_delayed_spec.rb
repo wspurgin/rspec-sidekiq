@@ -120,6 +120,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
             Object.delay.nil?
 
             expect(delay_subject.matches? Object.method :nil?).to be true
+
+            Object.delay.is_a? Object
+
+            expect(delay_subject.matches? Object.method :is_a?).to be true
           end
         end
 
