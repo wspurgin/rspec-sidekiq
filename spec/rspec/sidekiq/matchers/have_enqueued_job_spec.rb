@@ -55,6 +55,20 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
           expect(worker).to have_enqueued_sidekiq_job(*worker_args_at).at(tomorrow)
         end
       end
+
+      context "#on queue" do
+        it "matches the queue in the context" do
+          worker.perform_async(*worker_args)
+          expect(worker).to have_enqueued_sidekiq_job(*worker_args).on("default")
+        end
+
+        context "when setting queue at runtime" do
+          it "matches the queue set" do
+            worker.set(queue: "highest").perform_async(*worker_args)
+            expect(worker).to have_enqueued_sidekiq_job(*worker_args).on("highest")
+          end
+        end
+      end
     end
 
     context 'ActiveJob' do

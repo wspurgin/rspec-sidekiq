@@ -74,6 +74,28 @@ AwesomeJob.perform_in 5.minutes, 'Awesome', true
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
 ```
 
+#### Testing queue set for job
+
+Use the chainable `#on` matcher
+
+```ruby
+class AwesomeJob
+  include Sidekiq::Job
+
+  sidekiq_options queue: :low
+end
+
+AwesomeJob.perform_async("a little awesome")
+
+# test with..
+expect(AwesomeJob).to have_enqueued_sidekiq_job("a little awesome").on("low")
+
+# Setting the queue when enqueuing
+AwesomeJob.set(queue: "high").perform_async("Very Awesome!")
+
+expect(AwesomeJob).to have_enqueued_sidekiq_job("Very Awesome!").on("high")
+```
+
 
 #### Testing ActiveMailer jobs
 

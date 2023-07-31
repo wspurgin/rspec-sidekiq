@@ -17,16 +17,26 @@ module RSpec
           @job = job
         end
 
-        def matches?(option, value)
-          raise ArgumentError, "Option `#{option}` is not defined." unless %w[at].include?(option.to_s)
-          send("#{option}_evaluator", value)
+        def matches?(options)
+          with_context(**options)
         end
 
         private
 
         def at_evaluator(value)
-          return false if job['at'].to_s.empty?
-          value == Time.at(job['at']).to_i
+          return false if job["at"].to_s.empty?
+          value == Time.at(job["at"]).to_i
+        end
+
+        def with_context(**expected_context)
+          expected_context.all? do |key, value|
+            if key == "at"
+              # send to custom evaluator
+              at_evaluator(value)
+            else
+              job.context.has_key?(key) && job.context[key] == value
+            end
+          end
         end
       end
 
@@ -92,7 +102,7 @@ module RSpec
         end
 
         def context
-          @context||= job.except("args")
+          @context ||= job.except("args")
         end
       end
 
@@ -121,10 +131,9 @@ module RSpec
         end
 
         def options_matches?(job, options)
-          options.all? do |option, value|
-            parser = JobOptionParser.new(job)
-            parser.matches?(option, value)
-          end
+          parser = JobOptionParser.new(job)
+
+          parser.matches?(options)
         end
 
         def unwrap_jobs(jobs)
@@ -151,12 +160,17 @@ module RSpec
         end
 
         def at(timestamp)
-          @expected_options['at'] = timestamp.to_time.to_i
+          @expected_options["at"] = timestamp.to_time.to_i
           self
         end
 
         def in(interval)
-          @expected_options['at'] = (Time.now.to_f + interval.to_f).to_i
+          @expected_options["at"] = (Time.now.to_f + interval.to_f).to_i
+          self
+        end
+
+        def on(queue)
+          @expected_options["queue"] = queue
           self
         end
 
