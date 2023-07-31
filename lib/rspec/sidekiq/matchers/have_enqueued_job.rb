@@ -169,6 +169,11 @@ module RSpec
           self
         end
 
+        def on(queue)
+          @expected_options["queue"] = queue
+          self
+        end
+
         def description
           "have an enqueued #{klass} job with arguments #{expected_arguments}"
         end
