@@ -281,13 +281,13 @@ Please do! If there's a feature missing that you'd love to see then get in on th
 Issues/Pull Requests/Comments all welcome...
 
 [gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.svg
-[github]: http://github.com/philostler/rspec-sidekiq
+[github]: http://github.com/wspurgin/rspec-sidekiq
 [ruby_doc]: http://rubydoc.info/gems/rspec-sidekiq/frames
 [ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
 [ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
-[github_actions]: https://github.com/adsteel/rspec-sidekiq/actions
-[github_actions_badge]: https://github.com/adsteel/rspec-sidekiq/actions/workflows/main.yml/badge.svg
+[github_actions]: https://github.com/wspurgin/rspec-sidekiq/actions
+[github_actions_badge]: https://github.com/wspurgin/rspec-sidekiq/actions/workflows/main.yml/badge.svg
 
-[rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/philostler/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
-[sidekiq_wiki_batches]: https://github.com/mperham/sidekiq/wiki/Batches
-[sidekiq_wiki_delayed_extensions]: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions
+[rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/wspurgin/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
+[sidekiq_wiki_batches]: https://github.com/sidekiq/sidekiq/wiki/Batches
+[sidekiq_wiki_delayed_extensions]: https://github.com/sidekiq/sidekiq/wiki/Delayed-Extensions
