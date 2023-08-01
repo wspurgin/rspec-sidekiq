@@ -230,6 +230,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         it 'returns false' do
           expect(argument_subject.matches? worker).to be false
         end
+
+        context "and arguments are out of order" do
+          it "returns false" do
+            worker.perform_async(*worker_args.reverse)
+            expect(argument_subject.matches? worker).to be false
+          end
+        end
       end
 
       context 'when expected are matchers' do
