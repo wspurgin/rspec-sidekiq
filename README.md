@@ -54,6 +54,16 @@ AwesomeJob.perform_async 'Awesome', true
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
 ```
 
+You can use the built-in args matchers too:
+```ruby
+AwesomeJob.perform_async({"something" => "Awesome", "extra" => "stuff"})
+
+# using built-in matchers from rspec-mocks:
+expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
+expect(AwesomeJob).to have_enqueued_sidekiq_job(any_args)
+expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
+```
+
 #### Testing scheduled jobs
 
 *Use chainable matchers `#at` and `#in`*

@@ -27,7 +27,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
       end
 
-      context "when using bultin argument matchers" do
+      context "when using builtin argument matchers" do
         it "matches" do
           worker.perform_async({"something" => "Awesome", "extra" => "stuff"})
           expect(worker).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
