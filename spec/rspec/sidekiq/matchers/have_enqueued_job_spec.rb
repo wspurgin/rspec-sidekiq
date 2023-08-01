@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
+RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
   let(:tomorrow) { DateTime.now + 1 }
   let(:interval) { 3.minutes }
-  let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new worker_args }
-  let(:matcher_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
+  let(:argument_subject) { described_class.new worker_args }
+  let(:matcher_subject) { described_class.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
   let(:worker) { create_worker }
   let(:worker_args) { ['string', 1, true, { "key" => 'value', "bar" => "foo", "nested" => [{"hash" => true}] }] }
   let(:active_job) { create_active_job :mailers }
@@ -109,7 +109,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
   describe '#have_enqueued_sidekiq_job' do
     it 'returns instance' do
       worker.perform_async *worker_args
-      expect(have_enqueued_sidekiq_job).to be_a RSpec::Sidekiq::Matchers::HaveEnqueuedJob
+      expect(have_enqueued_sidekiq_job).to be_a described_class
     end
 
     it 'matches the same way have_enqueued_sidekiq_job does' do
@@ -142,7 +142,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
 
     context "when expected arguments is an array and multiple jobs enqueued" do
       let(:wrapped_args) { [worker_args] }
-      let(:argument_subject) { RSpec::Sidekiq::Matchers::HaveEnqueuedJob.new wrapped_args }
+      let(:argument_subject) { described_class.new wrapped_args }
 
       it "returns a message showing the wrapped array in expectations but each job on its own line" do
         jids = 2.times.map { worker.perform_async *worker_args }
