@@ -102,7 +102,6 @@ AwesomeJob.set(queue: "high").perform_async("Very Awesome!")
 expect(AwesomeJob).to have_enqueued_sidekiq_job("Very Awesome!").on("high")
 ```
 
-
 #### Testing ActiveMailer jobs
 
 ```ruby
@@ -116,6 +115,25 @@ expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
   user,
   true
 )
+```
+
+#### Testing a job is _not_ enqueued
+
+The negative case for `have_enqueued_sidekiq_job` is provided, but it's
+important to remember that `have_enqueued_sidekiq_job` is an expectation of
+specific _arguments_. That means, unless you tell the matcher that _no_ jobs
+with _any_ arguments should be enqueued, you'll get the wrong result:
+
+```ruby
+# failing case
+AwesomeJob.perform_async "Actually not awesome"
+
+### BAD - saying there shouldn't be a job enqueued _without_ args
+expect(AwesomeJob).not_to have_enqueued_sidekiq_job
+# => passes! 😱
+
+### Good
+expect(AwesomeJob).not_to have_enqueued_sidekiq_job(any_args)
 ```
 
 ### be_processed_in
