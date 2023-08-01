@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   s.add_dependency "rspec-core", "~> 3.0"
+  s.add_dependency "rspec-mocks", "~> 3.0"
   s.add_dependency "rspec-expectations", "~> 3.0"
   s.add_dependency "sidekiq", ">= 5", "< 8"
 

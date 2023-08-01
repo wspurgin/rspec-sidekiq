@@ -1,6 +1,8 @@
 module RSpec
   module Sidekiq
     module Matchers
+      include RSpec::Mocks::ArgumentMatchers
+
       def be_delayed(*expected_arguments)
         BeDelayed.new(*expected_arguments)
       end
@@ -71,7 +73,7 @@ module RSpec
 
             @expected_method_receiver == yaml[0] &&
               method.name == yaml[1] &&
-              (arguments.empty? || (arguments <=> yaml[2]) == 0)
+              (arguments.empty? || RSpec::Mocks::ArgumentListMatcher.new(*arguments).args_match?(*yaml[2]))
           end
 
           yield job if block && job

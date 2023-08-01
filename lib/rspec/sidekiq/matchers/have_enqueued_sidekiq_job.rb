@@ -36,13 +36,17 @@ module RSpec
       end
 
       class JobArguments
+        include RSpec::Mocks::ArgumentMatchers
+
         def initialize(job)
           self.job = job
         end
         attr_accessor :job
 
         def matches?(expected_args)
-          RSpec::Matchers::BuiltIn::ContainExactly.new(expected_args).matches?(unwrapped_arguments)
+          matcher = RSpec::Mocks::ArgumentListMatcher.new(*expected_args)
+
+          matcher.args_match?(*unwrapped_arguments)
         end
 
         def unwrapped_arguments

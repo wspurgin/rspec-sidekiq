@@ -12,6 +12,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
     let(:delay_for_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new(Object).for 3600 }
     let(:delay_until_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new.until Time.now + 3600 }
     let(:delay_until_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new(Object).until Time.now + 3600 }
+
+    around(:each) do |example|
+      travel_to Time.new(2023, 8, 1, 0, 0, 0, "-05:00") do
+        example.run
+      end
+    end
+
     before(:each) do
       delay_subject.matches? Object.method :nil?
       delay_with_arguments_subject.matches? Object.method :is_a?
@@ -73,7 +80,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
           expect(delay_until_with_arguments_subject.description).to eq "be delayed until #{Time.now + 3600} with arguments [Object]"
         end
       end
-      end
+    end
 
     describe '#failure_message' do
       context 'when expected is a delay' do
@@ -120,10 +127,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
             Object.delay.nil?
 
             expect(delay_subject.matches? Object.method :nil?).to be true
+          end
 
-            Object.delay.is_a? Object
+          context "and actual contains arguments" do
+            it "returns true" do
+              # Acutal has arugment
+              Object.delay.is_a? Object
 
-            expect(delay_subject.matches? Object.method :is_a?).to be true
+              # Expected didn't specify any arguemtns to match
+              expect(delay_subject.matches? Object.method :is_a?).to be true
+            end
           end
         end
 
@@ -132,6 +145,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
             Object.delay.is_a? Object
 
             expect(delay_with_arguments_subject.matches? Object.method :is_a?).to be true
+          end
+
+          context "and expected uses builtin matchers" do
+            let(:delay_with_arguments_subject) { RSpec::Sidekiq::Matchers::BeDelayed.new anything }
+            it "returns true" do
+              Object.delay.is_a? Object
+              expect(delay_with_arguments_subject.matches? Object.method(:is_a?)).to be true
+            end
           end
         end
 
@@ -166,7 +187,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
             expect(delay_until_with_arguments_subject.matches? Object.method :is_a?).to be true
           end
         end
-        end
+      end
 
       context 'when condition does not match' do
         context 'when expected is a delay' do

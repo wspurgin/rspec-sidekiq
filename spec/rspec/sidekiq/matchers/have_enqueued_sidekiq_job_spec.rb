@@ -27,6 +27,15 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
       end
 
+      context "when using builtin argument matchers" do
+        it "matches" do
+          worker.perform_async({"something" => "Awesome", "extra" => "stuff"})
+          expect(worker).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
+          expect(worker).to have_enqueued_sidekiq_job(any_args)
+          expect(worker).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
+        end
+      end
+
       context 'perform_in' do
         let(:worker_args_in) { worker_args + ['in'] }
 
@@ -229,6 +238,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       context 'when expected are arguments' do
         it 'returns false' do
           expect(argument_subject.matches? worker).to be false
+        end
+
+        context "and arguments are out of order" do
+          it "returns false" do
+            worker.perform_async(*worker_args.reverse)
+            expect(argument_subject.matches? worker).to be false
+          end
         end
       end
 
