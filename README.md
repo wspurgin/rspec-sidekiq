@@ -121,19 +121,23 @@ expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
 
 The negative case for `have_enqueued_sidekiq_job` is provided, but it's
 important to remember that `have_enqueued_sidekiq_job` is an expectation of
-specific _arguments_. That means, unless you tell the matcher that _no_ jobs
-with _any_ arguments should be enqueued, you'll get the wrong result:
+specific _arguments_. In other words, passing no arguments to
+`have_enqueued_sidekiq_job` is implicitly telling the matcher to look for jobs
+_without_ arguments.
+
+In short, unless you tell the matcher that _no_ jobs with _any_ arguments should be enqueued, you'll get the wrong result:
 
 ```ruby
-# failing case
+# example this is a test that we'd expect to fail
 AwesomeJob.perform_async "Actually not awesome"
 
 ### BAD - saying there shouldn't be a job enqueued _without_ args
 expect(AwesomeJob).not_to have_enqueued_sidekiq_job
-# => passes! 😱
+# => passes! 😱 Our job was enqueued _with_ args so no job exists without args.
 
 ### Good
 expect(AwesomeJob).not_to have_enqueued_sidekiq_job(any_args)
+# => fails
 ```
 
 ### be_processed_in
