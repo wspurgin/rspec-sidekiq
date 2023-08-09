@@ -171,5 +171,17 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         }
       end
     end
+
+    describe "chainable" do
+      it "can chain expectations on the job" do
+        specific_time = 1.hour.from_now
+        expect { worker.perform_at specific_time, "some_arg" }.to(
+          enqueue_sidekiq_job(worker)
+          .with("some_arg")
+          .on("default")
+          .at(specific_time)
+        )
+      end
+    end
   end
 end
