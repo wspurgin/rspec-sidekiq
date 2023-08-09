@@ -1,7 +1,5 @@
 **Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
 
-# RSpec for Sidekiq
-
 [![RubyGems][gem_version_badge]][ruby_gems]
 [![Github Actions CI][github_actions_badge]][github_actions]
 
@@ -65,6 +63,11 @@ expect { AwesomeJob.set(queue: "high").perform_async }.to enqueue_sidekiq_job.on
 specific_time = 1.hour.from_now
 expect { AwesomeJob.perform_at(specific_time) }.to enqueue_sidekiq_job.at(specific_time)
 
+# In a specific interval (be mindful of freezing or managing time here)
+freeze_time do
+  expect { AwesomeJob.perform_in(1.hour) }.to enqueue_sidekiq_job.in(1.hour)
+end
+
 # Combine and chain them as desired
 expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
   enqueue_sidekiq_job(AwesomeJob)
@@ -72,18 +75,11 @@ expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
   .on("default")
   .at(specific_time)
 )
-
-# In a specific interval (be mindful of freezing or managing time here)
-freeze_time do
-  expect { AwesomeJob.perform_in(1.hour) }.to enqueue_sidekiq_job.in(1.hour)
-end
 ```
 
 ### have_enqueued_sidekiq_job
-*Describes that there should be an enqueued job with the specified arguments*
-
-**Note:** When using rspec-rails >= 3.4, use `have_enqueued_sidekiq_job` instead to
-prevent a name clash with rspec-rails' ActiveJob matcher.
+*Describes that there should be an enqueued job with the **specified
+arguments***
 
 ```ruby
 AwesomeJob.perform_async 'Awesome', true
@@ -91,7 +87,7 @@ AwesomeJob.perform_async 'Awesome', true
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
 ```
 
-You can use the built-in args matchers too:
+You can use the built-in RSpec args matchers too:
 ```ruby
 AwesomeJob.perform_async({"something" => "Awesome", "extra" => "stuff"})
 
@@ -157,10 +153,10 @@ expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
 #### Testing a job is _not_ enqueued
 
 The negative case for `have_enqueued_sidekiq_job` is provided, but it's
-important to remember that `have_enqueued_sidekiq_job` is an expectation of
-specific _arguments_. In other words, passing no arguments to
-`have_enqueued_sidekiq_job` is implicitly telling the matcher to look for jobs
-_without_ arguments.
+important to remember that `have_enqueued_sidekiq_job` is an expectation that a
+job is enqueued _with specific arguments_. In other words, passing no arguments
+to `have_enqueued_sidekiq_job` is implicitly telling the matcher to look for
+jobs _without_ arguments.
 
 In short, unless you tell the matcher that _no_ jobs with _any_ arguments should be enqueued, you'll get the wrong result:
 
