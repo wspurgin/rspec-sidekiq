@@ -142,10 +142,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       expect(argument_subject.failure_message).to eq <<~eos.strip
       expected to have an enqueued #{worker} job
         with arguments:
-          -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+          -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
       but have enqueued only jobs
         -JID:#{jid} with arguments:
-          -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+          -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
       eos
     end
 
@@ -159,12 +159,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(argument_subject.failure_message).to eq <<~eos.strip
         expected to have an enqueued #{worker} job
           with arguments:
-            -[["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]]
+            -[["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]]
         but have enqueued only jobs
           -JID:#{jids[0]} with arguments:
-            -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+            -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
           -JID:#{jids[1]} with arguments:
-            -["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+            -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
         eos
       end
     end
