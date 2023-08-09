@@ -36,11 +36,48 @@ end
 ```
 
 ## Matchers
+* [enqueue_sidekiq_job](#enqueue_sidekiq_job)
 * [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
 * [be_processed_in](#be_processed_in)
 * [be_retryable](#be_retryable)
 * [be_unique](#be_unique)
 * [be_delayed (_deprecated_)](#be_delayed)
+
+### enqueue_sidekiq_job
+
+*Describes that the block should enqueue a job*. Optionally specify the
+specific job class, arguments, timing, and other context
+
+```ruby
+# Basic
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job
+
+# A specific job class
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job(AwesomeJob)
+
+# with specific arguments
+expect { AwesomeJob.perform_async "Awesome!" }.to enqueue_sidekiq_job.with("Awesome!")
+
+# On a specific queue
+expect { AwesomeJob.set(queue: "high").perform_async }.to enqueue_sidekiq_job.on("high")
+
+# At a specific datetime
+specific_time = 1.hour.from_now
+expect { AwesomeJob.perform_at(specific_time) }.to enqueue_sidekiq_job.at(specific_time)
+
+# Combine and chain them as desired
+expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
+  enqueue_sidekiq_job(AwesomeJob)
+  .with("Awesome!")
+  .on("default")
+  .at(specific_time)
+)
+
+# In a specific interval (be mindful of freezing or managing time here)
+freeze_time do
+  expect { AwesomeJob.perform_in(1.hour) }.to enqueue_sidekiq_job.in(1.hour)
+end
+```
 
 ### have_enqueued_sidekiq_job
 *Describes that there should be an enqueued job with the specified arguments*
