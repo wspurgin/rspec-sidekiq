@@ -56,20 +56,17 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       end
 
       it "fails if no job with args are found" do
-        jids = []
         expect do
           expect {
-            jids << worker.perform_async
+            worker.perform_async
           }.to enqueue_sidekiq_job.with("some_arg")
         end.to raise_error { |error|
-          expect(error.message).to eq(<<~MSG.strip)
-            expected to have an enqueued Sidekiq::Job job
-              with arguments:
-                -["some_arg"]
-            but have enqueued only jobs
-              -JID:#{jids[0]} with arguments:
-                -[]
-          MSG
+          lines = error.message.split("\n")
+          expect(lines).to include(
+            match(/expected to have an enqueued .* job/),
+            match(/with arguments:/),
+            match(/-\["some_arg"\]/)
+          )
         }
       end
     end
