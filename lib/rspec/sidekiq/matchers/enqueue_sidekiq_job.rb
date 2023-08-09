@@ -7,7 +7,13 @@ module RSpec
 
         def initialize(job_class)
           super()
-          @klass = job_class || ::Sidekiq::Job
+          default = if RSpec::Sidekiq.configuration.sidekiq_gte_7?
+            ::Sidekiq::Job
+          else
+            ::Sidekiq::Worker
+          end
+
+          @klass = job_class || default
         end
 
         def matches?(proc)
