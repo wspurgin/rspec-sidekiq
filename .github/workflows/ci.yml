@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        rvm:
+          - '3.0'
+          - '3.1'
+
+    name: Ruby ${{ matrix.ruby }} test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.rvm }}
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Run RSpec
+        env:
+          JENKINS: true
+        run: bundle exec rspec spec

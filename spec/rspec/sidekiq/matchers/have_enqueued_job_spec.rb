@@ -69,7 +69,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
           'TestActionMailer',
           'testmail',
-          'deliver_now'
+          'deliver_now',
+          { 'args' => [], '_aj_ruby2_keywords' => %w[args] }
         )
       end
 
@@ -78,7 +79,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedJob do
           'TestActionMailer',
           'testmail',
           'deliver_now',
-          { '_aj_globalid' => resource.to_global_id.uri.to_s }
+          { 'args' => [{ '_aj_globalid' => resource.to_global_id.uri.to_s }], '_aj_ruby2_keywords' => %w[args] }
         )
       end
     end

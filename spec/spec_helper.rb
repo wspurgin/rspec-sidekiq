@@ -25,5 +25,6 @@ ActiveJob::Base.queue_adapter = :sidekiq
 if Gem::Dependency.new('sidekiq', '>= 5.0.0').matching_specs.any?
   require 'active_record'
   ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
-  Sidekiq::Extensions.enable_delay!
+  #Sidekiq::Extensions.enable_delay!
+  Sidekiq.strict_args!(false)
 end
