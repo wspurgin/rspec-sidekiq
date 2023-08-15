@@ -1,4 +1,4 @@
-Unreleased - 4.0.0
+4.0.0
 ---
 * [BREAKING] Dropped support for matching jobs on ActiveJob's private API args, (e.g. `_aj_globalid` and `_aj_ruby2_keywords`). `_aj_globalid` can be replaced with the object itself, e.g. `have_enqueued_sidekiq_job(user)`.
 * [BREAKING] Dropped support for Ruby 2.6
@@ -10,6 +10,7 @@ Unreleased - 4.0.0
 * Add support for builtin argument matchers from rspec mocks for
   `have_enqueued_sidekiq_job` (#200)
 * Add `#on` to `have_enqueued_sidekiq_job` to support testing queue at enqueue time (#197)
+* Add `enqueue_sidekiq_job` for block-syntax style expectations
 * Clarified `have_enqueued_sidekiq_job` error message to make it clear that the "actual arguments" list is an array of argument-lists across all enqueued jobs. (#195)
 * Fix `in` and `at` evaluation to match Sidekiq (#194)
 * Fix `be_delayed` argument matcher (#196)

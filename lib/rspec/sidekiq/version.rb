@@ -1,5 +1,5 @@
 module RSpec
   module Sidekiq
-    VERSION = "4.0.0.pre"
+    VERSION = "4.0.0"
   end
 end
