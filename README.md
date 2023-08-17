@@ -1,6 +1,6 @@
 **Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
 
-[![RubyGems][gem_version_badge]][ruby_gems]
+[![Gem Version](https://badge.fury.io/rb/rspec-sidekiq.svg)](https://badge.fury.io/rb/rspec-sidekiq)
 [![Github Actions CI][github_actions_badge]][github_actions]
 
 Simple testing of Sidekiq jobs via a collection of matchers and helpers.
@@ -341,11 +341,7 @@ Please do! If there's a feature missing that you'd love to see then get in on th
 
 Issues/Pull Requests/Comments all welcome...
 
-[gem_version_badge]: https://badge.fury.io/rb/rspec-sidekiq.svg
 [github]: http://github.com/wspurgin/rspec-sidekiq
-[ruby_doc]: http://rubydoc.info/gems/rspec-sidekiq/frames
-[ruby_gems]: http://rubygems.org/gems/rspec-sidekiq
-[ruby_toolbox]: http://www.ruby-toolbox.com/projects/rspec-sidekiq
 [github_actions]: https://github.com/wspurgin/rspec-sidekiq/actions
 [github_actions_badge]: https://github.com/wspurgin/rspec-sidekiq/actions/workflows/main.yml/badge.svg
 
