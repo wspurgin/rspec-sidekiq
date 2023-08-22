@@ -55,6 +55,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         }.to enqueue_sidekiq_job.with("some_arg")
       end
 
+      context "when expected arguments include symbols" do
+        it "returns true" do
+          expect {
+            worker.perform_async("foo", {"some_arg" => "etc"})
+          }.to enqueue_sidekiq_job.with(:foo, {some_arg: :etc})
+        end
+      end
+
       it "fails if no job with args are found" do
         expect do
           expect {
