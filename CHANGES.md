@@ -1,3 +1,8 @@
+4.0.1
+---
+* Restore the old normalizing expected args behavior with symbols (#205)
+  * fixes an unintentional breaking change in 4.0.0
+
 4.0.0
 ---
 * [BREAKING] Dropped support for matching jobs on ActiveJob's private API args, (e.g. `_aj_globalid` and `_aj_ruby2_keywords`). `_aj_globalid` can be replaced with the object itself, e.g. `have_enqueued_sidekiq_job(user)`.
