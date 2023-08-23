@@ -33,6 +33,9 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
           expect(worker).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
           expect(worker).to have_enqueued_sidekiq_job(any_args)
           expect(worker).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
+
+          worker.perform_async({"something" => 1})
+          expect(worker).to have_enqueued_sidekiq_job({something: kind_of(Integer)})
         end
       end
 
@@ -187,6 +190,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         it 'returns true' do
           worker.perform_async *worker_args
           expect(argument_subject.matches? worker).to be true
+        end
+      end
+
+      context "when expected arguments include symbols" do
+        let(:worker_args) { [:foo, {bar: :baz}] }
+        it "returns true" do
+          worker.perform_async(*JSON.parse(worker_args.to_json))
+          expect(worker).to have_enqueued_sidekiq_job(*worker_args)
         end
       end
 
