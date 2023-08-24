@@ -1,3 +1,5 @@
+require 'forwardable'
+
 require 'sidekiq'
 require 'sidekiq/testing'
 
