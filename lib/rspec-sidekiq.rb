@@ -1,4 +1,4 @@
-require 'forwardable'
+# require 'forwardable'
 
 require 'sidekiq'
 require 'sidekiq/testing'
