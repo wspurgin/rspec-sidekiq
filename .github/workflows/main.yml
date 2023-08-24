@@ -47,4 +47,4 @@ jobs:
       - name: Run tests
         run: bundle exec rspec spec
       - name: Check for implicitly loaded dependencies # See #204
-        run: bundle exec ruby -r rspec-sidekiq -e 1
+        run: bundle exec ruby ./lib/rspec-sidekiq.rb
