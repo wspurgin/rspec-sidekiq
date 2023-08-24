@@ -1,3 +1,7 @@
+Unreleased
+---
+* Explicitly require forwardable (#204)
+
 4.0.1
 ---
 * Restore the old normalizing expected args behavior with symbols (#205)
