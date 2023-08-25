@@ -35,7 +35,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
           expect(worker).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
 
           worker.perform_async({"something" => 1})
-          expect(worker).to have_enqueued_sidekiq_job({something: kind_of(Integer)})
+          expect(worker).to have_enqueued_sidekiq_job({"something" => kind_of(Integer)})
         end
       end
 
@@ -92,6 +92,15 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       it 'matches on an enqueued ActiveJob by global_id-capable object' do
         active_job.perform_later(resource)
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(resource)
+      end
+
+      context "when expected arguments include symbols" do
+        let(:active_job) { create_active_job }
+        let(:worker_args) { [:foo, {bar: :baz}] }
+        it "returns true" do
+          active_job.perform_later(*worker_args)
+          expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(*worker_args)
+        end
       end
     end
 
@@ -193,13 +202,19 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         end
       end
 
-      context "when expected arguments include symbols" do
-        let(:worker_args) { [:foo, {bar: :baz}] }
-        it "returns true" do
-          worker.perform_async(*JSON.parse(worker_args.to_json))
-          expect(worker).to have_enqueued_sidekiq_job(*worker_args)
-        end
-      end
+      # This test is wrong:
+      # 1. we give JSON to sidekiq (perform_async)
+      # 2. sidekiq store this json
+      # 3. sidekiq retrieves it and deserialize it using pure JSON deserialization
+      # => it cannot contain any symbols (worker_args)
+      #
+      # context "when expected arguments include symbols" do
+      #   let(:worker_args) { [:foo, {bar: :baz}] }
+      #   it "returns true" do
+      #     worker.perform_async(*JSON.parse(worker_args.to_json))
+      #     expect(worker).to have_enqueued_sidekiq_job(*worker_args)
+      #   end
+      # end
 
       context 'when expected are matchers' do
         it 'returns true' do

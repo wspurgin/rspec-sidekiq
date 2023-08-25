@@ -9,7 +9,7 @@ module RSpec
       class HaveEnqueuedSidekiqJob < Base
         def initialize(expected_arguments)
           super()
-          @expected_arguments = normalize_arguments(expected_arguments)
+          @expected_arguments = expected_arguments
         end
 
         def matches?(job_class)
@@ -17,7 +17,7 @@ module RSpec
 
           @actual_jobs = EnqueuedJobs.new(klass)
 
-          actual_jobs.includes?(expected_arguments, expected_options)
+          actual_jobs.includes?(jsonified_expected_arguments, expected_options)
         end
       end
     end

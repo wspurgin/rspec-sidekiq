@@ -171,7 +171,7 @@ module RSpec
         end
 
         def with(*expected_arguments)
-          @expected_arguments = normalize_arguments(expected_arguments)
+          @expected_arguments = expected_arguments
           self
         end
 
@@ -237,17 +237,18 @@ module RSpec
           RSpec::Support::ObjectFormatter.format(thing)
         end
 
-        def normalize_arguments(args)
-          if args.is_a?(Array)
-            args.map{ |x| normalize_arguments(x) }
-          elsif args.is_a?(Hash)
-            args.each_with_object({}) do |(key, value), hash|
-              hash[key.to_s] = normalize_arguments(value)
+        def jsonified_expected_arguments
+          # We would just cast-to-parse-json, but we need to support
+          # RSpec matcher args like #kind_of
+          @jsonified_expected_arguments ||= begin
+            expected_arguments.map do |arg|
+              case arg.class
+              when Symbol then arg.to_s
+              when Hash then JSON.parse(arg.to_json)
+              else
+                arg
+              end
             end
-          elsif args.is_a?(Symbol)
-            args.to_s
-          else
-            args
           end
         end
       end

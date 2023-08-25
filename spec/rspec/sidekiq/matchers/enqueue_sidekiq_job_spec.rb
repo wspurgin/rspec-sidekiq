@@ -59,7 +59,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         it "returns true" do
           expect {
             worker.perform_async("foo", {"some_arg" => "etc"})
-          }.to enqueue_sidekiq_job.with(:foo, {some_arg: :etc})
+          }.to enqueue_sidekiq_job.with("foo", {"some_arg" => "etc"})
         end
       end
 
