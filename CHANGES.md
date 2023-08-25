@@ -1,4 +1,4 @@
-Unreleased
+4.0.2
 ---
 * Explicitly require forwardable (#204)
 
