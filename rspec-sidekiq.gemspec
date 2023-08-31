@@ -30,4 +30,6 @@ Gem::Specification.new do |s|
   s.files = `git ls-files -- lib/*`.split("\n")
   s.files += %w[CHANGES.md LICENSE README.md]
   s.require_paths = ["lib"]
+
+  s.required_ruby_version = ">= 2.7"
 end
