@@ -16,7 +16,7 @@ module RSpec
         private
 
         def at_evaluator(value)
-          return false if job["at"].to_s.empty?
+          return value.nil? if job["at"].to_s.empty?
           value == Time.at(job["at"]).to_i
         end
 
@@ -182,6 +182,11 @@ module RSpec
 
         def in(interval)
           @expected_options["at"] = (Time.now.to_f + interval.to_f).to_i
+          self
+        end
+
+        def immediately
+          @expected_options["at"] = nil
           self
         end
 
