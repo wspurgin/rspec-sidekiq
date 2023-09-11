@@ -177,6 +177,26 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       end
     end
 
+    context "immediately" do
+      it "passes if the job is enqueued immediately" do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.immediately
+        expect { worker.perform_at(1.hour.ago) }.to enqueue_sidekiq_job.immediately
+      end
+
+      it "fails if the job is scheduled" do
+        specific_time = 1.hour.from_now
+        expect do
+          expect { worker.perform_at(specific_time) }.to enqueue_sidekiq_job.immediately
+        end.to raise_error { |error|
+          lines = error.message.split("\n")
+          expect(lines).to include(
+            match(/expected to have an enqueued .* job/),
+            match(/-{"at"=>nil}/)
+          )
+        }
+      end
+    end
+
     describe "chainable" do
       it "can chain expectations on the job" do
         specific_time = 1.hour.from_now
