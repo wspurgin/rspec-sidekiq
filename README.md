@@ -99,7 +99,7 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => an
 
 #### Testing scheduled jobs
 
-*Use chainable matchers `#at` and `#in`*
+*Use chainable matchers `#at`, `#in` and `#immediately`*
 
 ```ruby
 time = 5.minutes.from_now
@@ -111,6 +111,13 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 AwesomeJob.perform_in 5.minutes, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).in(5.minutes)
+```
+
+```ruby
+# Job scheduled for a date in the past are enqueued immediately.
+AwesomeJob.perform_later 5.minutes.ago, 'Awesome', true # equivalent to: AwesomeJob.perform_async 'Awesome', true
+# test with...
+expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).immediately
 ```
 
 #### Testing queue set for job
