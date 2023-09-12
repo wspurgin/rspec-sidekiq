@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
   let(:tomorrow) { DateTime.now + 1 }
+  let(:yesterday) { DateTime.now - 1 }
   let(:interval) { 3.minutes }
   let(:argument_subject) { described_class.new worker_args }
   let(:matcher_subject) { described_class.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
@@ -223,6 +224,20 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
               expect(matcher_subject.at(tomorrow + 1).matches? worker).to be false
             end
           end
+
+          context 'and past timestamp matches' do
+            it 'returns true' do
+              worker.perform_at(yesterday, *worker_args)
+              expect(matcher_subject.immediately.matches? worker).to be true
+            end
+          end
+
+          context 'and past timestamp does not match' do
+            it 'returns true' do
+              worker.perform_at(tomorrow, *worker_args)
+              expect(matcher_subject.immediately.matches? worker).to be false
+            end
+          end
         end
 
         context 'with #perform_in' do
@@ -237,6 +252,20 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
             it 'returns false' do
               worker.perform_in(interval, *worker_args)
               expect(matcher_subject.in(interval + 1.minute).matches? worker).to be false
+            end
+          end
+
+          context 'and past interval matches' do
+            it 'returns true' do
+              worker.perform_in(-1, *worker_args)
+              expect(matcher_subject.immediately.matches? worker).to be true
+            end
+          end
+
+          context 'and interval does not match' do
+            it 'returns false' do
+              worker.perform_in(1, *worker_args)
+              expect(matcher_subject.immediately.matches? worker).to be false
             end
           end
         end
