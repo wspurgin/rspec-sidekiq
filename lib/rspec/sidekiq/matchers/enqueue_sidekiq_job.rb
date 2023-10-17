@@ -56,7 +56,8 @@ module RSpec
       #
       # Passes if a Job is enqueued as the result of a block. Chainable `with`
       # for arguments, `on` for queue, `at` for queued for a specific time, and
-      # `in` for a specific interval delay to being queued, `immediately` for queued without delay.
+      # `in` for a specific interval delay to being queued, `immediately` for
+      # queued without delay.
       #
       # @example
       #
@@ -83,7 +84,13 @@ module RSpec
       #   # Without any delay
       #   expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.immediately
       #   expect { AwesomeJob.perform_at(1.hour.ago) }.to enqueue_sidekiq_job.immediately
-
+      #
+      #   ## Composable
+      #
+      #   expect do
+      #     AwesomeJob.perform_async
+      #     OtherJob.perform_async
+      #   end.to enqueue_sidekiq_job(AwesomeJob).and enqueue_sidekiq_job(OtherJob)
       def enqueue_sidekiq_job(job_class = nil)
         EnqueueSidekiqJob.new(job_class)
       end

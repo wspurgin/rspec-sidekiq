@@ -197,6 +197,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       end
     end
 
+    describe "composable" do
+      let(:other_worker) { create_worker }
+      it "can be composed with other matchers" do
+        expect do
+          worker.perform_async
+          other_worker.perform_async
+        end.to enqueue_sidekiq_job(worker).and enqueue_sidekiq_job(other_worker)
+      end
+    end
+
     describe "chainable" do
       it "can chain expectations on the job" do
         specific_time = 1.hour.from_now
