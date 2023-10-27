@@ -75,11 +75,17 @@ expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
   .on("default")
   .at(specific_time)
 )
+
+# Also composable
+expect do
+  AwesomeJob.perform_async
+  OtherJob.perform_async
+end.to enqueue_sidekiq_job(AwesomeJob).and enqueue_sidekiq_job(OtherJob)
 ```
 
 ### have_enqueued_sidekiq_job
-*Describes that there should be an enqueued job with the **specified
-arguments***
+
+Describes that there should be an enqueued job with the **specified arguments**
 
 ```ruby
 AwesomeJob.perform_async 'Awesome', true
@@ -95,6 +101,9 @@ AwesomeJob.perform_async({"something" => "Awesome", "extra" => "stuff"})
 expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
 expect(AwesomeJob).to have_enqueued_sidekiq_job(any_args)
 expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
+
+# composable as well
+expect(AwesomeJob).to have_enqueued_sidekiq_job(any_args).and have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
 ```
 
 #### Testing scheduled jobs

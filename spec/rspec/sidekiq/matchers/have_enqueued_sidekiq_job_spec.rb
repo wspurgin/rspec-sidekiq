@@ -82,6 +82,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
           end
         end
       end
+
+      describe "composable" do
+        it "can be composed with other matchers" do
+          worker.perform_async(*worker_args)
+          worker.perform_async(1)
+          expect(worker).to have_enqueued_sidekiq_job(*worker_args).and have_enqueued_sidekiq_job(1)
+        end
+      end
     end
 
     context 'ActiveJob' do

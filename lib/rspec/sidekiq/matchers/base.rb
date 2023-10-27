@@ -162,6 +162,7 @@ module RSpec
       # @api private
       class Base
         include RSpec::Mocks::ArgumentMatchers
+        include RSpec::Matchers::Composable
 
         attr_reader :expected_arguments, :expected_options, :klass, :actual_jobs
 
