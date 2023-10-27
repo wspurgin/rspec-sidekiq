@@ -1,3 +1,9 @@
+4.1.0
+---
+* Add Composable support to `enqueue_sidekiq_job` and
+  `have_enqueued_sidekiq_job` (#211)
+* Add `immediately` to specify that a job should be enqueued without any delay (#210)
+
 4.0.2
 ---
 * Explicitly require forwardable (#204)
