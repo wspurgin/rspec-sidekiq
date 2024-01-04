@@ -1,4 +1,5 @@
 require "rspec/core"
+require "rspec/matchers"
 require "rspec/mocks/argument_list_matcher"
 require "rspec/mocks/argument_matchers"
 
