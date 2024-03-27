@@ -28,6 +28,18 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
       end
 
+      it 'matches with no args' do
+        worker.perform_async *worker_args
+        expect(worker).to have_enqueued_sidekiq_job
+      end
+
+      it "fails if a job was not enqueued" do
+        worker.perform_async *worker_args
+        expect do
+          expect(worker).not_to have_enqueued_sidekiq_job
+        end.to raise_error(/expected not to have an enqueued .* job/)
+      end
+
       context "when using builtin argument matchers" do
         it "matches" do
           worker.perform_async({"something" => "Awesome", "extra" => "stuff"})

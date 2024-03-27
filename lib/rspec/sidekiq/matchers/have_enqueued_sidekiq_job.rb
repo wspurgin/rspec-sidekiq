@@ -17,7 +17,10 @@ module RSpec
 
           @actual_jobs = EnqueuedJobs.new(klass)
 
-          actual_jobs.includes?(expected_arguments, expected_options)
+          actual_jobs.includes?(
+            expected_arguments == [] ? any_args : expected_arguments,
+            expected_options
+          )
         end
       end
     end
