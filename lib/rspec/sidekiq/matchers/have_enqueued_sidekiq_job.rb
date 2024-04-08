@@ -7,6 +7,11 @@ module RSpec
 
       # @api private
       class HaveEnqueuedSidekiqJob < Base
+        DEPRECATION = [
+          "[DEPRECATION] `have_enqueued_sidekiq_job()` is deprecated.",
+          "Please use either `have_enqueued_sidekiq_job(no_args)` or `have_enqueued_sidekiq_job(any_args)`."
+        ].join(" ")
+
         def initialize(expected_arguments)
           super()
           @expected_arguments = normalize_arguments(expected_arguments)
@@ -17,6 +22,7 @@ module RSpec
 
           @actual_jobs = EnqueuedJobs.new(klass)
 
+          warn DEPRECATION if expected_arguments == []
           actual_jobs.includes?(expected_arguments, expected_options)
         end
       end
