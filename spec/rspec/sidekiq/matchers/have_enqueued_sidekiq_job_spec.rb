@@ -23,6 +23,18 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(worker).to have_enqueued_sidekiq_job *worker_args
       end
 
+      it 'matches with no arguments but prints a warning' do
+        worker.perform_async
+        expect {
+          expect(worker).to have_enqueued_sidekiq_job
+        }.to output(/[DEPRECATION]/).to_stderr
+      end
+
+      it 'matches with no_args' do
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job(no_args)
+      end
+
       it 'matches on the global Worker queue' do
         worker.perform_async *worker_args
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args

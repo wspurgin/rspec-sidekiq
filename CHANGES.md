@@ -1,3 +1,7 @@
+Unreleased
+---
+* Deprecate `have_enqueued_sidekiq_job` with no arguments (use either `have_enqueued_sidekiq_job(no_args)` or `have_enqueued_sidekiq_job(any_args)`) ([@3v0k4](https://github.com/3v0k4))
+
 4.1.0
 ---
 * Add Composable support to `enqueue_sidekiq_job` and
