@@ -149,6 +149,30 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       worker.perform_async *worker_args
       expect(worker).to have_enqueued_sidekiq_job *worker_args
     end
+
+    context "when used without args" do
+      it "raises a warning with Kernal Warn" do
+        allow(Kernel).to receive(:warn)
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job
+        expect(Kernel).to have_received(:warn).with(described_class::DEPRECATION, uplevel: 3)
+      end
+
+      context "when warnings silenced" do
+        let(:test_config) { RSpec::Sidekiq::Configuration.new }
+        before do
+          test_config.silence_warning(:have_enqueued_sidekiq_job_default)
+          allow(RSpec::Sidekiq).to receive(:configuration).and_return(test_config)
+        end
+
+        it "does not warn" do
+          allow(Kernel).to receive(:warn)
+          worker.perform_async
+          expect(worker).to have_enqueued_sidekiq_job
+          expect(Kernel).not_to have_received(:warn)
+        end
+      end
+    end
   end
 
   describe '#description' do

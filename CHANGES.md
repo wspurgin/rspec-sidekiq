@@ -1,6 +1,7 @@
 Unreleased
 ---
-* Deprecate `have_enqueued_sidekiq_job` with no arguments (use either `have_enqueued_sidekiq_job(no_args)` or `have_enqueued_sidekiq_job(any_args)`) ([@3v0k4](https://github.com/3v0k4))
+* Add warning about `have_enqueued_sidekiq_job` with no arguments (default will
+  change in next major release) (#216)
 
 4.1.0
 ---
