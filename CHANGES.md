@@ -1,7 +1,10 @@
 Unreleased
 ---
+
+4.2.0
+---
 * Add warning about `have_enqueued_sidekiq_job` with no arguments (default will
-  change in next major release) (#216)
+  change in next major release) (#216, #217)
 
 4.1.0
 ---
