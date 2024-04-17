@@ -1,10 +1,10 @@
 Unreleased
 ---
+* [BREAKING] Make `have_enqueued_sidekiq_job()` match jobs with any arguments (same as `enqueue_sidekiq_job()` or `have_enqueued_sidekiq_job(any_args)`) ([@3v0k4](https://github.com/3v0k4) #215)
 
 4.2.0
 ---
-* Add warning about `have_enqueued_sidekiq_job` with no arguments (default will
-  change in next major release) (#216, #217)
+* Add warning about `have_enqueued_sidekiq_job` with no arguments (default will change in next major release) (#216, #217)
 
 4.1.0
 ---

@@ -18,26 +18,45 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
   describe 'expected usage' do
     context 'Sidekiq' do
-      it 'matches' do
-        worker.perform_async *worker_args
-        expect(worker).to have_enqueued_sidekiq_job *worker_args
-      end
-
-      it 'matches with no arguments but prints a warning' do
+      it 'matches a job with no arguments' do
         worker.perform_async
-        expect {
-          expect(worker).to have_enqueued_sidekiq_job
-        }.to output(/[DEPRECATION]/).to_stderr
-      end
-
-      it 'matches with no_args' do
-        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job
         expect(worker).to have_enqueued_sidekiq_job(no_args)
+        expect(worker).to have_enqueued_sidekiq_job.with(no_args)
+      end
+
+      it 'matches a job with arguments' do
+        worker.perform_async *worker_args
+        expect(worker).to have_enqueued_sidekiq_job
+        expect(worker).to have_enqueued_sidekiq_job *worker_args
       end
 
       it 'matches on the global Worker queue' do
         worker.perform_async *worker_args
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
+      end
+
+      it "fails if a job was enqueued with arguments but matched with no_args" do
+        worker.perform_async *worker_args
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job(no_args)
+        end.to raise_error(/expected to have an enqueued .* job/)
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job.with(no_args)
+        end.to raise_error(/expected to have an enqueued .* job/)
+      end
+
+      context "when negated" do
+        it "passes if no jobs are enqueued" do
+          expect(worker).not_to have_enqueued_sidekiq_job
+        end
+
+        it "fails if a job was enqueued" do
+          worker.perform_async *worker_args
+          expect do
+            expect(worker).not_to have_enqueued_sidekiq_job
+          end.to raise_error(/expected not to have an enqueued .* job/)
+        end
       end
 
       context "when using builtin argument matchers" do
@@ -148,30 +167,6 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'matches the same way have_enqueued_sidekiq_job does' do
       worker.perform_async *worker_args
       expect(worker).to have_enqueued_sidekiq_job *worker_args
-    end
-
-    context "when used without args" do
-      it "raises a warning with Kernal Warn" do
-        allow(Kernel).to receive(:warn)
-        worker.perform_async
-        expect(worker).to have_enqueued_sidekiq_job
-        expect(Kernel).to have_received(:warn).with(described_class::DEPRECATION, uplevel: 3)
-      end
-
-      context "when warnings silenced" do
-        let(:test_config) { RSpec::Sidekiq::Configuration.new }
-        before do
-          test_config.silence_warning(:have_enqueued_sidekiq_job_default)
-          allow(RSpec::Sidekiq).to receive(:configuration).and_return(test_config)
-        end
-
-        it "does not warn" do
-          allow(Kernel).to receive(:warn)
-          worker.perform_async
-          expect(worker).to have_enqueued_sidekiq_job
-          expect(Kernel).not_to have_received(:warn)
-        end
-      end
     end
   end
 
