@@ -34,14 +34,16 @@ end
 ```
 
 ## Matchers
-* [enqueue_sidekiq_job](#enqueue_sidekiq_job)
-* [have_enqueued_sidekiq_job](#have_enqueued_sidekiq_job)
-* [be_processed_in](#be_processed_in)
-* [be_retryable](#be_retryable)
-* [be_unique](#be_unique)
-* [be_delayed (_deprecated_)](#be_delayed)
+* [```enqueue_sidekiq_job```](#enqueue_sidekiq_job)
+* [```have_enqueued_sidekiq_job```](#have_enqueued_sidekiq_job)
+* [```be_processed_in```](#be_processed_in)
+* [```be_retryable```](#be_retryable)
+* [```save_backtrace```](#save_backtrace)
+* [```be_unique```](#be_unique)
+* [```be_expired_in```](#be_expired_in)
+* [```be_delayed``` (_deprecated_)](#be_delayed)
 
-### enqueue_sidekiq_job
+### ```enqueue_sidekiq_job```
 
 *Describes that the block should enqueue a job*. Optionally specify the
 specific job class, arguments, timing, and other context
@@ -68,6 +70,17 @@ freeze_time do
   expect { AwesomeJob.perform_in(1.hour) }.to enqueue_sidekiq_job.in(1.hour)
 end
 
+# A specific number of times
+
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.once
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(1).time
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(:once)
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_least(1).time
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_least(:once)
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(2).times
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:twice)
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:thrice)
+
 # Combine and chain them as desired
 expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
   enqueue_sidekiq_job(AwesomeJob)
@@ -83,7 +96,7 @@ expect do
 end.to enqueue_sidekiq_job(AwesomeJob).and enqueue_sidekiq_job(OtherJob)
 ```
 
-### have_enqueued_sidekiq_job
+### ```have_enqueued_sidekiq_job```
 
 Describes that there should be an enqueued job (with the specified arguments):
 
@@ -105,6 +118,19 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => an
 
 # composable as well
 expect(AwesomeJob).to have_enqueued_sidekiq_job(any_args).and have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
+```
+
+You can specify the number of jobs enqueued:
+
+```ruby
+expect(AwesomeJob).to have_enqueued_sidekiq_job.once
+expect(AwesomeJob).to have_enqueued_sidekiq_job.exactly(1).time
+expect(AwesomeJob).to have_enqueued_sidekiq_job.exactly(:once)
+expect(AwesomeJob).to have_enqueued_sidekiq_job.at_least(1).time
+expect(AwesomeJob).to have_enqueued_sidekiq_job.at_least(:once)
+expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(2).times
+expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(:twice)
+expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(:thrice)
 ```
 
 #### Testing scheduled jobs
@@ -167,7 +193,7 @@ expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
 )
 ```
 
-### be_processed_in
+### ```be_processed_in```
 *Describes the queue that a job should be processed in*
 ```ruby
 sidekiq_options queue: :download
@@ -176,7 +202,7 @@ expect(AwesomeJob).to be_processed_in :download # or
 it { is_expected.to be_processed_in :download }
 ```
 
-### be_retryable
+### ```be_retryable```
 *Describes if a job should retry when there is a failure in its execution*
 ```ruby
 sidekiq_options retry: 5
@@ -191,7 +217,7 @@ expect(AwesomeJob).to be_retryable false # or
 it { is_expected.to be_retryable false }
 ```
 
-### save_backtrace
+### ```save_backtrace```
 *Describes if a job should save the error backtrace when there is a failure in its execution*
 ```ruby
 sidekiq_options backtrace: 5
@@ -208,7 +234,7 @@ it { is_expected.to_not save_backtrace } # or
 it { is_expected.to save_backtrace false }
 ```
 
-### be_unique
+### ```be_unique```
 *Describes when a job should be unique within its queue*
 ```ruby
 sidekiq_options unique: true
@@ -217,7 +243,7 @@ expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
 ```
 
-### be_expired_in
+### ```be_expired_in```
 *Describes when a job should expire*
 ```ruby
 sidekiq_options expires_in: 1.hour
@@ -226,7 +252,7 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### be_delayed
+### ```be_delayed```
 
 **This matcher is deprecated**. Use of it with Sidekiq 7+ will raise an error.
 Sidekiq 7 [dropped Delayed

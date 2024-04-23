@@ -26,7 +26,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           expect {
             worker.perform_async
           }.not_to enqueue_sidekiq_job
-        end.to raise_error(/expected not to enqueue .* job but enqueued 1/)
+        end.to raise_error(/expected not to enqueue a .* job but enqueued 1/)
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           expect {
             "does nothing"
           }.to enqueue_sidekiq_job
-        }.to raise_error(/expected to enqueue a job but enqueued 0/)
+        }.to raise_error(/expected to enqueue a .* job.*but enqueued 0/m)
       end
 
       it "passes when negated and no new jobs were enqueued" do
@@ -71,7 +71,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/with arguments:/),
             match(/-\["some_arg"\]/)
           )
@@ -101,7 +101,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"queue"=>"very_high"}/)
           )
         }
@@ -121,7 +121,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"at"=>#{specific_time.to_i}}/)
           )
         }
@@ -134,7 +134,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"at"=>#{specific_time.to_i}}/)
           )
         }
@@ -158,7 +158,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"at"=>#{1.hour.from_now.to_i}}/)
           )
         }
@@ -170,7 +170,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"at"=>#{1.hour.from_now.to_i}}/)
           )
         }
@@ -190,7 +190,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         end.to raise_error { |error|
           lines = error.message.split("\n")
           expect(lines).to include(
-            match(/expected to have an enqueued .* job/),
+            match(/expected to enqueue a .* job/),
             match(/-{"at"=>nil}/)
           )
         }
@@ -216,6 +216,136 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           .on("default")
           .at(specific_time)
         )
+      end
+    end
+
+    context "with expected count" do
+      it 'matches a job with no arguments once' do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.once
+      end
+
+      it "fails if a job was expected once but occurred twice" do
+        expect do
+          expect { worker.perform_async; worker.perform_async }.to enqueue_sidekiq_job.once
+        end.to raise_error(/expected to enqueue 1 .* job.*but enqueued only jobs/m)
+      end
+
+      it 'matches a job with no arguments exactly once' do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.exactly(1)
+        expect { worker.perform_async }.to enqueue_sidekiq_job.exactly(1).time
+        expect { worker.perform_async }.to enqueue_sidekiq_job.exactly(:once)
+      end
+
+      it 'matches a job with no arguments twice' do
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.twice
+      end
+
+      it "fails if a job was expected twice but occurred once" do
+        expect do
+          expect { worker.perform_async }.to enqueue_sidekiq_job.twice
+        end.to raise_error(/expected to enqueue 2 .* jobs.*but enqueued only jobs/m)
+      end
+
+      it 'matches a job with no arguments exactly twice' do
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(2)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(2).times
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(:twice)
+      end
+
+      it 'matches a job with no arguments thrice' do
+        expect {
+          worker.perform_async
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.thrice
+      end
+
+      it 'matches a job with no arguments exactly thrice' do
+        expect {
+          worker.perform_async
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(3)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(3).times
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.exactly(:thrice)
+      end
+
+      it 'matches a job with no arguments at least once' do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_least(1)
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_least(1).time
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_least(:once)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_least(1)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_least(1).time
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_least(:once)
+      end
+
+      it "fails if a job was expected at least once but never occurred" do
+        expect do
+          expect {}.to enqueue_sidekiq_job.at_least(:once)
+        end.to raise_error(/expected to enqueue at least 1 .* job.*but enqueued 0 jobs/m)
+      end
+
+      it 'matches a job with no arguments at most twice' do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_most(2)
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_most(2).time
+        expect { worker.perform_async }.to enqueue_sidekiq_job.at_most(:twice)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_most(2)
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_most(2).time
+
+        expect {
+          worker.perform_async
+          worker.perform_async
+        }.to enqueue_sidekiq_job.at_most(:twice)
+      end
+
+      it "fails if a job was expected at most once but occurred twice" do
+        expect do
+          expect { worker.perform_async; worker.perform_async }.to enqueue_sidekiq_job.at_most(:once)
+        end.to raise_error(/expected to enqueue at most .* job.*but enqueued only jobs/m)
       end
     end
   end

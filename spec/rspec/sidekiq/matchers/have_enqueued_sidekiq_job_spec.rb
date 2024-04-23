@@ -25,6 +25,101 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(worker).to have_enqueued_sidekiq_job.with(no_args)
       end
 
+      it 'matches a job with no arguments once' do
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.once
+      end
+
+      it "fails if a job was expected once but occurred twice" do
+        worker.perform_async
+        worker.perform_async
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job.once
+        end.to raise_error(/expected to have enqueued 1 .* job.*but enqueued only jobs/m)
+      end
+
+      it 'matches a job with no arguments exactly once' do
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.exactly(1)
+        expect(worker).to have_enqueued_sidekiq_job.exactly(1).time
+        expect(worker).to have_enqueued_sidekiq_job.exactly(:once)
+      end
+
+      it 'matches a job with no arguments twice' do
+        worker.perform_async
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.twice
+      end
+
+      it "fails if a job was expected twice but occurred once" do
+        worker.perform_async
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job.twice
+        end.to raise_error(/expected to have enqueued 2 .* jobs.*but enqueued only jobs/m)
+      end
+
+      it 'matches a job with no arguments exactly twice' do
+        worker.perform_async
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.exactly(2)
+        expect(worker).to have_enqueued_sidekiq_job.exactly(2).times
+        expect(worker).to have_enqueued_sidekiq_job.exactly(:twice)
+      end
+
+      it 'matches a job with no arguments thrice' do
+        worker.perform_async
+        worker.perform_async
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.thrice
+      end
+
+      it 'matches a job with no arguments exactly thrice' do
+        worker.perform_async
+        worker.perform_async
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.exactly(3)
+        expect(worker).to have_enqueued_sidekiq_job.exactly(3).times
+        expect(worker).to have_enqueued_sidekiq_job.exactly(:thrice)
+      end
+
+      it 'matches a job with no arguments at least once' do
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.at_least(1)
+        expect(worker).to have_enqueued_sidekiq_job.at_least(1).time
+        expect(worker).to have_enqueued_sidekiq_job.at_least(:once)
+
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.at_least(1)
+        expect(worker).to have_enqueued_sidekiq_job.at_least(1).time
+        expect(worker).to have_enqueued_sidekiq_job.at_least(:once)
+      end
+
+      it "fails if a job was expected at least once but never occurred" do
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job.at_least(:once)
+        end.to raise_error(/expected to have enqueued at least 1 .* job.*but enqueued 0 jobs/m)
+      end
+
+      it 'matches a job with no arguments at most twice' do
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.at_most(2)
+        expect(worker).to have_enqueued_sidekiq_job.at_most(2).time
+        expect(worker).to have_enqueued_sidekiq_job.at_most(:twice)
+
+        worker.perform_async
+        expect(worker).to have_enqueued_sidekiq_job.at_most(2)
+        expect(worker).to have_enqueued_sidekiq_job.at_most(2).time
+        expect(worker).to have_enqueued_sidekiq_job.at_most(:twice)
+      end
+
+      it "fails if a job was expected at most once but occurred twice" do
+        worker.perform_async
+        worker.perform_async
+        expect do
+          expect(worker).to have_enqueued_sidekiq_job.at_most(:once)
+        end.to raise_error(/expected to have enqueued at most 1 .* job.*but enqueued only jobs/m)
+      end
+
       it 'matches a job with arguments' do
         worker.perform_async *worker_args
         expect(worker).to have_enqueued_sidekiq_job
@@ -40,10 +135,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         worker.perform_async *worker_args
         expect do
           expect(worker).to have_enqueued_sidekiq_job(no_args)
-        end.to raise_error(/expected to have an enqueued .* job/)
+        end.to raise_error(/expected to have enqueued a .* job/)
         expect do
           expect(worker).to have_enqueued_sidekiq_job.with(no_args)
-        end.to raise_error(/expected to have an enqueued .* job/)
+        end.to raise_error(/expected to have enqueued a .* job/)
       end
 
       context "when negated" do
@@ -55,7 +150,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
           worker.perform_async *worker_args
           expect do
             expect(worker).not_to have_enqueued_sidekiq_job
-          end.to raise_error(/expected not to have an enqueued .* job/)
+          end.to raise_error(/expected not to have enqueued a .* job/)
         end
       end
 
@@ -174,7 +269,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'returns description' do
       worker.perform_async *worker_args
       argument_subject.matches? worker
-      expect(argument_subject.description).to eq %{have an enqueued #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]}
+      expect(argument_subject.description).to eq %{have enqueued a #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]}
     end
   end
 
@@ -183,10 +278,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       jid = worker.perform_async *worker_args
       argument_subject.matches? worker
       expect(argument_subject.failure_message).to eq <<~eos.strip
-      expected to have an enqueued #{worker} job
+      expected to have enqueued a #{worker} job
         with arguments:
           -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
-      but have enqueued only jobs
+      but enqueued only jobs
         -JID:#{jid} with arguments:
           -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
       eos
@@ -200,10 +295,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         jids = 2.times.map { worker.perform_async *worker_args }
         argument_subject.matches? worker
         expect(argument_subject.failure_message).to eq <<~eos.strip
-        expected to have an enqueued #{worker} job
+        expected to have enqueued a #{worker} job
           with arguments:
             -[["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]]
-        but have enqueued only jobs
+        but enqueued only jobs
           -JID:#{jids[0]} with arguments:
             -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
           -JID:#{jids[1]} with arguments:
@@ -218,7 +313,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       worker.perform_async *worker_args
       argument_subject.matches? worker
       expect(argument_subject.failure_message_when_negated).to eq <<-eos.gsub(/^ {6}/, '').strip
-      expected not to have an enqueued #{worker} job
+      expected not to have enqueued a #{worker} job but enqueued 1
         arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
       eos
     end

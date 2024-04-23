@@ -1,6 +1,7 @@
 Unreleased
 ---
 * [BREAKING] Make `have_enqueued_sidekiq_job()` match jobs with any arguments (same as `enqueue_sidekiq_job()` or `have_enqueued_sidekiq_job(any_args)`) ([@3v0k4](https://github.com/3v0k4) #215)
+* Add support for expected number of jobs to both `enqueue_sidekiq_job` and `have_enqueued_sidekiq_job` ([@3v0k4](https://github.com/3v0k4) #219)
 
 4.2.0
 ---
