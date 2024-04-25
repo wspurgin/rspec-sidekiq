@@ -19,8 +19,13 @@ module RSpec
 
           actual_jobs.includes?(
             expected_arguments == [] ? any_args : expected_arguments,
-            expected_options
+            expected_options,
+            expected_count
           )
+        end
+
+        def prefix_message
+          "have enqueued"
         end
       end
     end

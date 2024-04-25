@@ -118,8 +118,19 @@ module RSpec
           @jobs = unwrap_jobs(klass.jobs).map { |job| EnqueuedJob.new(job) }
         end
 
-        def includes?(arguments, options)
-          !!jobs.find { |job| matches?(job, arguments, options) }
+        def includes?(arguments, options, count)
+          matching = jobs.filter { |job| matches?(job, arguments, options) }
+
+          case count
+          in [:exactly, n]
+            matching.size == n
+          in [:at_least, n]
+            matching.size >= n
+          in [:at_most, n]
+            matching.size <= n
+          else
+            matching.size > 0
+          end
         end
 
         def each(&block)
@@ -164,11 +175,12 @@ module RSpec
         include RSpec::Mocks::ArgumentMatchers
         include RSpec::Matchers::Composable
 
-        attr_reader :expected_arguments, :expected_options, :klass, :actual_jobs
+        attr_reader :expected_arguments, :expected_options, :klass, :actual_jobs, :expected_count
 
         def initialize
           @expected_arguments = [any_args]
           @expected_options = {}
+          set_expected_count :positive, 1
         end
 
         def with(*expected_arguments)
@@ -196,12 +208,59 @@ module RSpec
           self
         end
 
+        def once
+          set_expected_count :exactly, 1
+          self
+        end
+
+        def twice
+          set_expected_count :exactly, 2
+          self
+        end
+
+        def thrice
+          set_expected_count :exactly, 3
+          self
+        end
+
+        def exactly(n)
+          set_expected_count :exactly, n
+          self
+        end
+
+        def at_least(n)
+          set_expected_count :at_least, n
+          self
+        end
+
+        def at_most(n)
+          set_expected_count :at_most, n
+          self
+        end
+
+        def times
+          self
+        end
+        alias :time :times
+
+        def set_expected_count(relativity, n)
+          n =
+            case n
+            when Integer then n
+            when :once   then 1
+            when :twice  then 2
+            when :thrice then 3
+            else raise ArgumentError, "Unsupported #{n} in '#{relativity} #{n}'. Use either an Integer, :once, :twice, or :thrice."
+            end
+          @expected_count = [relativity, n]
+        end
+
         def description
-          "have an enqueued #{klass} job with arguments #{expected_arguments}"
+          "#{common_message} with arguments #{expected_arguments}"
         end
 
         def failure_message
-          message = ["expected to have an enqueued #{klass} job"]
+          message = ["expected to #{common_message}"]
           if expected_arguments
             message << "  with arguments:"
             message << "    -#{formatted(expected_arguments)}"
@@ -213,7 +272,7 @@ module RSpec
           end
 
           if actual_jobs.any?
-            message << "but have enqueued only jobs"
+            message << "but enqueued only jobs"
             if expected_arguments
               job_messages = actual_jobs.map do |job|
                 base = "  -JID:#{job.jid} with arguments:"
@@ -227,13 +286,34 @@ module RSpec
 
               message << job_messages.join("\n")
             end
+          else
+            message << "but enqueued 0 jobs"
           end
 
           message.join("\n")
         end
 
+        def common_message
+          "#{prefix_message} #{count_message} #{klass} #{expected_count.last == 1 ? "job" : "jobs"}"
+        end
+
+        def prefix_message
+          raise NotImplementedError
+        end
+
+        def count_message
+          case expected_count
+          in [:positive, _]
+            "a"
+          in [:exactly, n]
+            n
+          in [relativity, n]
+            "#{relativity.to_s.gsub('_', ' ')} #{n}"
+          end
+        end
+
         def failure_message_when_negated
-          message = ["expected not to have an enqueued #{klass} job"]
+          message = ["expected not to #{common_message} but enqueued #{actual_jobs.count}"]
           message << "  arguments: #{expected_arguments}" if expected_arguments.any?
           message << "  options: #{expected_options}" if expected_options.any?
           message.join("\n")

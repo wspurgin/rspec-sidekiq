@@ -27,24 +27,11 @@ module RSpec
             return false
           end
 
-          @actual_jobs.includes?(expected_arguments, expected_options)
+          @actual_jobs.includes?(expected_arguments, expected_options, expected_count)
         end
 
-        def failure_message
-          if @actual_jobs.none?
-            "expected to enqueue a job but enqueued 0"
-          else
-            super
-          end
-        end
-
-        def failure_message_when_negated
-          messages = ["expected not to enqueue a #{@klass} job but enqueued #{actual_jobs.count}"]
-
-          messages << "  with arguments #{formatted(expected_arguments)}" if expected_arguments
-          messages << "  with context #{formatted(expected_options)}" if expected_options
-
-          messages.join("\n")
+        def prefix_message
+          "enqueue"
         end
 
         def supports_block_expectations?
