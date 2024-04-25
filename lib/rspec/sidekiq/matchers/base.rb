@@ -246,7 +246,7 @@ module RSpec
         def set_expected_count(relativity, n)
           n =
             case n
-            when Numeric then n
+            when Integer then n
             when :once   then 1
             when :twice  then 2
             when :thrice then 3
