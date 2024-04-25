@@ -250,6 +250,7 @@ module RSpec
             when :once   then 1
             when :twice  then 2
             when :thrice then 3
+            else raise ArgumentError, "Unsupported #{n} in '#{relativity} #{n}'. Use either an Integer, :once, :twice, or :thrice."
             end
           @expected_count = [relativity, n]
         end
