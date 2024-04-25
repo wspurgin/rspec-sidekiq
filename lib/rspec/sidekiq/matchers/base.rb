@@ -180,7 +180,7 @@ module RSpec
         def initialize
           @expected_arguments = [any_args]
           @expected_options = {}
-          @expected_count = set_expected_count :positive, 1
+          set_expected_count :positive, 1
         end
 
         def with(*expected_arguments)
