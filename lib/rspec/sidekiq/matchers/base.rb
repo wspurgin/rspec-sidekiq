@@ -293,14 +293,14 @@ module RSpec
         end
 
         def common_message
-          "#{prefix_message} #{count} #{klass} #{expected_count.last == 1 ? "job" : "jobs"}"
+          "#{prefix_message} #{count_message} #{klass} #{expected_count.last == 1 ? "job" : "jobs"}"
         end
 
         def prefix_message
           raise NotImplementedError
         end
 
-        def count
+        def count_message
           case expected_count
           in [:positive, _]
             "a"
