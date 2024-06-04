@@ -5,6 +5,8 @@ name: main build
 run-name: ${{ github.actor }} 🚀 ${{github.ref_name}}
 on:
   push:
+    branches:
+      - 'main'
   pull_request:
   schedule:
     - cron: '30 15 * * *'
