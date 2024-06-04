@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RSpec
   module Sidekiq
     module Matchers
@@ -275,13 +277,13 @@ module RSpec
             message << "but enqueued only jobs"
             if expected_arguments
               job_messages = actual_jobs.map do |job|
-                base = "  -JID:#{job.jid} with arguments:"
-                base << "\n    -#{formatted(job.args)}"
+                base = ["  -JID:#{job.jid} with arguments:"]
+                base << "    -#{formatted(job.args)}"
                 if expected_options.any?
-                  base << "\n   with context: #{formatted(job.context)}"
+                  base << "   with context: #{formatted(job.context)}"
                 end
 
-                base
+                base.join("\n")
               end
 
               message << job_messages.join("\n")

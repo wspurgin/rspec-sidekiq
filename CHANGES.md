@@ -1,5 +1,6 @@
 Unreleased
 ---
+* Add `frozen_string_literal: true` (#220)
 
 5.0.0
 ---

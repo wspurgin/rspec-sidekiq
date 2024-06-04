@@ -36,7 +36,7 @@ jobs:
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up using Ruby ${{ matrix.ruby-version }} with Gemfile '${{ matrix.gemfile }}'
         uses: ruby/setup-ruby@v1
         with:

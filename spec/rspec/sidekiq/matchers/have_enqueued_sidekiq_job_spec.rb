@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
@@ -121,18 +123,18 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       end
 
       it 'matches a job with arguments' do
-        worker.perform_async *worker_args
+        worker.perform_async(*worker_args)
         expect(worker).to have_enqueued_sidekiq_job
-        expect(worker).to have_enqueued_sidekiq_job *worker_args
+        expect(worker).to have_enqueued_sidekiq_job(*worker_args)
       end
 
       it 'matches on the global Worker queue' do
-        worker.perform_async *worker_args
-        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job *worker_args
+        worker.perform_async(*worker_args)
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(*worker_args)
       end
 
       it "fails if a job was enqueued with arguments but matched with no_args" do
-        worker.perform_async *worker_args
+        worker.perform_async(*worker_args)
         expect do
           expect(worker).to have_enqueued_sidekiq_job(no_args)
         end.to raise_error(/expected to have enqueued a .* job/)
@@ -147,7 +149,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         end
 
         it "fails if a job was enqueued" do
-          worker.perform_async *worker_args
+          worker.perform_async(*worker_args)
           expect do
             expect(worker).not_to have_enqueued_sidekiq_job
           end.to raise_error(/expected not to have enqueued a .* job/)
@@ -255,19 +257,19 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
   describe '#have_enqueued_sidekiq_job' do
     it 'returns instance' do
-      worker.perform_async *worker_args
+      worker.perform_async(*worker_args)
       expect(have_enqueued_sidekiq_job).to be_a described_class
     end
 
     it 'matches the same way have_enqueued_sidekiq_job does' do
-      worker.perform_async *worker_args
-      expect(worker).to have_enqueued_sidekiq_job *worker_args
+      worker.perform_async(*worker_args)
+      expect(worker).to have_enqueued_sidekiq_job(*worker_args)
     end
   end
 
   describe '#description' do
     it 'returns description' do
-      worker.perform_async *worker_args
+      worker.perform_async(*worker_args)
       argument_subject.matches? worker
       expect(argument_subject.description).to eq %{have enqueued a #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]}
     end
@@ -275,7 +277,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
   describe '#failure_message' do
     it 'returns message' do
-      jid = worker.perform_async *worker_args
+      jid = worker.perform_async(*worker_args)
       argument_subject.matches? worker
       expect(argument_subject.failure_message).to eq <<~eos.strip
       expected to have enqueued a #{worker} job
@@ -292,7 +294,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       let(:argument_subject) { described_class.new wrapped_args }
 
       it "returns a message showing the wrapped array in expectations but each job on its own line" do
-        jids = 2.times.map { worker.perform_async *worker_args }
+        jids = 2.times.map { worker.perform_async(*worker_args) }
         argument_subject.matches? worker
         expect(argument_subject.failure_message).to eq <<~eos.strip
         expected to have enqueued a #{worker} job
@@ -310,7 +312,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
   describe '#failure_message_when_negated' do
     it 'returns message' do
-      worker.perform_async *worker_args
+      worker.perform_async(*worker_args)
       argument_subject.matches? worker
       expect(argument_subject.failure_message_when_negated).to eq <<-eos.gsub(/^ {6}/, '').strip
       expected not to have enqueued a #{worker} job but enqueued 1
@@ -323,7 +325,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     context 'when condition matches' do
       context 'when expected are arguments' do
         it 'returns true' do
-          worker.perform_async *worker_args
+          worker.perform_async(*worker_args)
           expect(argument_subject.matches? worker).to be true
         end
       end
@@ -338,7 +340,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
       context 'when expected are matchers' do
         it 'returns true' do
-          worker.perform_async *worker_args
+          worker.perform_async(*worker_args)
           expect(matcher_subject.matches? worker).to be true
         end
       end
