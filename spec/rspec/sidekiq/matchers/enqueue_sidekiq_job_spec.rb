@@ -199,6 +199,72 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       end
     end
 
+    context "with_context" do
+      it "passes if the job's context hash matches the expected keyword args" do
+        expect { worker.perform_async }.to enqueue_sidekiq_job.with_context(
+          created_at: anything
+        )
+      end
+
+      it "raises an Argument Error if called successively" do
+        expect do
+          expect { worker.perform_async }.to(
+            enqueue_sidekiq_job(worker)
+            .on("default")
+            .with_context(
+              created_at: anything,
+              queue: "something_else"
+            )
+          )
+        end.to raise_error(ArgumentError, /There are already expectations against 'queue'.*/)
+      end
+
+      it "fails when no job with a matching context is found" do
+        expect do
+          expect { worker.perform_async }.to(
+            enqueue_sidekiq_job(worker)
+            .with_context(
+              created_at: "2024-01-01T00:00:00Z" # incorrect date format
+            )
+          )
+        end.to raise_error { |error|
+          lines = error.message.split("\n")
+          expect(lines).to include(
+            match(/expected to enqueue a .* job/),
+            match(/-{"created_at"=>"2024-01-01T00:00:00Z"}/)
+          )
+        }
+      end
+
+      context "with nested context" do
+        it "matches on nested context" do
+          expect { worker.set(nested: {option: "here"}).perform_async }.to(
+            enqueue_sidekiq_job(worker)
+            .with_context(
+              nested: {option: kind_of(String)}
+            )
+          )
+        end
+
+        it "fails when no job with a matching context is found" do
+          expect do
+            expect { worker.set(nested: {option: "here"}).perform_async }.to(
+              enqueue_sidekiq_job(worker)
+              .with_context(
+                nested: {option: "there"} # wrong value expectation
+              )
+            )
+          end.to raise_error { |error|
+            lines = error.message.split("\n")
+            expect(lines).to include(
+              match(/expected to enqueue a .* job/),
+              match(/-{"nested"=>{"option"=>"there"}/)
+            )
+          }
+        end
+      end
+    end
+
     describe "composable" do
       let(:other_worker) { create_worker }
       it "can be composed with other matchers" do

@@ -122,6 +122,86 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         end.to raise_error(/expected to have enqueued at most 1 .* job.*but enqueued only jobs/m)
       end
 
+      context "with_context" do
+        subject(:enqueue!) { worker.set(trace_id: "something").perform_async }
+
+        it "passes if the job's context hash matches the expected keyword args" do
+          enqueue!
+
+          expect(worker).to have_enqueued_sidekiq_job.with_context(
+            trace_id: anything
+          )
+        end
+
+        it "raises an Argument Error if called successively" do
+          enqueue!
+
+          expect do
+            expect(worker).to(
+              have_enqueued_sidekiq_job
+              .on("default")
+              .with_context(
+                trace_id: anything,
+                queue: "something_else"
+              )
+            )
+          end.to raise_error(ArgumentError, /There are already expectations against 'queue'.*/)
+        end
+
+        it "fails when no job with a matching context is found" do
+          enqueue!
+
+          expect do
+            expect(worker).to(
+              have_enqueued_sidekiq_job
+              .with_context(
+                trace_id: "nothing"
+              )
+            )
+          end.to raise_error { |error|
+            lines = error.message.split("\n")
+            expect(lines).to include(
+              match(/expected to have enqueued a .* job/),
+              match(/-{"trace_id"=>"nothing"}/)
+            )
+          }
+        end
+
+        context "with nested context" do
+          subject(:enqueue!) { worker.set(nested: {option: "here"}).perform_async }
+
+          it "matches on nested context" do
+            enqueue!
+
+            expect(worker).to(
+              have_enqueued_sidekiq_job
+              .with_context(
+                nested: {option: kind_of(String)}
+              )
+            )
+          end
+
+          it "fails when no job with a matching context is found" do
+            enqueue!
+
+            expect do
+              expect(worker).to(
+                have_enqueued_sidekiq_job
+                .with_context(
+                  nested: {option: "there"} # wrong value expectation
+                )
+              )
+            end.to raise_error { |error|
+              lines = error.message.split("\n")
+              expect(lines).to include(
+                match(/expected to have enqueued a .* job/),
+                match(/-{"nested"=>{"option"=>"there"}/)
+              )
+            }
+          end
+        end
+      end
+
       it 'matches a job with arguments' do
         worker.perform_async(*worker_args)
         expect(worker).to have_enqueued_sidekiq_job
