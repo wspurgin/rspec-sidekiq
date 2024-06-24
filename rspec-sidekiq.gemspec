@@ -12,6 +12,10 @@ Gem::Specification.new do |s|
   s.description = "Simple testing of Sidekiq jobs via a collection of matchers and helpers"
   s.license     = "MIT"
 
+  s.metadata = {
+    "changelog_uri" => "https://github.com/wspurgin/rspec-sidekiq/blob/main/CHANGES.md"
+  }
+
   s.add_dependency "rspec-core", "~> 3.0"
   s.add_dependency "rspec-mocks", "~> 3.0"
   s.add_dependency "rspec-expectations", "~> 3.0"
