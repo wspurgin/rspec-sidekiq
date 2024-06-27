@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'rspec/core'
+require "rspec/core"
+require "rspec/support/fuzzy_matcher"
 
 if defined? Sidekiq::Batch
   module RSpec

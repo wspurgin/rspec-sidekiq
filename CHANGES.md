@@ -1,6 +1,7 @@
 Unreleased
 ---
 * Add `frozen_string_literal: true` (#220)
+* Add `with_context` matcher for matching against job contexts (#222)
 
 5.0.0
 ---

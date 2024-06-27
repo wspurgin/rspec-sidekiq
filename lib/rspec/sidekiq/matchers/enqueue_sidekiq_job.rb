@@ -74,6 +74,9 @@ module RSpec
       #   expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.immediately
       #   expect { AwesomeJob.perform_at(1.hour.ago) }.to enqueue_sidekiq_job.immediately
       #
+      #   # With specific context
+      #   expect { AwesomeJob.set(trace_id: "something").perform_async }.to enqueue_sidekiq_job.with_context(trace_id: anything)
+      #
       #   ## Composable
       #
       #   expect do
