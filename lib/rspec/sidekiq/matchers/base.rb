@@ -123,13 +123,13 @@ module RSpec
         def includes?(arguments, options, count)
           matching = jobs.filter { |job| matches?(job, arguments, options) }
 
-          case count
-          in [:exactly, n]
-            matching.size == n
-          in [:at_least, n]
-            matching.size >= n
-          in [:at_most, n]
-            matching.size <= n
+          case count[0]
+          when :exactly
+            matching.size == count[1]
+          when :at_least
+            matching.size >= count[1]
+          when :at_most
+            matching.size <= count[1]
           else
             matching.size > 0
           end
@@ -304,13 +304,13 @@ module RSpec
         end
 
         def count_message
-          case expected_count
-          in [:positive, _]
+          case expected_count[0]
+          when :positive
             "a"
-          in [:exactly, n]
-            n
-          in [relativity, n]
-            "#{relativity.to_s.gsub('_', ' ')} #{n}"
+          when :exactly
+            expected_count[1]
+          else
+            "#{expected_count[0].to_s.gsub('_', ' ')} #{expected_count[1]}"
           end
         end
 
