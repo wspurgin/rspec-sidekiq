@@ -10,7 +10,7 @@ module Sidekiq
 
       def default_retries_exhausted_message
         {
-          'queue' => get_sidekiq_options[:worker],
+          'queue' => get_sidekiq_options['queue'],
           'class' => name,
           'args' => [],
           'error_message' => 'An error occurred'

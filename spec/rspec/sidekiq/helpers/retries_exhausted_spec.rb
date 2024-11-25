@@ -20,6 +20,15 @@ RSpec.describe 'Retries Exhausted block' do
     end
   end
 
+  it 'has an exhausted message' do
+    expect(FooClass.default_retries_exhausted_message).to eq({
+                                                               "args" => [],
+                                                               "class" => "FooClass",
+                                                               "error_message" => "An error occurred",
+                                                               "queue" => "data",
+                                                             })
+  end
+
   it 'executes whatever is within the block' do
     FooClass.within_sidekiq_retries_exhausted_block { expect(FooClass).to receive(:bar).with('hello') }
   end
