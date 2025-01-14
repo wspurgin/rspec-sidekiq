@@ -111,7 +111,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
     end
 
     context "with a specific retry option" do
-      it "passes if the queue is set at runtime" do
+      it "passes if retry is set at runtime" do
         expect {
           worker.set(retry: 5).perform_async
         }.to enqueue_sidekiq_job.with_retry(5)
@@ -121,7 +121,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         }.to enqueue_sidekiq_job.with_retry(false)
       end
 
-      it "passes if the queue is set via options" do
+      it "passes if retry is set via options" do
         other_worker = create_worker(retry: 5)
         expect {
           other_worker.perform_async
