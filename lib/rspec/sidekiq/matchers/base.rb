@@ -210,6 +210,11 @@ module RSpec
           self
         end
 
+        def with_retry(retry_count)
+          @expected_options["retry"] = retry_count
+          self
+        end
+
         def once
           set_expected_count :exactly, 1
           self
