@@ -110,6 +110,39 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       end
     end
 
+    context "with a specific retry option" do
+      it "passes if the queue is set at runtime" do
+        expect {
+          worker.set(retry: 5).perform_async
+        }.to enqueue_sidekiq_job.with_retry(5)
+
+        expect {
+          worker.set(retry: false).perform_async
+        }.to enqueue_sidekiq_job.with_retry(false)
+      end
+
+      it "passes if the queue is set via options" do
+        other_worker = create_worker(retry: 5)
+        expect {
+          other_worker.perform_async
+        }.to enqueue_sidekiq_job.with_retry(5)
+      end
+
+      it "fails if job is enqueued using different retry option" do
+        expect do
+          expect {
+            worker.perform_async
+          }.to enqueue_sidekiq_job.with_retry(5)
+        end.to raise_error { |error|
+          lines = error.message.split("\n")
+          expect(lines).to include(
+            match(/expected to enqueue a .* job/),
+            match(/-{"retry"=>5}/)
+          )
+        }
+      end
+    end
+
     context "at a specific time" do
       it "passes if the job is enqueued for the specific time" do
         specific_time = 1.hour.from_now
