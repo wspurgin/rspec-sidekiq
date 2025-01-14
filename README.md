@@ -61,6 +61,9 @@ expect { AwesomeJob.perform_async "Awesome!" }.to enqueue_sidekiq_job.with("Awes
 # On a specific queue
 expect { AwesomeJob.set(queue: "high").perform_async }.to enqueue_sidekiq_job.on("high")
 
+# With a specific retry count
+expect { AwesomeJob.set(retry: 0).perform_async }.to enqueue_sidekiq_job.with_retry(0)
+
 # At a specific datetime
 specific_time = 1.hour.from_now
 expect { AwesomeJob.perform_at(specific_time) }.to enqueue_sidekiq_job.at(specific_time)
