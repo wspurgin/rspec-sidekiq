@@ -1,5 +1,3 @@
-**Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
-
 [![Gem Version](https://badge.fury.io/rb/rspec-sidekiq.svg)](https://badge.fury.io/rb/rspec-sidekiq)
 [![Github Actions CI][github_actions_badge]][github_actions]
 
@@ -247,13 +245,32 @@ it { is_expected.to save_backtrace false }
 ```
 
 ### ```be_unique```
+
+:warning: This is intended to for Sidekiq Enterprise unique job implementation.
+There is _limited_ support for Sidekiq Unique Jobs, but compatibility is not
+guaranteed.
+
 *Describes when a job should be unique within its queue*
 ```ruby
-sidekiq_options unique: true
+sidekiq_options unique_for: 1.hour
 # test with...
 expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
+
+# specify a specific interval
+sidkiq_options unique_for: 1.hour
+it { is_expected.to be_unique.for(1.hour) }
 ```
+
+#### `until` matcher
+
+:warning: This sub matcher only works for Sidekiq Enterprise
+
+```ruby
+sidkiq_options unique_for: 1.hour, unique_until: :start
+it { is_expected.to be_unique.until(:start) }
+```
+
 
 ### ```be_expired_in```
 *Describes when a job should expire*

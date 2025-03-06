@@ -1,6 +1,8 @@
 Unreleased
 ---
+* Add `until` matcher for Sidekiq Enterprise unique jobs (#232, #147)
 * Add `with_context` matcher for matching against job contexts (#222)
+* Support for Sidekiq 8 (#233)
 * Add `frozen_string_literal: true` (#220)
 * Fix pattern matching warnings on Ruby 2.7 (#227)
 
