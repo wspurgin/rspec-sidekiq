@@ -24,6 +24,7 @@ RSpec.configure do |config|
   config.sidekiq_gte_7 = Gem::Dependency.new("sidekiq", ">= 7.0.0").matching_specs.any?
 
   config.before(:suite) do
+    require "sidekiq/rails" if config.sidekiq_gte_7
     ActiveJob::Base.queue_adapter = :sidekiq
     ActiveJob::Base.logger.level = :warn
 

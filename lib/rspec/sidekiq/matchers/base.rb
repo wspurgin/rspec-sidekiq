@@ -60,7 +60,11 @@ module RSpec
         private
 
         def active_job?
-          job["class"] == "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
+          if RSpec::Sidekiq.configuration.sidekiq_gte_8?
+            job["class"] == "Sidekiq::ActiveJob::Wrapper"
+          else
+            job["class"] == "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
+          end
         end
 
         def deserialized_active_job_args

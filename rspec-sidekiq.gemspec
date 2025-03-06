@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rspec-core", "~> 3.0"
   s.add_dependency "rspec-mocks", "~> 3.0"
   s.add_dependency "rspec-expectations", "~> 3.0"
-  s.add_dependency "sidekiq", ">= 5", "< 8"
+  s.add_dependency "sidekiq", ">= 5", "< 9"
 
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-doc"
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "activerecord"
   s.add_development_dependency "activemodel"
   s.add_development_dependency "activesupport"
+  s.add_development_dependency "railties"
 
   s.files = `git ls-files -- lib/*`.split("\n")
   s.files += %w[CHANGES.md LICENSE README.md]
