@@ -28,7 +28,7 @@ module RSpec
               # send to custom evaluator
               at_evaluator(value)
             else
-              job.context.has_key?(key) && job.context[key] == value
+              job.context.has_key?(key) && RSpec::Support::FuzzyMatcher.values_match?(value, job.context[key])
             end
           end
         end
@@ -248,6 +248,26 @@ module RSpec
           self
         end
         alias :time :times
+
+        def with_context(**kwargs)
+          raise ArgumentError, "Must specify keyword arguments to with_context" if kwargs.empty?
+
+          # gather keys and compare against currently set expected_options
+          # Someone could have accidentally used with_context and other
+          # chainables with different expectations. Better to explicitly
+          # inform loudly of clashes than let them overwrite silently
+          normalized = normalize_arguments(kwargs)
+          already_set = normalized.keys & @expected_options.keys
+          if already_set.any?
+            prettied = already_set.map { |key| "'#{key}'" }
+            raise ArgumentError, "There are already expectations against #{prettied.join(",")}. Did you already call other context chainables like `on` or `at`?"
+          end
+
+          # We're good, no accidental overwrites of expectations
+          @expected_options.merge!(normalized)
+
+          self
+        end
 
         def set_expected_count(relativity, n)
           n =

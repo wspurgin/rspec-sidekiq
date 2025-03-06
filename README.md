@@ -81,6 +81,11 @@ expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(2).times
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:twice)
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:thrice)
 
+# With specific context
+expect {
+  AwesomeJob.set(trace_id: "something").perform_async
+}.to enqueue_sidekiq_job.with_context(trace_id: anything)
+
 # Combine and chain them as desired
 expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
   enqueue_sidekiq_job(AwesomeJob)
@@ -131,6 +136,13 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job.at_least(:once)
 expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(2).times
 expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(:twice)
 expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(:thrice)
+```
+
+Likewise, specify what should be in the context:
+```ruby
+AwesomeJob.set(trace_id: "something").perform_async
+
+expect(AwesomeJob).to have_enqueued_sidekiq_job.with_context(trace_id: anything)
 ```
 
 #### Testing scheduled jobs
