@@ -79,10 +79,16 @@ expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(2).times
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:twice)
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:thrice)
 
-# With specific context
+# With specific context:
+# Useful for testing anything `set` on the job, including
+# overrides to things like `retry`
 expect {
   AwesomeJob.set(trace_id: "something").perform_async
 }.to enqueue_sidekiq_job.with_context(trace_id: anything)
+
+expect {
+  AwesomeJob.set(retry: 5).perform_async
+}.to enqueue_sidekiq_job.with_context(retry: 5)
 
 # Combine and chain them as desired
 expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
@@ -214,6 +220,10 @@ it { is_expected.to be_processed_in :download }
 
 ### ```be_retryable```
 *Describes if a job should retry when there is a failure in its execution*
+
+Note: this only tests against the `retry` option in the job's Sidekiq options.
+To test an enqueued job's retry, i.e. `AwesomeJob.set(retry: 5)`, use
+`with_context`
 ```ruby
 sidekiq_options retry: 5
 # test with...
@@ -262,9 +272,9 @@ sidkiq_options unique_for: 1.hour
 it { is_expected.to be_unique.for(1.hour) }
 ```
 
-#### `until` matcher
+#### `until` sub-matcher
 
-:warning: This sub matcher only works for Sidekiq Enterprise
+:warning: This sub-matcher only works for Sidekiq Enterprise
 
 ```ruby
 sidkiq_options unique_for: 1.hour, unique_until: :start
