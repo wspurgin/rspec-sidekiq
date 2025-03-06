@@ -1,5 +1,3 @@
-**Welcome @wspurgin as new maintainer for `rspec-sidekiq`!**
-
 [![Gem Version](https://badge.fury.io/rb/rspec-sidekiq.svg)](https://badge.fury.io/rb/rspec-sidekiq)
 [![Github Actions CI][github_actions_badge]][github_actions]
 
@@ -81,10 +79,16 @@ expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(2).times
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:twice)
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.at_most(:thrice)
 
-# With specific context
+# With specific context:
+# Useful for testing anything `set` on the job, including
+# overrides to things like `retry`
 expect {
   AwesomeJob.set(trace_id: "something").perform_async
 }.to enqueue_sidekiq_job.with_context(trace_id: anything)
+
+expect {
+  AwesomeJob.set(retry: 5).perform_async
+}.to enqueue_sidekiq_job.with_context(retry: 5)
 
 # Combine and chain them as desired
 expect { AwesomeJob.perform_at(specific_time, "Awesome!") }.to(
@@ -216,6 +220,10 @@ it { is_expected.to be_processed_in :download }
 
 ### ```be_retryable```
 *Describes if a job should retry when there is a failure in its execution*
+
+Note: this only tests against the `retry` option in the job's Sidekiq options.
+To test an enqueued job's retry, i.e. `AwesomeJob.set(retry: 5)`, use
+`with_context`
 ```ruby
 sidekiq_options retry: 5
 # test with...
@@ -247,13 +255,32 @@ it { is_expected.to save_backtrace false }
 ```
 
 ### ```be_unique```
+
+:warning: This is intended to for Sidekiq Enterprise unique job implementation.
+There is _limited_ support for Sidekiq Unique Jobs, but compatibility is not
+guaranteed.
+
 *Describes when a job should be unique within its queue*
 ```ruby
-sidekiq_options unique: true
+sidekiq_options unique_for: 1.hour
 # test with...
 expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
+
+# specify a specific interval
+sidkiq_options unique_for: 1.hour
+it { is_expected.to be_unique.for(1.hour) }
 ```
+
+#### `until` sub-matcher
+
+:warning: This sub-matcher only works for Sidekiq Enterprise
+
+```ruby
+sidkiq_options unique_for: 1.hour, unique_until: :start
+it { is_expected.to be_unique.until(:start) }
+```
+
 
 ### ```be_expired_in```
 *Describes when a job should expire*

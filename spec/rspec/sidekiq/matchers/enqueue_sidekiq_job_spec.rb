@@ -206,6 +206,18 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         )
       end
 
+      context "when using `set` to override global context" do
+        let(:worker) { create_worker(retry: 2) }
+        it "passes" do
+          expect { worker.set(retry: 5).perform_async }.to(
+            enqueue_sidekiq_job(worker)
+            .with_context(
+              retry: 5
+            )
+          )
+        end
+      end
+
       it "raises an Argument Error if called successively" do
         expect do
           expect { worker.perform_async }.to(
