@@ -33,6 +33,14 @@ jobs:
           - 'gemfiles/sidekiq6_5_rails6.gemfile'
           - 'gemfiles/sidekiq6_5_rails7.gemfile'
           - 'gemfiles/sidekiq7_rails7.gemfile'
+          - 'gemfiles/sidekiq8_rails8.gemfile'
+        exclude:
+          - ruby-version: '3.1'
+            gemfile: 'gemfiles/sidekiq8_rails8.gemfile'
+          - ruby-version: '3.0'
+            gemfile: 'gemfiles/sidekiq8_rails8.gemfile'
+          - ruby-version: '2.7'
+            gemfile: 'gemfiles/sidekiq8_rails8.gemfile'
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:

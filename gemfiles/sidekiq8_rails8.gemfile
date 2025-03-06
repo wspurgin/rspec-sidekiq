@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'sidekiq', '~> 8'
+gem 'activejob', '~> 8'
+gem 'actionmailer', '~> 8'
+gem 'activerecord', '~> 8'
+gem "activemodel", "~> 8"
+gem "railties", "~> 8"
+
+gemspec :path => '../'

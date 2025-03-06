@@ -24,6 +24,10 @@ module RSpec
         Gem::Version.new(::Sidekiq::VERSION) >= Gem::Version.new("7.0.0")
       end
 
+      def sidekiq_gte_8?
+        Gem::Version.new(::Sidekiq::VERSION) >= Gem::Version.new("8.0.0")
+      end
+
       def silence_warning(symbol)
         @silence_warnings << symbol
       end
