@@ -268,7 +268,7 @@ expect(AwesomeJob).to be_unique
 it { is_expected.to be_unique }
 
 # specify a specific interval
-sidkiq_options unique_for: 1.hour
+sidekiq_options unique_for: 1.hour
 it { is_expected.to be_unique.for(1.hour) }
 ```
 
@@ -277,7 +277,7 @@ it { is_expected.to be_unique.for(1.hour) }
 :warning: This sub-matcher only works for Sidekiq Enterprise
 
 ```ruby
-sidkiq_options unique_for: 1.hour, unique_until: :start
+sidekiq_options unique_for: 1.hour, unique_until: :start
 it { is_expected.to be_unique.until(:start) }
 ```
 
