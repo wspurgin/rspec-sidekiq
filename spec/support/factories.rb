@@ -18,10 +18,13 @@ module RSpec
             Object.const_set clazz_name, clazz
           end
 
-          def create_active_job(options = {})
+          def create_active_job(options = {}, sidekiq_options = {})
             clazz_name = "ActiveJob#{ rand(36**10).to_s 36 }"
             clazz = Class.new(ActiveJob::Base) do
               queue_as options
+              if self.respond_to?(:sidekiq_options)
+                sidekiq_options sidekiq_options
+              end
 
               def perform
               end

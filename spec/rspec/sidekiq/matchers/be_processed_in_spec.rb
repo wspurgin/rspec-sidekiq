@@ -7,7 +7,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeProcessedIn do
   let(:symbol_worker) { create_worker queue: :a_queue }
   let(:string_subject) { RSpec::Sidekiq::Matchers::BeProcessedIn.new 'a_queue' }
   let(:string_worker) { create_worker queue: 'a_queue' }
-  let(:active_job) { create_active_job :mailers }
+  # both enqueue in the Active Job queue "mailers" and the sidekiq queue "mailers"
+  let(:active_job) { create_active_job :mailers, queue: :mailers }
 
   before(:each) do
     symbol_subject.matches? symbol_worker
