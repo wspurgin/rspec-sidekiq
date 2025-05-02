@@ -22,7 +22,9 @@ module RSpec
             clazz_name = "ActiveJob#{ rand(36**10).to_s 36 }"
             clazz = Class.new(ActiveJob::Base) do
               queue_as options
-              sidekiq_options sidekiq_options
+              if self.respond_to?(:sidekiq_options)
+                sidekiq_options sidekiq_options
+              end
 
               def perform
               end
