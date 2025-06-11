@@ -25,10 +25,6 @@ module RSpec
           proc.call
           @actual_jobs = EnqueuedJobs.new(@klass).minus!(original_jobs)
 
-          if @actual_jobs.none?
-            return false
-          end
-
           @actual_jobs.includes?(expected_arguments, expected_options, expected_count)
         end
 
