@@ -133,7 +133,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
 
           context "and actual contains arguments" do
             it "returns true" do
-              # Acutal has arugment
+              # Actual has arugment
               Object.delay.is_a? Object
 
               # Expected didn't specify any arguemtns to match
