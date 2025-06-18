@@ -14,7 +14,7 @@ if defined? Sidekiq::Batch
 
       ##
       # Sidekiq::Batch is a Sidekiq::Pro feature. However the general consensus is
-      # that, by defeault, you can't test without redis. RSpec::Sidekiq includes
+      # that, by default, you can't test without redis. RSpec::Sidekiq includes
       # a "null object" pattern implementation to mock Batches. This will mock
       # Sidekiq::Batch and prevent it from using Redis.
       #
