@@ -136,7 +136,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
               # Actual has arugment
               Object.delay.is_a? Object
 
-              # Expected didn't specify any arguemtns to match
+              # Expected didn't specify any arguments to match
               expect(delay_subject.matches? Object.method :is_a?).to be true
             end
           end
