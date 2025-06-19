@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry-doc"
   s.add_development_dependency "pry-nav"
   s.add_development_dependency "rspec"
-  s.add_development_dependency "coveralls"
   s.add_development_dependency "fuubar"
   s.add_development_dependency "activejob"
   s.add_development_dependency "actionmailer"
