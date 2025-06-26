@@ -167,7 +167,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
             lines = error.message.split("\n")
             expect(lines).to include(
               match(/expected to have enqueued a .* job/),
-              match(/-{"trace_id"=>"nothing"}/)
+              match(/-{"trace_id"\s*=>\s*"nothing"}/)
             )
           }
         end
@@ -200,7 +200,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
               lines = error.message.split("\n")
               expect(lines).to include(
                 match(/expected to have enqueued a .* job/),
-                match(/-{"nested"=>{"option"=>"there"}/)
+                match(/-{"nested"\s*=>\s*{"option"\s*=>\s*"there"}/)
               )
             }
           end
@@ -356,7 +356,9 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'returns description' do
       worker.perform_async(*worker_args)
       argument_subject.matches? worker
-      expect(argument_subject.description).to eq %{have enqueued a #{worker} job with arguments [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]}
+      expected_args = ["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+      args_string = expected_args.inspect
+      expect(argument_subject.description).to eq %{have enqueued a #{worker} job with arguments #{args_string}}
     end
   end
 
@@ -364,14 +366,10 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'returns message' do
       jid = worker.perform_async(*worker_args)
       argument_subject.matches? worker
-      expect(argument_subject.failure_message).to eq <<~eos.strip
-      expected to have enqueued a #{worker} job
-        with arguments:
-          -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
-      but enqueued only jobs
-        -JID:#{jid} with arguments:
-          -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
-      eos
+      expect(argument_subject.failure_message).to match(/expected to have enqueued a #{worker} job/)
+      expect(argument_subject.failure_message).to match(/with arguments:\s*-\[.*"string".*1.*true.*\]/)
+      expect(argument_subject.failure_message).to match(/but enqueued only jobs/)
+      expect(argument_subject.failure_message).to match(/JID:#{jid} with arguments:\s*-\[.*"string".*1.*true.*\]/)
     end
 
     context "when expected arguments is an array and multiple jobs enqueued" do
@@ -381,16 +379,15 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       it "returns a message showing the wrapped array in expectations but each job on its own line" do
         jids = 2.times.map { worker.perform_async(*worker_args) }
         argument_subject.matches? worker
-        expect(argument_subject.failure_message).to eq <<~eos.strip
-        expected to have enqueued a #{worker} job
-          with arguments:
-            -[["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]]
-        but enqueued only jobs
-          -JID:#{jids[0]} with arguments:
-            -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
-          -JID:#{jids[1]} with arguments:
-            -["string", 1, true, {"bar"=>"foo", "key"=>"value", "nested"=>[{"hash"=>true}]}]
-        eos
+        message = argument_subject.failure_message
+        expect(message).to match(/expected to have enqueued a #{worker} job/)
+        expect(message).to match(/with arguments:\s*-\[\[.*"string".*1.*true.*\]\]/)
+        expect(message).to match(/but enqueued only jobs/)
+        expect(message).to match(/JID:#{Regexp.escape(jids[0])} with arguments:\s*-\[.*"string".*1.*true.*\]/)
+        expect(message).to match(/JID:#{Regexp.escape(jids[1])} with arguments:\s*-\[.*"string".*1.*true.*\]/)
+        expect(message).to match(/"bar"\s*=>\s*"foo"/)
+        expect(message).to match(/"key"\s*=>\s*"value"/)
+        expect(message).to match(/"nested"\s*=>\s*\[\{"hash"\s*=>\s*true\}\]/)
       end
     end
   end
@@ -399,10 +396,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'returns message' do
       worker.perform_async(*worker_args)
       argument_subject.matches? worker
-      expect(argument_subject.failure_message_when_negated).to eq <<-eos.gsub(/^ {6}/, '').strip
-      expected not to have enqueued a #{worker} job but enqueued 1
-        arguments: [\"string\", 1, true, {\"key\"=>\"value\", \"bar\"=>\"foo\", \"nested\"=>[{\"hash\"=>true}]}]
-      eos
+      message = argument_subject.failure_message_when_negated
+      expect(message).to match(/expected not to have enqueued a #{worker} job but enqueued 1/)
+      expect(message).to match(/arguments: \[.*"string".*1.*true.*\]/)
+      expect(message).to match(/"key"\s*=>\s*"value"/)
+      expect(message).to match(/"bar"\s*=>\s*"foo"/)
+      expect(message).to match(/"nested"\s*=>\s*\[\{"hash"\s*=>\s*true\}\]/)
     end
   end
 

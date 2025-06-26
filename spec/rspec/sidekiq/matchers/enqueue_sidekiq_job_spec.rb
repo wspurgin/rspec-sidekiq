@@ -104,7 +104,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"queue"=>"very_high"}/)
+            match(/-{"queue"\s*=>\s*"very_high"}/)
           )
         }
       end
@@ -124,7 +124,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"at"=>#{specific_time.to_i}}/)
+            match(/-{"at"\s*=>\s*#{specific_time.to_i}}/)
           )
         }
       end
@@ -137,7 +137,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"at"=>#{specific_time.to_i}}/)
+            match(/-{"at"\s*=>\s*#{specific_time.to_i}}/)
           )
         }
       end
@@ -161,7 +161,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"at"=>#{1.hour.from_now.to_i}}/)
+            match(/-{"at"\s*=>\s*#{1.hour.from_now.to_i}}/)
           )
         }
       end
@@ -173,7 +173,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"at"=>#{1.hour.from_now.to_i}}/)
+            match(/-{"at"\s*=>\s*#{1.hour.from_now.to_i}}/)
           )
         }
       end
@@ -193,7 +193,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"at"=>nil}/)
+            match(/-{"at"\s*=>\s*nil}/)
           )
         }
       end
@@ -243,7 +243,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           lines = error.message.split("\n")
           expect(lines).to include(
             match(/expected to enqueue a .* job/),
-            match(/-{"created_at"=>"2024-01-01T00:00:00Z"}/)
+            match(/-{"created_at"\s*=>\s*"2024-01-01T00:00:00Z"}/)
           )
         }
       end
@@ -270,7 +270,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
             lines = error.message.split("\n")
             expect(lines).to include(
               match(/expected to enqueue a .* job/),
-              match(/-{"nested"=>{"option"=>"there"}/)
+              match(/-{"nested"\s*=>\s*{"option"\s*=>\s*"there"}/)
             )
           }
         end
