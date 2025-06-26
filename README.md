@@ -384,7 +384,7 @@ FooClass.within_sidekiq_retries_exhausted_block {
 
 ## Testing
 ```
-bundle exec rspec spec
+bundle exec rspec
 ```
 
 ## Maintainers
