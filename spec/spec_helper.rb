@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'pry'
+require 'debug'
 
 require 'sidekiq'
 require 'rspec-sidekiq'

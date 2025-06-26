@@ -22,9 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rspec-expectations", "~> 3.0"
   s.add_dependency "sidekiq", ">= 5", "< 9"
 
-  s.add_development_dependency "pry"
-  s.add_development_dependency "pry-doc"
-  s.add_development_dependency "pry-nav"
+  s.add_development_dependency "debug"
   s.add_development_dependency "rspec"
   s.add_development_dependency "coveralls"
   s.add_development_dependency "fuubar"
