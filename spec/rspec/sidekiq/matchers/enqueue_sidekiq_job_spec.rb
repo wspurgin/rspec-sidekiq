@@ -300,6 +300,15 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
     end
 
     context "with expected count" do
+      it "zero" do
+        expect {
+          "does nothing"
+        }.to enqueue_sidekiq_job.exactly(0)
+        expect {
+          "does nothing"
+        }.to enqueue_sidekiq_job.exactly(0).time
+      end
+
       it 'matches a job with no arguments once' do
         expect { worker.perform_async }.to enqueue_sidekiq_job.once
       end

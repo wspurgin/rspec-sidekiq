@@ -20,6 +20,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
   describe 'expected usage' do
     context 'Sidekiq' do
+      it 'matches no job' do
+        expect(worker).to have_enqueued_sidekiq_job.exactly(0)
+        expect(worker).to have_enqueued_sidekiq_job.exactly(0).time
+      end
+
       it 'matches a job with no arguments' do
         worker.perform_async
         expect(worker).to have_enqueued_sidekiq_job
