@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../lib/rspec/sidekiq/version", __FILE__)
+require_relative "lib/rspec/sidekiq/version"
 
 Gem::Specification.new do |s|
   s.name        = "rspec-sidekiq"
