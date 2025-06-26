@@ -36,6 +36,12 @@ jobs:
           - 'gemfiles/sidekiq7_rails7.gemfile'
           - 'gemfiles/sidekiq8_rails8.gemfile'
         exclude:
+          - ruby-version: '3.4'
+            gemfile: 'gemfiles/sidekiq5_rails6.gemfile'
+          - ruby-version: '3.4'
+            gemfile: 'gemfiles/sidekiq6_4_rails6.gemfile'
+          - ruby-version: '3.4'
+            gemfile: 'gemfiles/sidekiq6_5_rails6.gemfile'
           - ruby-version: '3.1'
             gemfile: 'gemfiles/sidekiq8_rails8.gemfile'
           - ruby-version: '3.0'
