@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.description = "Simple testing of Sidekiq jobs via a collection of matchers and helpers"
   s.license     = "MIT"
 
-  spec.metadata["homepage_uri"]      = s.homepage
-  spec.metadata["source_code_uri"]   = s.homepage
-  spec.metadata["changelog_uri"]     = "#{s.homepage}/blob/main/CHANGES.md"
-  spec.metadata["bug_tracker_uri"]   = "#{s.homepage}/issues"
+  s.metadata["homepage_uri"]      = s.homepage
+  s.metadata["source_code_uri"]   = s.homepage
+  s.metadata["changelog_uri"]     = "#{s.homepage}/blob/main/CHANGES.md"
+  s.metadata["bug_tracker_uri"]   = "#{s.homepage}/issues"
 
   s.add_dependency "rspec-core", "~> 3.0"
   s.add_dependency "rspec-mocks", "~> 3.0"
