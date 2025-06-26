@@ -24,8 +24,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "debug"
   s.add_development_dependency "rspec"
-  s.add_development_dependency "coveralls"
-  s.add_development_dependency "fuubar"
   s.add_development_dependency "activejob"
   s.add_development_dependency "actionmailer"
   s.add_development_dependency "activerecord"
