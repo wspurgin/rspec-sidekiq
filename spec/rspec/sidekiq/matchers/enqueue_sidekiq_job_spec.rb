@@ -309,6 +309,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         }.to enqueue_sidekiq_job.exactly(0).time
       end
 
+      it "fails if a job was expected zero times but occurred once" do
+        expect do
+          expect { worker.perform_async }.to enqueue_sidekiq_job.exactly(0)
+        end.to raise_error(/expected to enqueue 0 .* job.*but enqueued only jobs/m)
+      end
+
       it 'matches a job with no arguments once' do
         expect { worker.perform_async }.to enqueue_sidekiq_job.once
       end
