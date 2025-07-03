@@ -400,7 +400,6 @@ Please do! If there's a feature missing that you'd love to see then get in on th
 
 Issues/Pull Requests/Comments all welcome...
 
-[github]: http://github.com/wspurgin/rspec-sidekiq
 [github_actions]: https://github.com/wspurgin/rspec-sidekiq/actions
 [github_actions_badge]: https://github.com/wspurgin/rspec-sidekiq/actions/workflows/main.yml/badge.svg
 
