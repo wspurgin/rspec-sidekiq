@@ -144,7 +144,7 @@ module RSpec
         end
 
         def minus!(other)
-          self unless other.is_a?(EnqueuedJobs)
+          return self unless other.is_a?(EnqueuedJobs)
 
           @jobs -= other.jobs
 
