@@ -300,6 +300,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
     end
 
     context "with expected count" do
+      it "ensure that jobs with no arguments are not invoked" do
+        expect { "does noting" }.to enqueue_sidekiq_job.never
+      end
+
+      it "fails if a job with no arguments is invoked" do
+        expect do
+          expect { worker.perform_async }.to enqueue_sidekiq_job.never
+        end.to raise_error(/expected to enqueue 0 .* job.*but enqueued only jobs/m)
+      end
+
       it "zero" do
         expect {
           "does nothing"

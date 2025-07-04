@@ -1,5 +1,6 @@
 Unreleased
 ---
+* Add `never` matcher for aliasing `exactly(0)` (#256)
 
 5.1.0
 ---

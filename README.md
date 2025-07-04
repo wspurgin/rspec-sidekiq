@@ -70,6 +70,9 @@ end
 
 # A specific number of times
 
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.never
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(0)
+expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(0).time
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.once
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(1).time
 expect { AwesomeJob.perform_async }.to enqueue_sidekiq_job.exactly(:once)
