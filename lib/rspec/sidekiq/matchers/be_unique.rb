@@ -38,7 +38,7 @@ module RSpec
           def matches?(job)
             @klass = job.is_a?(Class) ? job : job.class
             @actual = @klass.get_sidekiq_options[unique_key]
-            !!(value_matches? && interval_matches? && expiration_matches?)
+            value_matches? && interval_matches? && expiration_matches?
           end
 
           def for(interval)
@@ -96,7 +96,11 @@ module RSpec
           end
 
           def value_matches?
-            @actual && @actual > 0
+            unless @actual
+              false
+            else
+              @actual > 0
+            end
           end
 
           def unique_key
