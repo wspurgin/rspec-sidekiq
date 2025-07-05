@@ -18,19 +18,19 @@ Gem::Specification.new do |s|
   s.metadata["bug_tracker_uri"]   = "#{s.homepage}/issues"
 
   s.add_dependency "rspec-core", "~> 3.0"
-  s.add_dependency "rspec-mocks", "~> 3.0"
   s.add_dependency "rspec-expectations", "~> 3.0"
+  s.add_dependency "rspec-mocks", "~> 3.0"
   s.add_dependency "sidekiq", ">= 5", "< 9"
 
-  s.add_development_dependency "debug"
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "activejob"
   s.add_development_dependency "actionmailer"
-  s.add_development_dependency "activerecord"
+  s.add_development_dependency "activejob"
   s.add_development_dependency "activemodel"
+  s.add_development_dependency "activerecord"
   s.add_development_dependency "activesupport"
-  s.add_development_dependency "railties"
+  s.add_development_dependency "debug"
   s.add_development_dependency "ostruct"
+  s.add_development_dependency "railties"
+  s.add_development_dependency "rspec"
 
   s.files = `git ls-files -- lib/*`.split("\n")
   s.files += %w[CHANGES.md LICENSE README.md]
