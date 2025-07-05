@@ -25,10 +25,10 @@ module RSpec
 
           def failure_message
             if !interval_matches? && @expected_interval
-              "expected #{@klass} to be unique for #{@expected_interval} seconds, "\
+              "expected #{@klass} to be unique for #{@expected_interval} seconds, " \
               "but its interval was #{actual_interval} seconds"
             elsif !expiration_matches?
-              "expected #{@klass} to be unique until #{@expected_expiration}, "\
+              "expected #{@klass} to be unique until #{@expected_expiration}, " \
               "but its unique_until was #{actual_expiration || 'not specified'}"
             else
               "expected #{@klass} to be unique in the queue"
@@ -60,7 +60,7 @@ module RSpec
           end
 
           def expiration_matches?
-            @expected_expiration.nil? || actual_expiration ==  @expected_expiration
+            @expected_expiration.nil? || actual_expiration == @expected_expiration
           end
 
           def failure_message_when_negated

@@ -28,7 +28,6 @@ RSpec.configure do |config|
     ActiveJob::Base.queue_adapter = :sidekiq
     ActiveJob::Base.logger.level = :warn
 
-
     if config.sidekiq_gte_5 && !config.sidekiq_gte_7
       require "active_record"
       ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)

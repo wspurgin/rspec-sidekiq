@@ -25,7 +25,7 @@ RSpec.describe 'Batch', stub_batches: true do
   end
 
   describe 'NullStatus' do
-    let(:batch) {  Sidekiq::Batch.new }
+    let(:batch) { Sidekiq::Batch.new }
 
     subject { batch.status }
 
