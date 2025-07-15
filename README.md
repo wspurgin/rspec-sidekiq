@@ -392,6 +392,7 @@ bundle exec rspec
 
 ## Maintainers
 * @wspurgin
+* @ydah
 
 ### Alumni
 
