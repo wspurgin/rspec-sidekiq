@@ -214,6 +214,11 @@ module RSpec
           self
         end
 
+        def never
+          set_expected_count :exactly, 0
+          self
+        end
+
         def once
           set_expected_count :exactly, 1
           self
