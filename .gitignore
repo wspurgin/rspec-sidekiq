@@ -3,3 +3,4 @@ tmp
 /gemfiles/*.lock
 .tool-versions
 .rspec
+.ruby-version
