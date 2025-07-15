@@ -391,12 +391,13 @@ bundle exec rspec
 ```
 
 ## Maintainers
-* @wspurgin
+* [@wspurgin]
+* [@ydah]
 
 ### Alumni
 
-* @packrat386
-* @philostler
+* [@packrat386]
+* [@philostler]
 
 ## Contribute
 Please do! If there's a feature missing that you'd love to see then get in on the action!
@@ -409,3 +410,8 @@ Issues/Pull Requests/Comments all welcome...
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/wspurgin/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/sidekiq/sidekiq/wiki/Batches
 [sidekiq_wiki_delayed_extensions]: https://github.com/sidekiq/sidekiq/wiki/Delayed-Extensions
+
+[@wspurgin]: https://github.com/wspurgin
+[@ydah]: https://github.com/ydah
+[@packrat386]: https://github.com/packrat386
+[@philostler]: https://github.com/philostler
