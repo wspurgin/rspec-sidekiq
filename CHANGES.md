@@ -1,6 +1,11 @@
 Unreleased
 ---
+
+5.2.0
+---
 * Add `never` matcher for aliasing `exactly(0)` (#256)
+* Fix BeProcessedIn matcher behavior for Rails 8 (#237)
+* Fix `exactly(0)` to not fail when nothing is enqueued (#238)
 
 5.1.0
 ---
