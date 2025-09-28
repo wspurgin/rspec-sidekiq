@@ -30,6 +30,14 @@ RSpec.describe 'Batch', stub_batches: true do
     subject { batch.status }
 
     describe '#total' do
+      around do |example|
+        original_stdout = $stdout
+        $stdout = StringIO.new
+        example.run
+      ensure
+        $stdout = original_stdout
+      end
+
       it 'returns 0 when no jobs' do
         expect(subject.total).to eq(0)
       end
