@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "debug"
   s.add_development_dependency "ostruct"
   s.add_development_dependency "railties"
+  s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
 
   s.files = `git ls-files -- lib/*`.split("\n")

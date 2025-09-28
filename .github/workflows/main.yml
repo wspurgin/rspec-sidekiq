@@ -65,6 +65,6 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Run tests
-        run: bundle exec rspec
+        run: bundle exec rake
       - name: Check for implicitly loaded dependencies # See #204
         run: bundle exec ruby ./lib/rspec-sidekiq.rb
