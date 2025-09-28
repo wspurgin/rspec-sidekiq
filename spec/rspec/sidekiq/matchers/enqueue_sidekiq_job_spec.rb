@@ -60,8 +60,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
       context "when expected arguments include symbols" do
         it "returns true" do
           expect {
-            worker.perform_async("foo", {"some_arg" => "etc"})
-          }.to enqueue_sidekiq_job.with(:foo, {some_arg: :etc})
+            worker.perform_async("foo", { "some_arg" => "etc" })
+          }.to enqueue_sidekiq_job.with(:foo, { some_arg: :etc })
         end
       end
 
@@ -250,20 +250,20 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
 
       context "with nested context" do
         it "matches on nested context" do
-          expect { worker.set(nested: {option: "here"}).perform_async }.to(
+          expect { worker.set(nested: { option: "here" }).perform_async }.to(
             enqueue_sidekiq_job(worker)
             .with_context(
-              nested: {option: kind_of(String)}
+              nested: { option: kind_of(String) }
             )
           )
         end
 
         it "fails when no job with a matching context is found" do
           expect do
-            expect { worker.set(nested: {option: "here"}).perform_async }.to(
+            expect { worker.set(nested: { option: "here" }).perform_async }.to(
               enqueue_sidekiq_job(worker)
               .with_context(
-                nested: {option: "there"} # wrong value expectation
+                nested: { option: "there" } # wrong value expectation
               )
             )
           end.to raise_error { |error|

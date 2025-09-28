@@ -161,7 +161,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeUnique do
 
     context "without a uniquing solution" do
       it "raises an exception" do
-        expect{subject.unique_key}.to raise_error RuntimeError, 'No support found for Sidekiq unique jobs'
+        expect { subject.unique_key }.to raise_error RuntimeError, 'No support found for Sidekiq unique jobs'
       end
     end
   end

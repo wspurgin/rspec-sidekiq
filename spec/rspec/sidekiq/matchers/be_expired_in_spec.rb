@@ -39,7 +39,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeExpiredIn do
     end
     context 'when expected is not equal to actual' do
       it 'returns false' do
-        expect(RSpec::Sidekiq::Matchers::BeExpiredIn.new(2).matches? worker). to be false
+        expect(RSpec::Sidekiq::Matchers::BeExpiredIn.new(2).matches? worker).to be false
       end
     end
   end
