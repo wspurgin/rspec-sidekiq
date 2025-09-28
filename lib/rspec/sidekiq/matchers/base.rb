@@ -356,7 +356,7 @@ module RSpec
 
         def normalize_arguments(args)
           if args.is_a?(Array)
-            args.map{ |x| normalize_arguments(x) }
+            args.map { |x| normalize_arguments(x) }
           elsif args.is_a?(Hash)
             args.each_with_object({}) do |(key, value), hash|
               hash[key.to_s] = normalize_arguments(value)

@@ -3,12 +3,12 @@
 module RSpec
   module Sidekiq
     module Matchers
-      def save_backtrace(expected_backtrace=true)
+      def save_backtrace(expected_backtrace = true)
         SaveBacktrace.new expected_backtrace
       end
 
       class SaveBacktrace
-        def initialize(expected_backtrace=true)
+        def initialize(expected_backtrace = true)
           @expected_backtrace = expected_backtrace
         end
 

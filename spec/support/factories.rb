@@ -6,7 +6,7 @@ module RSpec
       module Support
         module Factories
           def create_worker(options = {})
-            clazz_name = "Worker#{ rand(36**10).to_s 36 }"
+            clazz_name = "Worker#{rand(36**10).to_s 36}"
             clazz = Class.new do
               include ::Sidekiq::Worker
 
@@ -19,7 +19,7 @@ module RSpec
           end
 
           def create_active_job(options = {}, sidekiq_options = {})
-            clazz_name = "ActiveJob#{ rand(36**10).to_s 36 }"
+            clazz_name = "ActiveJob#{rand(36**10).to_s 36}"
             clazz = Class.new(ActiveJob::Base) do
               queue_as options
               if self.respond_to?(:sidekiq_options)

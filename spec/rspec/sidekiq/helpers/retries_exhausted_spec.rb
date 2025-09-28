@@ -34,7 +34,7 @@ RSpec.describe 'Retries Exhausted block' do
   end
 
   it 'passes message and exception to the block' do
-    args = { 'args' => ['a', 'b']}
+    args = { 'args' => ['a', 'b'] }
     exception = StandardError.new('something went wrong')
     FooClass.within_sidekiq_retries_exhausted_block(args, exception) do
       expect(FooClass).to receive(:foo).with(FooClass.default_retries_exhausted_message.merge(args))

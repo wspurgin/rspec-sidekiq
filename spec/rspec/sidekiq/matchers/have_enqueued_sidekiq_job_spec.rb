@@ -9,7 +9,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
   let(:argument_subject) { described_class.new worker_args }
   let(:matcher_subject) { described_class.new [be_a(String), be_a(Integer), true, be_a(Hash)] }
   let(:worker) { create_worker }
-  let(:worker_args) { ['string', 1, true, { "key" => 'value', "bar" => "foo", "nested" => [{"hash" => true}] }] }
+  let(:worker_args) { ['string', 1, true, { "key" => 'value', "bar" => "foo", "nested" => [{ "hash" => true }] }] }
   let(:active_job) { create_active_job :mailers }
   let(:resource) { TestResource.new }
 
@@ -173,7 +173,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         end
 
         context "with nested context" do
-          subject(:enqueue!) { worker.set(nested: {option: "here"}).perform_async }
+          subject(:enqueue!) { worker.set(nested: { option: "here" }).perform_async }
 
           it "matches on nested context" do
             enqueue!
@@ -181,7 +181,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
             expect(worker).to(
               have_enqueued_sidekiq_job
               .with_context(
-                nested: {option: kind_of(String)}
+                nested: { option: kind_of(String) }
               )
             )
           end
@@ -193,7 +193,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
               expect(worker).to(
                 have_enqueued_sidekiq_job
                 .with_context(
-                  nested: {option: "there"} # wrong value expectation
+                  nested: { option: "there" } # wrong value expectation
                 )
               )
             end.to raise_error { |error|
@@ -243,13 +243,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
 
       context "when using builtin argument matchers" do
         it "matches" do
-          worker.perform_async({"something" => "Awesome", "extra" => "stuff"})
+          worker.perform_async({ "something" => "Awesome", "extra" => "stuff" })
           expect(worker).to have_enqueued_sidekiq_job(hash_including("something" => "Awesome"))
           expect(worker).to have_enqueued_sidekiq_job(any_args)
           expect(worker).to have_enqueued_sidekiq_job(hash_excluding("bad_stuff" => anything))
 
-          worker.perform_async({"something" => 1})
-          expect(worker).to have_enqueued_sidekiq_job({something: kind_of(Integer)})
+          worker.perform_async({ "something" => 1 })
+          expect(worker).to have_enqueued_sidekiq_job({ something: kind_of(Integer) })
         end
       end
 
@@ -356,7 +356,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     it 'returns description' do
       worker.perform_async(*worker_args)
       argument_subject.matches? worker
-      expected_args = ["string", 1, true, {"key"=>"value", "bar"=>"foo", "nested"=>[{"hash"=>true}]}]
+      expected_args = ["string", 1, true, { "key" => "value", "bar" => "foo", "nested" => [{ "hash" => true }] }]
       args_string = expected_args.inspect
       expect(argument_subject.description).to eq %{have enqueued a #{worker} job with arguments #{args_string}}
     end
@@ -415,7 +415,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       end
 
       context "when expected arguments include symbols" do
-        let(:worker_args) { [:foo, {bar: :baz}] }
+        let(:worker_args) { [:foo, { bar: :baz }] }
         it "returns true" do
           worker.perform_async(*JSON.parse(worker_args.to_json))
           expect(worker).to have_enqueued_sidekiq_job(*worker_args)
