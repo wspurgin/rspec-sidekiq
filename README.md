@@ -16,7 +16,8 @@ end
 
 rspec-sidekiq requires `sidekiq/testing` by default so there is no need to include the line `require "sidekiq/testing"` inside your `spec_helper.rb`.
 
-*IMPORTANT! This has the effect of not pushing enqueued jobs to Redis but to a `job` array to enable testing ([see the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting]). Thus, only include `gem "rspec-sidekiq"` in environments where this behaviour is required, such as the `test` group.*
+> [!IMPORTANT]
+> This has the effect of not pushing enqueued jobs to Redis but to a `job` array to enable testing ([see the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting]). Thus, only include `gem "rspec-sidekiq"` in environments where this behaviour is required, such as the `test` group.*
 
 ## Configuration
 
@@ -273,9 +274,10 @@ it { is_expected.to save_backtrace false }
 
 ### `be_unique`
 
-:warning: This is intended to for Sidekiq Enterprise unique job implementation.
-There is _limited_ support for Sidekiq Unique Jobs, but compatibility is not
-guaranteed.
+> [!CAUTION]
+> This is intended to for Sidekiq Enterprise unique job implementation.
+> There is _limited_ support for Sidekiq Unique Jobs, but compatibility is not
+> guaranteed.
 
 *Describes when a job should be unique within its queue*
 
@@ -292,7 +294,8 @@ it { is_expected.to be_unique.for(1.hour) }
 
 #### `until` sub-matcher
 
-:warning: This sub-matcher only works for Sidekiq Enterprise
+> [!CAUTION]
+> This sub-matcher only works for Sidekiq Enterprise
 
 ```ruby
 sidekiq_options unique_for: 1.hour, unique_until: :start
@@ -370,9 +373,10 @@ You can *opt-in* with `stub_batches` to make `rspec-sidekiq` mock the
 implementation (using a NullObject pattern). This enables testing without a
 Redis instance. Mocha and RSpec stubbing is supported here.
 
-:warning: **Caution**: Opting-in to this feature, while allowing you to test without
-having Redis, _does not_ provide the exact API that `Sidekiq::Batch` does. As
-such it can cause surprises.
+> [!CAUTION]
+> Opting-in to this feature, while allowing you to test without
+> having Redis, _does not_ provide the exact API that `Sidekiq::Batch` does. As
+> such it can cause surprises.
 
 ```ruby
 RSpec.describe "Using mocked batches", stub_batches: true do
