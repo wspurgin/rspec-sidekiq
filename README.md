@@ -3,21 +3,25 @@
 
 Simple testing of Sidekiq jobs via a collection of matchers and helpers.
 
-[Jump to Matchers &raquo;](#matchers) | [Jump to Helpers &raquo;](#helpers)
+[Jump to Matchers »](#matchers) | [Jump to Helpers »](#helpers)
 
 ## Installation
+
 ```ruby
 # Gemfile
 group :test do
   gem 'rspec-sidekiq'
 end
 ```
-rspec-sidekiq requires ```sidekiq/testing``` by default so there is no need to include the line ```require "sidekiq/testing"``` inside your ```spec_helper.rb```.
 
-*IMPORTANT! This has the effect of not pushing enqueued jobs to Redis but to a ```job``` array to enable testing ([see the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting]). Thus, only include ```gem "rspec-sidekiq"``` in environments where this behaviour is required, such as the ```test``` group.*
+rspec-sidekiq requires `sidekiq/testing` by default so there is no need to include the line `require "sidekiq/testing"` inside your `spec_helper.rb`.
+
+*IMPORTANT! This has the effect of not pushing enqueued jobs to Redis but to a `job` array to enable testing ([see the FAQ & Troubleshooting Wiki page][rspec_sidekiq_wiki_faq_&_troubleshooting]). Thus, only include `gem "rspec-sidekiq"` in environments where this behaviour is required, such as the `test` group.*
 
 ## Configuration
-If you wish to modify the default behaviour, add the following to your ```spec_helper.rb``` file
+
+If you wish to modify the default behaviour, add the following to your `spec_helper.rb` file
+
 ```ruby
 RSpec::Sidekiq.configure do |config|
   # Clears all job queues before each example
@@ -32,16 +36,17 @@ end
 ```
 
 ## Matchers
-* [```enqueue_sidekiq_job```](#enqueue_sidekiq_job)
-* [```have_enqueued_sidekiq_job```](#have_enqueued_sidekiq_job)
-* [```be_processed_in```](#be_processed_in)
-* [```be_retryable```](#be_retryable)
-* [```save_backtrace```](#save_backtrace)
-* [```be_unique```](#be_unique)
-* [```be_expired_in```](#be_expired_in)
-* [```be_delayed``` (_deprecated_)](#be_delayed)
 
-### ```enqueue_sidekiq_job```
+* [`enqueue_sidekiq_job`](#enqueue_sidekiq_job)
+* [`have_enqueued_sidekiq_job`](#have_enqueued_sidekiq_job)
+* [`be_processed_in`](#be_processed_in)
+* [`be_retryable`](#be_retryable)
+* [`save_backtrace`](#save_backtrace)
+* [`be_unique`](#be_unique)
+* [`be_expired_in`](#be_expired_in)
+* [`be_delayed` (_deprecated_)](#be_delayed)
+
+### `enqueue_sidekiq_job`
 
 *Describes that the block should enqueue a job*. Optionally specify the
 specific job class, arguments, timing, and other context
@@ -108,7 +113,7 @@ expect do
 end.to enqueue_sidekiq_job(AwesomeJob).and enqueue_sidekiq_job(OtherJob)
 ```
 
-### ```have_enqueued_sidekiq_job```
+### `have_enqueued_sidekiq_job`
 
 Describes that there should be an enqueued job (with the specified arguments):
 
@@ -120,6 +125,7 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true)
 ```
 
 You can use the built-in RSpec args matchers too:
+
 ```ruby
 AwesomeJob.perform_async({"something" => "Awesome", "extra" => "stuff"})
 
@@ -146,6 +152,7 @@ expect(AwesomeJob).to have_enqueued_sidekiq_job.at_most(:thrice)
 ```
 
 Likewise, specify what should be in the context:
+
 ```ruby
 AwesomeJob.set(trace_id: "something").perform_async
 
@@ -162,6 +169,7 @@ AwesomeJob.perform_at time, 'Awesome', true
 # test with...
 expect(AwesomeJob).to have_enqueued_sidekiq_job('Awesome', true).at(time)
 ```
+
 ```ruby
 AwesomeJob.perform_in 5.minutes, 'Awesome', true
 # test with...
@@ -212,8 +220,10 @@ expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
 )
 ```
 
-### ```be_processed_in```
+### `be_processed_in`
+
 *Describes the queue that a job should be processed in*
+
 ```ruby
 sidekiq_options queue: :download
 # test with...
@@ -221,12 +231,14 @@ expect(AwesomeJob).to be_processed_in :download # or
 it { is_expected.to be_processed_in :download }
 ```
 
-### ```be_retryable```
+### `be_retryable`
+
 *Describes if a job should retry when there is a failure in its execution*
 
 Note: this only tests against the `retry` option in the job's Sidekiq options.
 To test an enqueued job's retry, i.e. `AwesomeJob.set(retry: 5)`, use
 `with_context`
+
 ```ruby
 sidekiq_options retry: 5
 # test with...
@@ -240,8 +252,10 @@ expect(AwesomeJob).to be_retryable false # or
 it { is_expected.to be_retryable false }
 ```
 
-### ```save_backtrace```
+### `save_backtrace`
+
 *Describes if a job should save the error backtrace when there is a failure in its execution*
+
 ```ruby
 sidekiq_options backtrace: 5
 # test with...
@@ -257,13 +271,14 @@ it { is_expected.to_not save_backtrace } # or
 it { is_expected.to save_backtrace false }
 ```
 
-### ```be_unique```
+### `be_unique`
 
 :warning: This is intended to for Sidekiq Enterprise unique job implementation.
 There is _limited_ support for Sidekiq Unique Jobs, but compatibility is not
 guaranteed.
 
 *Describes when a job should be unique within its queue*
+
 ```ruby
 sidekiq_options unique_for: 1.hour
 # test with...
@@ -284,9 +299,10 @@ sidekiq_options unique_for: 1.hour, unique_until: :start
 it { is_expected.to be_unique.until(:start) }
 ```
 
+### `be_expired_in`
 
-### ```be_expired_in```
 *Describes when a job should expire*
+
 ```ruby
 sidekiq_options expires_in: 1.hour
 # test with...
@@ -294,13 +310,14 @@ it { is_expected.to be_expired_in 1.hour }
 it { is_expected.to_not be_expired_in 2.hours }
 ```
 
-### ```be_delayed```
+### `be_delayed`
 
 **This matcher is deprecated**. Use of it with Sidekiq 7+ will raise an error.
 Sidekiq 7 [dropped Delayed
 Extensions](https://github.com/sidekiq/sidekiq/issues/5076).
 
 *Describes a method that should be invoked asynchronously (See [Sidekiq Delayed Extensions][sidekiq_wiki_delayed_extensions])*
+
 ```ruby
 Object.delay.is_nil? # delay
 expect(Object.method :is_nil?).to be_delayed
@@ -323,6 +340,7 @@ expect(MyMailer.instance_method :some_mail).to be_delayed
 ```
 
 ## Example matcher usage
+
 ```ruby
 require 'spec_helper'
 
@@ -341,6 +359,7 @@ end
 ```
 
 ## Helpers
+
 * [Batches (Sidekiq Pro) _experimental_](#batches)
 * [`within_sidekiq_retries_exhausted_block`](#within_sidekiq_retries_exhausted_block)
 
@@ -354,7 +373,6 @@ Redis instance. Mocha and RSpec stubbing is supported here.
 :warning: **Caution**: Opting-in to this feature, while allowing you to test without
 having Redis, _does not_ provide the exact API that `Sidekiq::Batch` does. As
 such it can cause surprises.
-
 
 ```ruby
 RSpec.describe "Using mocked batches", stub_batches: true do
@@ -375,6 +393,7 @@ end
 ```
 
 ### within_sidekiq_retries_exhausted_block
+
 ```ruby
 sidekiq_retries_exhausted do |msg|
   bar('hello')
@@ -386,11 +405,13 @@ FooClass.within_sidekiq_retries_exhausted_block {
 ```
 
 ## Testing
+
 ```
 bundle exec rspec
 ```
 
 ## Maintainers
+
 * [@wspurgin]
 * [@ydah]
 
@@ -400,18 +421,17 @@ bundle exec rspec
 * [@philostler]
 
 ## Contribute
+
 Please do! If there's a feature missing that you'd love to see then get in on the action!
 
 Issues/Pull Requests/Comments all welcome...
 
+[@packrat386]: https://github.com/packrat386
+[@philostler]: https://github.com/philostler
+[@wspurgin]: https://github.com/wspurgin
+[@ydah]: https://github.com/ydah
 [github_actions]: https://github.com/wspurgin/rspec-sidekiq/actions
 [github_actions_badge]: https://github.com/wspurgin/rspec-sidekiq/actions/workflows/main.yml/badge.svg
-
 [rspec_sidekiq_wiki_faq_&_troubleshooting]: https://github.com/wspurgin/rspec-sidekiq/wiki/FAQ-&-Troubleshooting
 [sidekiq_wiki_batches]: https://github.com/sidekiq/sidekiq/wiki/Batches
 [sidekiq_wiki_delayed_extensions]: https://github.com/sidekiq/sidekiq/wiki/Delayed-Extensions
-
-[@wspurgin]: https://github.com/wspurgin
-[@ydah]: https://github.com/ydah
-[@packrat386]: https://github.com/packrat386
-[@philostler]: https://github.com/philostler
