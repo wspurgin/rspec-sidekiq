@@ -122,7 +122,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
           expect(delay_until_with_arguments_subject.failure_message).to eq "expected Object.is_a? to be delayed until #{Time.now + 3600} with arguments [Object]"
         end
       end
-      end
+    end
 
     describe '#matches?' do
       context 'when condition matches' do
@@ -229,8 +229,8 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeDelayed do
             expect(delay_until_with_arguments_subject.matches? Object.method :is_a?).to be false
           end
         end
-        end
       end
+    end
 
     describe '#failure_message_when_negated' do
       context 'when expected is a delay' do
