@@ -28,7 +28,7 @@ module RSpec
               # send to custom evaluator
               at_evaluator(value)
             else
-              job.context.has_key?(key) && RSpec::Support::FuzzyMatcher.values_match?(value, job.context[key])
+              job.context.has_key?(key) && RSpec::Support::FuzzyMatcher.values_match?(value&.to_s, job.context[key]&.to_s)
             end
           end
         end
