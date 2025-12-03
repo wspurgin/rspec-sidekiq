@@ -116,6 +116,11 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         expect { worker.perform_at(specific_time) }.to enqueue_sidekiq_job.at(specific_time)
       end
 
+      it "passes if the job is enqueued within a specific time range" do
+        specific_time = 1.hour.from_now
+        expect { worker.perform_at(specific_time) }.to enqueue_sidekiq_job.at(be_within(1.second).of(specific_time))
+      end
+
       it "fails if the job is enqueued at no particular time" do
         specific_time = 1.hour.from_now
         expect do

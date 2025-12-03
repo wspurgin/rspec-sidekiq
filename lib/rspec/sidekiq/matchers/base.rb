@@ -19,6 +19,8 @@ module RSpec
 
         def at_evaluator(value)
           return value.nil? if job["at"].to_s.empty?
+          return value.matches?(Time.at(job["at"])) if value.respond_to?(:matches?)
+
           value == Time.at(job["at"]).to_i
         end
 
@@ -195,12 +197,12 @@ module RSpec
         end
 
         def at(timestamp)
-          @expected_options["at"] = timestamp.to_time.to_i
+          @expected_options["at"] = matcher?(timestamp) ? timestamp : timestamp.to_time.to_i
           self
         end
 
         def in(interval)
-          @expected_options["at"] = (Time.now.to_f + interval.to_f).to_i
+          @expected_options["at"] = matcher?(interval) ? interval : (Time.now.to_f + interval.to_f).to_i
           self
         end
 
@@ -366,6 +368,12 @@ module RSpec
           else
             args
           end
+        end
+
+        private
+
+        def matcher?(object)
+          object.respond_to?(:matches?)
         end
       end
     end
