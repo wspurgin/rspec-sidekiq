@@ -212,7 +212,7 @@ module RSpec
         end
 
         def on(queue)
-          @expected_options["queue"] = queue
+          @expected_options["queue"] = normalize_arguments(queue)
           self
         end
 

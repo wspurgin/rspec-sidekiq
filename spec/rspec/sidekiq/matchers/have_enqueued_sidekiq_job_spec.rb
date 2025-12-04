@@ -288,6 +288,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
           expect(worker).to have_enqueued_sidekiq_job(*worker_args).on("default")
         end
 
+        context "when the queue is referenced as a symbol" do
+          it "matches the queue in the context" do
+            worker.perform_async(*worker_args)
+            expect(worker).to have_enqueued_sidekiq_job(*worker_args).on(:default)
+          end
+        end
+
         context "when setting queue at runtime" do
           it "matches the queue set" do
             worker.set(queue: "highest").perform_async(*worker_args)
