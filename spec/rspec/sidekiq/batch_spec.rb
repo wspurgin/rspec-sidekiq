@@ -19,6 +19,14 @@ RSpec.describe 'Batch', stub_batches: true do
         expect(batch.non_existent_method).to eq(batch)
       end
     end
+
+    describe '#respond_to_missing?' do
+      it 'returns true for any method' do
+        batch = Sidekiq::Batch.new
+        expect(batch.respond_to?(:non_existent_method)).to be true
+        expect(batch.respond_to?(:any_method_name)).to be true
+      end
+    end
   end
 
   describe 'NullBatch' do

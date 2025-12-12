@@ -10,6 +10,10 @@ if defined? Sidekiq::Batch
         def method_missing(*args, &block)
           self
         end
+
+        def respond_to_missing?(*_args)
+          true
+        end
       end
 
       ##
