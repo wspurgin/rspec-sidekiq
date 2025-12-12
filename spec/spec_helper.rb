@@ -11,6 +11,11 @@ require 'active_support/testing/time_helpers'
 
 require_relative 'support/init'
 
+RSpec::Sidekiq.configure do |config|
+  # Disable warning when running gem's own test suite
+  config.warn_when_jobs_not_processed_by_sidekiq = false
+end
+
 RSpec.configure do |config|
   config.disable_monkey_patching!
 
