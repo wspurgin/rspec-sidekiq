@@ -52,17 +52,19 @@ module RSpec
         end
 
         def unwrapped_arguments
-          args = job["args"]
+          @unwrapped_arguments ||= begin
+            args = job["args"]
 
-          return deserialized_active_job_args if active_job?
-
-          args
+            active_job? ? deserialized_active_job_args : args
+          end
         end
 
         private
 
         def active_job?
-          if RSpec::Sidekiq.configuration.sidekiq_gte_8?
+          return @active_job if defined?(@active_job)
+
+          @active_job = if RSpec::Sidekiq.configuration.sidekiq_gte_8?
             job["class"] == "Sidekiq::ActiveJob::Wrapper"
           else
             job["class"] == "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
@@ -110,12 +112,30 @@ module RSpec
           @context ||= job.except("args")
         end
 
+        def matches_arguments?(expected_args)
+          job_arguments.matches?(expected_args)
+        end
+
+        def matches_options?(expected_options)
+          job_option_parser.matches?(expected_options)
+        end
+
         def ==(other)
           super(other) unless other.is_a?(EnqueuedJob)
 
           jid == other.jid
         end
         alias_method :eql?, :==
+
+        private
+
+        def job_arguments
+          @job_arguments ||= JobArguments.new(job)
+        end
+
+        def job_option_parser
+          @job_option_parser ||= JobOptionParser.new(self)
+        end
       end
 
       class EnqueuedJobs
@@ -161,15 +181,11 @@ module RSpec
         end
 
         def arguments_matches?(job, arguments)
-          job_arguments = JobArguments.new(job)
-
-          job_arguments.matches?(arguments)
+          job.matches_arguments?(arguments)
         end
 
         def options_matches?(job, options)
-          parser = JobOptionParser.new(job)
-
-          parser.matches?(options)
+          job.matches_options?(options)
         end
 
         def unwrap_jobs(jobs)
@@ -357,13 +373,14 @@ module RSpec
         end
 
         def normalize_arguments(args)
-          if args.is_a?(Array)
+          case args
+          when Array
             args.map { |x| normalize_arguments(x) }
-          elsif args.is_a?(Hash)
+          when Hash
             args.each_with_object({}) do |(key, value), hash|
               hash[key.to_s] = normalize_arguments(value)
             end
-          elsif args.is_a?(Symbol)
+          when Symbol
             args.to_s
           else
             args
