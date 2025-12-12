@@ -108,6 +108,21 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
           )
         }
       end
+
+      context 'when the queue is referenced as a symbol' do
+        it "passes if the queue is set at runtime" do
+          expect {
+            worker.set(queue: :high).perform_async
+          }.to enqueue_sidekiq_job.on(:high)
+        end
+
+        it "passes if the queue is set via options" do
+          other_worker = create_worker(queue: :low)
+          expect {
+            other_worker.perform_async
+          }.to enqueue_sidekiq_job.on(:low)
+        end
+      end
     end
 
     context "at a specific time" do
