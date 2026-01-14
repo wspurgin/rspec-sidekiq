@@ -12,6 +12,7 @@ require_relative "matchers/be_processed_in"
 require_relative "matchers/be_retryable"
 require_relative "matchers/be_unique"
 require_relative "matchers/have_enqueued_sidekiq_job"
+require_relative "matchers/have_job_options"
 require_relative "matchers/save_backtrace"
 require_relative "matchers/enqueue_sidekiq_job"
 
