@@ -3,7 +3,11 @@
 require 'forwardable'
 
 require 'sidekiq'
-require 'sidekiq/testing'
+if Gem::Version.new(Sidekiq::VERSION) >= Gem::Version.new('8.1.1')
+  Sidekiq.testing!(:fake)
+else
+  require 'sidekiq/testing'
+end
 
 require_relative 'rspec/sidekiq/batch'
 require_relative 'rspec/sidekiq/configuration'
