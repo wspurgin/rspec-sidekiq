@@ -1,6 +1,15 @@
 Unreleased
 ---
 
+5.3.0
+---
+* Add `have_job` matcher and named queue stubs (`stub_named_queues`) (#279)
+* Add `have_job_option` and `have_job_options` matchers for job option assertions (#278)
+* Add `respond_to_missing?` to `NullBatch` for proper method reflection (#275)
+* Support RSpec matchers with `at` and `in` evaluators (#272)
+* Allow `on` to accept either a `String` or `Symbol` queue name (#273)
+* Avoid `require "sidekiq/testing"` deprecation on Sidekiq 8.1.1+ (#280)
+
 5.2.0
 ---
 * Add `never` matcher for aliasing `exactly(0)` (#256)
