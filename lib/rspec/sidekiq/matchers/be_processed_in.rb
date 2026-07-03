@@ -25,7 +25,7 @@ module RSpec
           if @klass.methods.include?(:get_sidekiq_options)
             @actual = @klass.get_sidekiq_options['queue']
           else
-            @actual = job.try(:queue_name)
+            @actual = job.respond_to?(:queue_name) ? job.queue_name : nil
           end
           @actual.to_s == @expected_queue.to_s
         end

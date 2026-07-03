@@ -98,6 +98,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::BeProcessedIn do
           expect(string_subject.matches? create_worker queue: 'another_queue').to be false
         end
       end
+
+      context 'when job does not implement queue_name' do
+        it 'returns false without raising error' do
+          expect(string_subject.matches? Object.new).to be false
+        end
+      end
     end
   end
 

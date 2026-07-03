@@ -77,8 +77,8 @@ if defined? Sidekiq::Batch
               when Class
                 callback.new.send("on_#{event}", self, options)
               when String
-                klass, meth = callback.split('#')
-                klass.constantize.new.send(meth, self, options)
+                klass, meth = callback.split('#', 2)
+                Object.const_get(klass).new.send(meth, self, options)
               else
                 raise ArgumentError, 'Unsupported callback notation'
               end
