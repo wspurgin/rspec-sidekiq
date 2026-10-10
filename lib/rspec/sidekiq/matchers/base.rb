@@ -175,6 +175,10 @@ module RSpec
         end
         alias_method :eql?, :==
 
+        def hash
+          jid.hash
+        end
+
         private
 
         def job_arguments
