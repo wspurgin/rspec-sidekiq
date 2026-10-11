@@ -349,6 +349,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         expect { worker.perform_async }.to enqueue_sidekiq_job.once
       end
 
+      it 'counts only jobs added after 17 jobs were already enqueued' do
+        17.times { worker.perform_async }
+
+        expect { worker.perform_async }.to enqueue_sidekiq_job(worker).once
+      end
+
       it "fails if a job was expected once but occurred twice" do
         expect do
           expect { worker.perform_async; worker.perform_async }.to enqueue_sidekiq_job.once
