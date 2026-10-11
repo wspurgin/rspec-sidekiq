@@ -424,7 +424,7 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       context "when expected arguments include symbols" do
         let(:worker_args) { [:foo, { bar: :baz }] }
         it "returns true" do
-          worker.perform_async(*JSON.parse(worker_args.to_json))
+          worker.perform_async(*JSON.parse(JSON.generate(worker_args)))
           expect(worker).to have_enqueued_sidekiq_job(*worker_args)
         end
       end

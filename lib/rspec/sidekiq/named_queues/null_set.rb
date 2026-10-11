@@ -21,7 +21,7 @@ module RSpec
         def scan(pattern)
           return enum_for(:scan, pattern) unless block_given?
 
-          entries = items.select { |item| File.fnmatch?(pattern, item.to_json) }
+          entries = items.select { |item| File.fnmatch?(pattern, JSON.generate(item)) }
           entries.each { |item| yield Entry.new(item) }
         end
 
