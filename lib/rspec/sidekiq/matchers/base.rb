@@ -87,6 +87,7 @@ module RSpec
       # @api private
       class JobArguments
         include RSpec::Mocks::ArgumentMatchers
+        include ArgumentNormalization
 
         def initialize(job)
           self.job = job
@@ -94,6 +95,7 @@ module RSpec
         attr_accessor :job
 
         def matches?(expected_args)
+          expected_args = normalize_arguments(expected_args) unless active_job?
           matcher = RSpec::Mocks::ArgumentListMatcher.new(*expected_args)
 
           matcher.args_match?(*unwrapped_arguments)
@@ -258,7 +260,7 @@ module RSpec
         end
 
         def with(*expected_arguments)
-          @expected_arguments = normalize_arguments(expected_arguments)
+          @expected_arguments = expected_arguments
           self
         end
 

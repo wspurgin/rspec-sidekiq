@@ -213,6 +213,12 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         expect(worker).to have_enqueued_sidekiq_job(*worker_args)
       end
 
+      it 'normalizes symbol arguments for Sidekiq jobs' do
+        worker.perform_async("foo", { "key" => "v" })
+        expect(worker).to have_enqueued_sidekiq_job(:foo, key: "v")
+        expect(worker).to have_enqueued_sidekiq_job.with(:foo, key: "v")
+      end
+
       it 'matches on the global Worker queue' do
         worker.perform_async(*worker_args)
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(*worker_args)
@@ -316,6 +322,17 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
       it 'matches on an enqueued ActiveJob' do
         active_job.perform_later "someResource", *worker_args
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job 'someResource', *worker_args
+      end
+
+      it 'matches symbol arguments without matching strings' do
+        active_job.perform_later(:foo)
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job.with(:foo)
+        expect(Sidekiq::Worker).not_to have_enqueued_sidekiq_job("foo")
+      end
+
+      it 'matches keyword arguments' do
+        active_job.perform_later(1, key: "v")
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(1, key: "v")
       end
 
       it 'matches on an enqueued ActiveJob by global_id-capable object' do
