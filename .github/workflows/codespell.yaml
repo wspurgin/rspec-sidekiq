@@ -1,14 +1,20 @@
 name: CodeSpell
 on:
   - pull_request
+
+permissions:
+  contents: read
+
 jobs:
   codespell:
     name: CodeSpell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: CodeSpell
-        uses: codespell-project/actions-codespell@master
+        uses: codespell-project/actions-codespell@02dddb342731ef97c88b2c2f7e0703bb49610f36 # master
         with:
           check_filenames: true
           check_hidden: true
