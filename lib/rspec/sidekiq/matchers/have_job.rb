@@ -11,7 +11,6 @@ module RSpec
       class HaveJob
         include RSpec::Mocks::ArgumentMatchers
         include CountExpectation
-        include ArgumentNormalization
 
         attr_reader :expected_job_class, :expected_arguments, :expected_count
 
@@ -27,7 +26,7 @@ module RSpec
         end
 
         def with(*expected_arguments)
-          @expected_arguments = normalize_arguments(expected_arguments)
+          @expected_arguments = expected_arguments
           self
         end
 

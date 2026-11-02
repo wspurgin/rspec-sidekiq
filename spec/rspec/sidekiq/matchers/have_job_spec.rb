@@ -28,6 +28,14 @@ RSpec.describe 'have_job matcher' do
     set = build_scheduled_set({ "class" => worker.to_s, "args" => ["arg"] })
 
     expect(set).to have_job(worker).with('arg')
+    expect(set).to have_job(worker).with(:arg)
+  end
+
+  it 'matches ActiveJob symbol arguments in scheduled jobs' do
+    TestJob.perform_later(:foo)
+    set = build_scheduled_set(Sidekiq::Worker.jobs.last)
+
+    expect(set).to have_job(TestJob).with(:foo)
   end
 
   it 'matches any job when class is omitted' do
