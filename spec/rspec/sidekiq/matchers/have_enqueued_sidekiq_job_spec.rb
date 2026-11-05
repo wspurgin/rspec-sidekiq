@@ -313,6 +313,16 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     end
 
     context 'ActiveJob' do
+      it 'preserves a hash with an args key and the following argument' do
+        active_job.perform_later({ args: [1, 2] }, 3)
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(eq(args: [1, 2]), 3)
+      end
+
+      it 'preserves a non-array value under an args key' do
+        active_job.perform_later(args: 1)
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(eq(args: 1))
+      end
+
       it 'matches on an enqueued ActiveJob' do
         active_job.perform_later "someResource", *worker_args
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job 'someResource', *worker_args
@@ -325,6 +335,23 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
     end
 
     context 'ActionMailer' do
+      it 'preserves a mailer argument containing an args key' do
+        TestActionMailer.testmail({ args: [1, 2] }, 3).deliver_later
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+          'TestActionMailer', 'testmail', 'deliver_now', eq(args: [1, 2]), 3
+        )
+      end
+
+      it 'unwraps arguments for a custom mail delivery job' do
+        stub_const('CustomMailDeliveryJob', Class.new(ActionMailer::MailDeliveryJob))
+        allow(TestActionMailer).to receive(:delivery_job).and_return(CustomMailDeliveryJob)
+
+        TestActionMailer.testmail('value').deliver_later
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(
+          'TestActionMailer', 'testmail', 'deliver_now', 'value'
+        )
+      end
+
       it 'matches on ActionMailer Job' do
         TestActionMailer.testmail(*worker_args).deliver_later
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(

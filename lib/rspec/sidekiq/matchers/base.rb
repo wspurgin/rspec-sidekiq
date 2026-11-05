@@ -121,15 +121,19 @@ module RSpec
 
         def deserialized_active_job_args
           active_job_args = ActiveJob::Arguments.deserialize(active_job_original_args)
+          return active_job_args unless mail_delivery_job?
 
-          # ActiveJob 7 (aj7) changed deserialization structure, adding passed arguments
-          # in an aj-specific hash under the :args key
-          aj7_args_hash = active_job_args.detect { |arg| arg.respond_to?(:key) && arg.key?(:args) }
+          mailer_options = active_job_args.last
+          return active_job_args unless mailer_options.is_a?(Hash) && mailer_options.key?(:args)
 
-          return active_job_args if aj7_args_hash.nil?
+          active_job_args[0...-1] + mailer_options[:args]
+        end
 
-          active_job_args.delete(aj7_args_hash)
-          active_job_args.concat(aj7_args_hash[:args])
+        def mail_delivery_job?
+          return false unless defined?(ActionMailer::MailDeliveryJob)
+
+          job_class = job["wrapped"].to_s.safe_constantize
+          job_class && job_class <= ActionMailer::MailDeliveryJob
         end
 
         def active_job_original_args
