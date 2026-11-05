@@ -5,6 +5,53 @@ require 'spec_helper'
 RSpec.describe 'named queues stubs', stub_named_queues: true do
   let(:worker) { create_worker }
 
+  it 'keeps immediate jobs in the fake queue' do
+    jid = nil
+    expect { jid = worker.perform_async('arg') }.to enqueue_sidekiq_job(worker).with('arg')
+
+    expect(worker).to have_enqueued_sidekiq_job('arg').once
+    expect(worker.jobs.map { |job| job['jid'] }).to eq([jid])
+    expect(Sidekiq::ScheduledSet.new).not_to have_job(worker)
+  end
+
+  it 'keeps delayed jobs in both the fake queue and ScheduledSet' do
+    jid = worker.perform_in(60, 'arg')
+
+    expect(worker).to have_enqueued_sidekiq_job('arg').once
+    expect(worker.jobs.map { |job| job['jid'] }).to eq([jid])
+    expect(Sidekiq::ScheduledSet.new).to have_job(worker).with('arg').once
+    expect(Sidekiq::ScheduledSet.new.map { |entry| entry.item['jid'] }).to eq([jid])
+  end
+
+  it 'preserves jobs pushed through the client class' do
+    jid = Sidekiq::Client.push('class' => worker, 'args' => ['arg'])
+
+    expect(worker).to have_enqueued_sidekiq_job('arg').once
+    expect(worker.jobs.map { |job| job['jid'] }).to eq([jid])
+  end
+
+  %w[class instance].each do |client_type|
+    it "keeps bulk jobs in both queues through the client #{client_type}" do
+      client = client_type == 'class' ? Sidekiq::Client : Sidekiq::Client.new
+      jids = client.push_bulk('class' => worker, 'args' => [[1], [2]], 'at' => 1.hour.from_now.to_f)
+
+      expect(worker).to have_enqueued_sidekiq_job(1).once
+      expect(worker).to have_enqueued_sidekiq_job(2).once
+      expect(worker.jobs.map { |job| job['jid'] }).to eq(jids)
+      expect(Sidekiq::ScheduledSet.new).to have_job(worker).exactly(2).times
+      expect(Sidekiq::ScheduledSet.new.map { |entry| entry.item['jid'] }).to eq(jids)
+    end
+  end
+
+  it 'does not record jobs rejected by client middleware' do
+    client = Sidekiq::Client.new
+    allow(client.middleware).to receive(:invoke).and_return(nil)
+
+    expect(client.push('class' => worker, 'args' => [], 'at' => 1.hour.from_now.to_f)).to be_nil
+    expect(worker.jobs).to be_empty
+    expect(Sidekiq::ScheduledSet.new).not_to have_job(worker)
+  end
+
   it 'stores scheduled jobs for ScheduledSet' do
     worker.perform_at(1.hour.from_now, 'arg')
 
