@@ -14,7 +14,7 @@ jobs:
         with:
           persist-credentials: false
       - name: CodeSpell
-        uses: codespell-project/actions-codespell@02dddb342731ef97c88b2c2f7e0703bb49610f36 # master
+        uses: codespell-project/actions-codespell@02dddb342731ef97c88b2c2f7e0703bb49610f36
         with:
           check_filenames: true
           check_hidden: true
