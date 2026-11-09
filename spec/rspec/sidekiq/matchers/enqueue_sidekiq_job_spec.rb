@@ -57,6 +57,14 @@ RSpec.describe RSpec::Sidekiq::Matchers::EnqueueSidekiqJob do
         }.to enqueue_sidekiq_job.with("some_arg")
       end
 
+      it "matches an ActiveJob symbol argument" do
+        expect { TestJob.perform_later(:foo) }.to enqueue_sidekiq_job.with(:foo)
+      end
+
+      it "matches ActiveJob keyword arguments" do
+        expect { TestJob.perform_later(1, key: "v") }.to enqueue_sidekiq_job.with(1, key: "v")
+      end
+
       context "when expected arguments include symbols" do
         it "returns true" do
           expect {
