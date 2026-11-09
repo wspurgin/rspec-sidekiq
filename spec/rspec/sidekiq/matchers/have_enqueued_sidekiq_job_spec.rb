@@ -332,6 +332,13 @@ RSpec.describe RSpec::Sidekiq::Matchers::HaveEnqueuedSidekiqJob do
         active_job.perform_later(resource)
         expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(resource)
       end
+
+      it 'matches a global_id-capable argument that responds to key but not key?' do
+        allow(resource).to receive(:key).and_return('blob-key')
+
+        expect { active_job.perform_later(resource) }.to enqueue_sidekiq_job
+        expect(Sidekiq::Worker).to have_enqueued_sidekiq_job(resource)
+      end
     end
 
     context 'ActionMailer' do
